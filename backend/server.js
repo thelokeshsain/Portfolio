@@ -67,7 +67,7 @@ app.use(cors({
     cb(new Error(`CORS: origin not allowed — ${origin}`))
   },
   methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization'],
+  allowedHeaders: ['Content-Type','Authorization','x-csrf-token'],
   credentials: true, maxAge: 86400,
 }))
 app.use(cookieParser())
