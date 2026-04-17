@@ -95,7 +95,7 @@ function base({ headerBg, headerContent, bodyContent, footerNote }) {
           <td width="7"></td>
           <td style="width:12px;height:12px;background:#28c840;border-radius:50%;"></td>
           <td width="12"></td>
-          <td style="font-family:monospace;font-size:11px;color:#888888;vertical-align:middle;">lokeshsain</td>
+          <td style="font-family:monospace;font-size:11px;color:#888888;vertical-align:middle;">lokeshsain.vercel.app</td>
         </tr></table>
       </td>
     </tr>
