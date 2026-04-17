@@ -168,7 +168,7 @@ export default function NotFound() {
             onClick={() => nav('/')}
             style={{ color: ink, fontWeight: 700, cursor: 'pointer', textDecoration: 'underline' }}
           >
-            lokeshsain.dev
+            lokeshsain
           </span>
         </p>
       </div>
