@@ -9,7 +9,6 @@ const GHIcon = ({ size = 14 }) => (
 );
 
 function ProjectCard({ p }) {
-  // tags is always string[] after DataContext normalization
   const tags = Array.isArray(p.tags)
     ? p.tags.map((t) => (typeof t === "string" ? t : t?.label || ""))
     : [];
@@ -43,17 +42,17 @@ function ProjectCard({ p }) {
           flexDirection: "column",
         }}
       >
-        {/* ── Header row: category tag + period + logo ── */}
+        {/* ── Header row: category + period on left, logo on right ── */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "flex-start",
             marginBottom: 14,
-            gap: 10,
+            gap: 12,
           }}
         >
-          {/* Left: category + period stacked */}
+          {/* Left: category tag + period stacked */}
           <div
             style={{
               display: "flex",
@@ -81,21 +80,17 @@ function ProjectCard({ p }) {
             )}
           </div>
 
-          {/* Right: project logo — shown only when image is set */}
+          {/* Right: project logo — bigger, transparent background */}
           {p.image && (
             <div
               style={{
-                width: "clamp(44px, 8vw, 56px)",
-                height: "clamp(44px, 8vw, 56px)",
-                borderRadius: 10,
-                border: "2px solid var(--ink)",
-                background: p.accentBg || "var(--yellow)",
-                overflow: "hidden",
+                width: "clamp(64px, 12vw, 100px)",
+                height: "clamp(64px, 12vw, 80px)",
                 flexShrink: 0,
-                boxShadow: "3px 3px 0 var(--ink)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                background: "transparent",
               }}
             >
               <img
@@ -105,7 +100,7 @@ function ProjectCard({ p }) {
                   width: "100%",
                   height: "100%",
                   objectFit: "contain",
-                  padding: 5,
+                  padding: 0,
                 }}
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
