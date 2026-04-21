@@ -3,7 +3,7 @@
  * Fix #5: Profile image path — use img with onError fallback
  * Fix #8: Show stats on mobile (separate row below text, not hidden)
  */
-import { Mail } from 'lucide-react'
+import { Mail, FileText } from 'lucide-react'
 import useTyping from '../../hooks/useTyping'
 import useScrollFade from '../../hooks/useScrollFade'
 import { useData } from '../../context/DataContext'
@@ -74,6 +74,11 @@ export default function Hero() {
               <a href={`mailto:${h.email}`} className="btn btn-outline">
                 <Mail size={15} /> Say Hello
               </a>
+              {h.resumeUrl && (
+                <a href={h.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+                  <FileText size={15} /> View Resume
+                </a>
+              )}
             </div>
 
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>

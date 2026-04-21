@@ -42,6 +42,7 @@ const s = new mongoose.Schema(
         icon: { type: String, maxlength: 10 },
         title: { type: String, maxlength: 100 },
         sub: { type: String, maxlength: 100 },
+        link: { type: String, maxlength: 300 },
       },
     ],
     experience: [
@@ -73,6 +74,7 @@ const s = new mongoose.Schema(
         image: { type: String, default: null, maxlength: 2_000_000 }, // base64 project logo (max ~1.5MB file)
       },
     ],
+
     skills: { type: mongoose.Schema.Types.Mixed, default: {} },
     coreStack: [{ type: String, maxlength: 60 }],
     sections: {
