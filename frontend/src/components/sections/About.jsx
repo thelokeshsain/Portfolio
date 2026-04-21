@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import useScrollFade from '../../hooks/useScrollFade'
 import { useData } from '../../context/DataContext'
+import CertificationsModal from '../ui/CertificationsModal'
 
 const TERMINAL_FIELDS = [
   { key: 'name',         cls: 't-s' },
@@ -19,6 +21,8 @@ export default function About() {
   const about        = Array.isArray(data.about)        ? data.about        : []
   const education    = Array.isArray(data.education)    ? data.education    : []
   const achievements = Array.isArray(data.achievements) ? data.achievements : []
+  const certifications = [] // Keep variable for linting, but no longer used
+  const [isCertsOpen, setIsCertsOpen] = useState(false)
   const h = data.hero || {}
 
   const fields = TERMINAL_FIELDS.map(f => ({
@@ -69,26 +73,15 @@ export default function About() {
             </div>
 
             {/* Achievements */}
+            {/* Unified Achievements & Certs Button */}
             {achievements.length > 0 && (
-              <div style={{ border: '2px solid var(--ink)', borderRadius: 'var(--r)', padding: '20px 22px', background: 'var(--cream)', boxShadow: 'var(--sh)' }}>
-                <div className="label" style={{ marginBottom: 16 }}>Achievements</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                  {achievements.map((a, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                      <div style={{ width: 32, height: 32, borderRadius: 8, background: 'var(--yellow)', border: '2px solid var(--ink)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '2px 2px 0 var(--ink)' }}>
-                        {i === 0
-                          ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                          : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                        }
-                      </div>
-                      <div>
-                        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--ink)' }}>{a.title}</div>
-                        <div style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--mono)', marginTop: 3 }}>{a.sub}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <button
+                className="btn btn-outline"
+                style={{ alignSelf: "flex-start", marginTop: 8 }}
+                onClick={() => setIsCertsOpen(true)}
+              >
+                🏆 View Achievements & Certifications
+              </button>
             )}
           </div>
 
@@ -127,6 +120,12 @@ export default function About() {
 
         </div>
       </div>
+      
+      <CertificationsModal 
+        isOpen={isCertsOpen} 
+        onClose={() => setIsCertsOpen(false)} 
+        achievements={achievements} 
+      />
     </section>
   )
 }
