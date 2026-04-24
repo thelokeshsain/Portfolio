@@ -78,7 +78,7 @@ export default function Navbar({ isInstallable, onInstall }) {
           style={{ marginTop: 8, justifyContent: 'center' }}
           onClick={() => setOpen(false)}
         >
-          ✉ Hire Me
+          ✉️ Hire Me
         </a>
       </div>
     </>
