@@ -1,4 +1,4 @@
-// Contact Controller — Manages visitor inquiries and admin message management.
+// Contact Controller - Manages visitor inquiries and admin message management.
 // Handles automatic email notifications, pagination, and bulk cleanup operations.
 const mongoose = require('mongoose')
 const Contact  = require('../models/Contact')
@@ -25,23 +25,20 @@ exports.submit = async (req, res) => {
 
     await Contact.create({ name, email, message, ip, userAgent, browser, device })
 
-    try {
-      await sendMail({ to: email, subject: '✓ Got your message — Lokesh Sain', html: confirmationEmail(name) })
-    } catch (e) { console.error('[Contact] Confirmation email failed:', e.message) }
+    sendMail({ to: email, subject: 'Got your message - Lokesh Sain', html: confirmationEmail(name) })
+      .catch((e) => console.error('[Contact] Confirmation email failed:', e.message))
 
-    try {
-      const dateStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'medium' })
-      await sendMail({
-        to:      process.env.OWNER_EMAIL,
-        subject: `📬 New message from ${name}`,
-        html:    notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr }),
-      })
-    } catch (e) { console.error('[Contact] Admin notification failed:', e.message) }
+    const dateStr = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'full', timeStyle: 'medium' })
+    sendMail({
+      to:      process.env.OWNER_EMAIL,
+      subject: `New message from ${name}`,
+      html:    notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr }),
+    }).catch((e) => console.error('[Contact] Admin notification failed:', e.message))
 
     res.status(201).json({ message: 'Message sent successfully' })
   } catch (err) {
     console.error('[Contact]', err.message)
-    res.status(500).json({ message: 'Failed to send message — please try again' })
+    res.status(500).json({ message: 'Failed to send message - please try again' })
   }
 }
 
@@ -72,7 +69,7 @@ exports.markRead = async (req, res) => {
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(400).json({ message: 'Invalid contact ID' })
-    const contact = await Contact.findByIdAndUpdate(id, { read: true }, { new: true })
+    const contact = await Contact.findByIdAndUpdate(id, { read: true }, { new: true }).lean()
     if (!contact) return res.status(404).json({ message: 'Contact not found' })
     res.json({ message: 'Marked as read', contact })
   } catch (err) {
@@ -86,7 +83,7 @@ exports.deleteContact = async (req, res) => {
     const { id } = req.params
     if (!mongoose.Types.ObjectId.isValid(id))
       return res.status(400).json({ message: 'Invalid contact ID' })
-    const result = await Contact.findByIdAndDelete(id)
+    const result = await Contact.findByIdAndDelete(id).lean()
     if (!result) return res.status(404).json({ message: 'Contact not found' })
     res.json({ message: 'Message deleted' })
   } catch (err) {
