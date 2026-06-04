@@ -27,21 +27,17 @@ module.exports = async (req, res, next) => {
     if (decoded.jti && await blocklist.isRevoked(decoded.jti))
       return res.status(401).json({ message: 'Token has been revoked — please login again' })
 
-    if (!decoded.sid)
-      return res.status(401).json({ message: 'Session invalidated â€” please login again' })
-
     const session = await RefreshSession.findOne({
       sessionId: decoded.sid,
       admin: decoded.id,
       revokedAt: null,
       expiresAt: { $gt: new Date() },
-    })
-    if (!session) return res.status(401).json({ message: 'Session expired â€” please login again' })
+    }).populate('admin')
 
-    // password and totpSecret are excluded by the schema's select:false.
-    // Avoid mixing exclusion and +inclusion projections, which Mongoose rejects.
-    const admin = await Admin.findById(decoded.id)
-    if (!admin) return res.status(401).json({ message: 'Admin account not found' })
+    if (!session || !session.admin)
+      return res.status(401).json({ message: 'Session expired — please login again' })
+
+    const admin = session.admin
 
     // Version check: allows global invalidation on password change
     if (decoded.v !== admin.tokenVersion)

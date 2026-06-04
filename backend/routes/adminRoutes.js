@@ -4,8 +4,9 @@
  */
 const router = require('express').Router()
 const auth   = require('../middleware/auth')
+const csrf   = require('../middleware/csrf')
 const { loginLimiter, twoFALimiter, refreshLimiter, make } = require('../middleware/rateLimit')
-const { loginRules, passwordRules, forgotPasswordRules, resetPasswordRules } = require('../middleware/validate')
+const { loginRules, forgotPasswordRules, resetPasswordRules, changePasswordOtpRules } = require('../middleware/validate')
 const adminController   = require('../controllers/adminController')
 const contactController = require('../controllers/contactController')
 
@@ -19,19 +20,23 @@ router.post  ('/refresh-token',     refreshLimiter,                     adminCon
 router.post  ('/forgot-password',   resetLimiter,  forgotPasswordRules, adminController.forgotPassword)
 router.post  ('/reset-password',    resetLimiter,  resetPasswordRules,  adminController.resetPassword)
 
-// Protected (auth required)
-router.post  ('/logout',            auth,                         adminController.logout)
-router.get   ('/me',                auth,                         adminController.getMe)
-router.post  ('/setup-totp',        auth,                         adminController.setupTotp)
-router.post  ('/enable-totp',       auth,                         adminController.enableTotp)
-router.delete('/disable-totp',      auth,                         adminController.disableTotp)
-router.put   ('/portfolio/:section', auth,                        adminController.updateSection)
-router.put   ('/password',           auth, passwordRules,         adminController.changePassword)
+// Apply authentication and CSRF protection to all subsequent routes
+router.use(auth)
+router.use(csrf)
+
+// Protected (auth required, CSRF enforced for write methods)
+router.post  ('/logout',            adminController.logout)
+router.get   ('/me',                adminController.getMe)
+router.post  ('/setup-totp',        adminController.setupTotp)
+router.post  ('/enable-totp',       adminController.enableTotp)
+router.delete('/disable-totp',      adminController.disableTotp)
+router.put   ('/portfolio/:section', adminController.updateSection)
+router.put   ('/password',           changePasswordOtpRules,         adminController.changePassword)
 
 // Contact management
-router.get   ('/contacts',          auth,                         contactController.getContacts)
-router.put   ('/contacts/:id/read', auth,                         contactController.markRead)
-router.delete('/contacts/:id',      auth,                         contactController.deleteContact)
-router.delete('/contacts',          auth,                         contactController.deleteAllRead)
+router.get   ('/contacts',          contactController.getContacts)
+router.put   ('/contacts/:id/read', contactController.markRead)
+router.delete('/contacts/:id',      contactController.deleteContact)
+router.delete('/contacts',          contactController.deleteAllRead)
 
 module.exports = router

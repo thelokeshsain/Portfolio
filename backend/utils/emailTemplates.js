@@ -95,7 +95,7 @@ function base({ headerBg, headerContent, bodyContent, footerNote }) {
           <td width="7"></td>
           <td style="width:12px;height:12px;background:#28c840;border-radius:50%;"></td>
           <td width="12"></td>
-          <td style="font-family:monospace;font-size:11px;color:#888888;vertical-align:middle;">lokeshsain.vercel.app</td>
+          <td style="font-family:monospace;font-size:11px;color:#888888;vertical-align:middle;">${process.env.CLIENT_URL ? new URL(process.env.CLIENT_URL).hostname : "lokeshsain.vercel.app"}</td>
         </tr></table>
       </td>
     </tr>
@@ -232,7 +232,7 @@ exports.confirmationEmail = (name) =>
         ${socialCircle("https://linkedin.com/in/thelokeshsain", "#0A66C2", ICONS.linkedin, "LinkedIn")}
         ${socialCircle("https://github.com/thelokeshsain", "#24292e", ICONS.github, "GitHub")}
         <td class="social-cell" style="padding-right:0;">
-          <a href="https://lokeshsain.vercel.app" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:#ffde2d;border:2px solid #000000;text-decoration:none;">
+          <a href="${process.env.CLIENT_URL || "https://lokeshsain.vercel.app"}" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:#ffde2d;border:2px solid #000000;text-decoration:none;">
             <table width="44" height="44" cellpadding="0" cellspacing="0" border="0">
               <tr><td align="center" valign="middle">${FAVICON_IMG}</td></tr>
             </table>
@@ -241,7 +241,7 @@ exports.confirmationEmail = (name) =>
       </tr>
     </table>
 
-    ${ctaBtn("https://lokeshsain.vercel.app/", "View My Portfolio &rarr;", "#000000", "#ffffff")}
+    ${ctaBtn(process.env.CLIENT_URL || "https://lokeshsain.vercel.app", "View My Portfolio &rarr;", "#000000", "#ffffff")}
 
     <!-- Signature -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:2px solid #000000;margin-top:28px;">
@@ -348,7 +348,7 @@ exports.loginAlertEmail = ({ ip, browser, device, dateStr }) =>
       infoRow(ICONS.monitor, "Device", esc(device || "Unknown")) +
       infoRow(ICONS.cpu, "Browser", esc(browser || "Unknown"), true),
     )}
-    ${ctaBtn((process.env.CLIENT_URL || "http://localhost:5173") + "/admin", "Go to Admin Panel &rarr;", "#ffde2d", "#000000")}`,
+    ${ctaBtn((process.env.CLIENT_URL || "http://localhost:5174") + "/admin", "Go to Admin Panel &rarr;", "#ffde2d", "#000000")}`,
     footerNote: "Lokesh Portfolio Security Alert",
   });
 

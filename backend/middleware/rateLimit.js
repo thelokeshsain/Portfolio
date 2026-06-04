@@ -10,6 +10,10 @@ const make = (windowMinutes, max, message) => rateLimit({
   max,
   standardHeaders: true,
   legacyHeaders:   false,
+  handler: (req, res, _next, options) => {
+    console.warn(`[SECURITY] Rate limit exceeded [IP: ${req.ip}] [Path: ${req.path}] [Method: ${req.method}]`);
+    res.status(options.statusCode).json(options.message);
+  },
   message:         { message },
   // SECURITY: Rely on default behavior (req.ip) calibrated by app.set('trust proxy', 1) in server.js
   // This is the most secure and reliable pattern for Render/v8.x

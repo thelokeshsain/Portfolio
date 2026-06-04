@@ -16,8 +16,8 @@ const contactSchema = new mongoose.Schema({
   read:      { type: Boolean, default: false },
 }, { timestamps: true })
 
-contactSchema.index({ createdAt: -1 })
 contactSchema.index({ email: 1 })
+contactSchema.index({ read: 1, createdAt: -1 })
 // Auto-delete messages after 90 days (GDPR data retention)
 contactSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * 24 * 3600 })
 

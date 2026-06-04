@@ -1,6 +1,6 @@
 // SECURITY: AuthContext — Centralized session management and persistent authentication.
 // Implements secure axios interceptors for 401 handling and idle session timeouts.
-import { createContext, useContext, useState, useEffect, useRef } from 'react'
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react'
 import axios from 'axios'
 
 const Ctx = createContext()
@@ -99,25 +99,27 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const idleTimer             = useRef(null)
 
-  const doLogout = async () => {
+  const doLogout = useCallback(async () => {
     clearTimeout(idleTimer.current)
     try { await apiClient.post('/admin/logout', null, { skipAuthRefresh: true }) } catch { /* continue */ }
+    // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
+    // The backend enforces actual cryptographic token/session lifetime checks.
     localStorage.removeItem('adminLoginTime')
     setAuthHeaders(null, null)
     setAdmin(null)
-  }
+  }, [])
 
   // Handle global logout signal from interceptor
   useEffect(() => {
     const handler = () => doLogout()
     window.addEventListener('admin-logout', handler)
     return () => window.removeEventListener('admin-logout', handler)
-  }, [])
+  }, [doLogout])
 
-  const resetIdleTimer = () => {
+  const resetIdleTimer = useCallback(() => {
     clearTimeout(idleTimer.current)
     idleTimer.current = setTimeout(() => doLogout(), IDLE_MS)
-  }
+  }, [doLogout])
 
   useEffect(() => {
     if (!admin) return
@@ -129,9 +131,11 @@ export function AuthProvider({ children }) {
       clearTimeout(idleTimer.current)
       events.forEach(e => window.removeEventListener(e, handler))
     }
-  }, [admin]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [admin, resetIdleTimer])
 
   useEffect(() => {
+    // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
+    // The backend enforces actual cryptographic token/session lifetime checks.
     const loginTime = parseInt(localStorage.getItem('adminLoginTime') || '0')
 
     //belt-and-suspenders session age check
@@ -169,7 +173,7 @@ export function AuthProvider({ children }) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [doLogout])
 
   const login = async (email, password) => {
     const r = await apiClient.post('/admin/login', { email, password })
@@ -178,12 +182,16 @@ export function AuthProvider({ children }) {
 
   const verifyTwoFactor = async (token, code) => {
     const r = await apiClient.post('/admin/verify-2fa', { token, code })
+    // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
+    // The backend enforces actual cryptographic token/session lifetime checks.
     localStorage.setItem('adminLoginTime', Date.now().toString())
     setAuthHeaders(r.data.token, r.data.csrfToken)
     setAdmin(r.data.admin)
   }
 
   const setSession = (token, adminData, csrfToken) => {
+    // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
+    // The backend enforces actual cryptographic token/session lifetime checks.
     localStorage.setItem('adminLoginTime', Date.now().toString())
     setAuthHeaders(token, csrfToken)
     setAdmin(adminData)
