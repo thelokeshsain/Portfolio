@@ -5,7 +5,6 @@ const otpTokenSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    index: true,
   },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +15,6 @@ const otpTokenSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    index: true,
   },
   payload: {
     type: mongoose.Schema.Types.Mixed,

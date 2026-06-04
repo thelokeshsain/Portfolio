@@ -91,6 +91,19 @@ const resetPasswordRules = validate([
     .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/).withMessage('Must contain a special character'),
 ])
 
+// SEC-06: Change password validation (needs currentPassword, newPassword, otpToken, and otpCode)
+const changePasswordOtpRules = validate([
+  body('currentPassword').notEmpty().withMessage('Current password required'),
+  body('otpToken').notEmpty().isHexadecimal().isLength({ min: 64, max: 64 }).withMessage('Invalid OTP token format'),
+  body('otpCode').notEmpty().isString().isLength({ min: 6, max: 6 }).withMessage('OTP code must be 6 digits'),
+  body('newPassword')
+    .isLength({ min: 12, max: 128 }).withMessage('Password must be 12–128 characters')
+    .matches(/[A-Z]/).withMessage('Must contain an uppercase letter')
+    .matches(/[a-z]/).withMessage('Must contain a lowercase letter')
+    .matches(/[0-9]/).withMessage('Must contain a number')
+    .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/).withMessage('Must contain a special character'),
+])
+
 module.exports = { 
   contactRules, 
   loginRules, 
@@ -99,5 +112,6 @@ module.exports = {
   projectUrlRules, 
   forgotPasswordRules,
   resetPasswordRules,
+  changePasswordOtpRules,
   isSafeUrl 
 }

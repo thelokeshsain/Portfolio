@@ -1,5 +1,6 @@
 // SECURITY: NoSQL Injection Sanitizer — Recursively removes keys starting with $ or containing .
 // Ensures both object and array request bodies are safe from operator injection attacks.
+// SEC-05: Also sanitizes req.query and req.params to prevent injection via URL parameters.
 function sanitizeValue(val) {
   if (val === null || val === undefined) return val
   if (typeof val === 'string') return val
@@ -14,7 +15,7 @@ function sanitizeObject(obj) {
   const clean = {}
   for (const key of Object.keys(obj)) {
     if (key.startsWith('$') || key.includes('.')) {
-      console.warn(`[Security] NoSQL operator blocked in key: "${key}"`)
+      console.warn(`[SECURITY] NoSQL operator blocked in key: "${key}"`)
       continue
     }
     clean[key] = sanitizeValue(obj[key])
@@ -23,6 +24,7 @@ function sanitizeObject(obj) {
 }
 
 module.exports = function mongoSanitizeMiddleware(req, _res, next) {
+  // Sanitize request body
   if (req.body !== null && req.body !== undefined) {
     // Handle both array bodies (e.g. coreStack: ['React','Node'])
     // and object bodies (e.g. hero: {name:'Lokesh',...})
@@ -32,5 +34,16 @@ module.exports = function mongoSanitizeMiddleware(req, _res, next) {
       req.body = sanitizeObject(req.body)
     }
   }
+
+  // SEC-05: Sanitize query parameters (prevents NoSQL injection via GET params like ?role[$gt]=)
+  if (req.query && typeof req.query === 'object') {
+    req.query = sanitizeObject(req.query)
+  }
+
+  // SEC-05: Sanitize URL params (prevents NoSQL injection via route params)
+  if (req.params && typeof req.params === 'object') {
+    req.params = sanitizeObject(req.params)
+  }
+
   next()
 }

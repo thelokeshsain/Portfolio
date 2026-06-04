@@ -345,8 +345,10 @@ exports.login = async (req, res) => {
       ? await admin.comparePassword(password)
       : await require("bcryptjs").compare(password, DUMMY_HASH);
 
-    if (!admin || !passwordValid)
+    if (!admin || !passwordValid) {
+      console.warn(`[SECURITY] Failed admin login attempt [Email: ${email}] [IP: ${req.ip}]`);
       return res.status(401).json({ message: "Invalid email or password" });
+    }
 
     if (admin.twoFactorEnabled) {
       // SECURITY: Generate a temporary session token for MFA verification step
@@ -421,12 +423,14 @@ exports.verifyTwoFactor = async (req, res) => {
         algorithm: "SHA1",
       });
       const cleanCode = code.replace(/\s/g, "");
-      if (totp.validate({ token: cleanCode, window: 1 }) === null)
+      if (totp.validate({ token: cleanCode, window: 1 }) === null) {
+        console.warn(`[SECURITY] Failed TOTP verification for admin [Email: ${admin.email}] [IP: ${req.ip}]`);
         return res
           .status(400)
           .json({
             message: "Invalid authenticator code. Check your device clock.",
           });
+      }
       // Replay prevention: same code cannot be used twice within the 90s window
       const windowKey = `${entry.adminId}_${Math.floor(Date.now() / 30000)}_${cleanCode}`;
       const reserved = await otpStore.reserve(
@@ -442,8 +446,10 @@ exports.verifyTwoFactor = async (req, res) => {
           .status(400)
           .json({ message: "Code already used — wait for the next code" });
     } else {
-      if (!codesMatch(entry.codeHash, code))
+      if (!codesMatch(entry.codeHash, code)) {
+        console.warn(`[SECURITY] Failed Email 2FA verification for admin [Email: ${admin.email}] [IP: ${req.ip}]`);
         return res.status(400).json({ message: "Invalid verification code" });
+      }
     }
 
     await otpStore.delete(token);
@@ -575,34 +581,6 @@ exports.refreshToken = async (req, res) => {
     setCsrfCookie(req, res, csrfToken);
 
     return res.json({ token: newAccessToken, csrfToken });
-
-    // THEFT DETECTION: If token version doesn't match, this token has already been rotated.
-    // Someone might be trying to reuse a stolen refresh token.
-    if (false) {
-      console.warn(
-        `[Security] Refresh token reuse detected for ${admin.email}. Invalidating all sessions.`,
-      );
-      // legacy global refresh-token version removed
-      await admin.save();
-      clearRefreshCookie(req, res);
-      return res
-        .status(401)
-        .json({ message: "Security breach detected — please login again" });
-    }
-
-    // ROTATION: Issue new versions of BOTH tokens
-    // legacy global refresh-token version removed
-    await admin.save();
-
-    const legacyAccessToken = signAccessToken(
-      admin._id,
-      admin.tokenVersion,
-      session.sessionId,
-    );
-    const legacyRefreshToken = signRefreshToken(admin._id, session.sessionId);
-    setRefreshCookie(req, res, legacyRefreshToken);
-
-    res.json({ token: legacyAccessToken });
   } catch (err) {
     clearRefreshCookie(req, res);
     clearCsrfCookie(req, res);
@@ -810,12 +788,12 @@ exports.forgotPassword = async (req, res) => {
     const admin = await Admin.findOne({ email: email.toLowerCase().trim() });
     if (!admin) {
       // Return a dummy token so response shape is identical — prevents account enumeration
-      const dummyToken = require("crypto").randomBytes(32).toString("hex");
+      const dummyToken = crypto.randomBytes(32).toString("hex");
       return res.json({ message: GENERIC, token: dummyToken });
     }
 
     const code = crypto.randomInt(100000, 999999).toString();
-    const token = require("crypto").randomBytes(32).toString("hex");
+    const token = crypto.randomBytes(32).toString("hex");
 
     // Store with 10-minute TTL
     await otpStore.set(

@@ -11,7 +11,6 @@ const refreshSessionSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    index: true,
   },
   refreshTokenHash: {
     type: String,
@@ -59,5 +58,6 @@ const refreshSessionSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 refreshSessionSchema.index({ admin: 1, revokedAt: 1 })
+refreshSessionSchema.index({ admin: 1, sessionId: 1, revokedAt: 1, expiresAt: 1 })
 
 module.exports = mongoose.model('RefreshSession', refreshSessionSchema)
