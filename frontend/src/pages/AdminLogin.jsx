@@ -72,7 +72,7 @@ function StrengthBar({ password }) {
     /[A-Z]/.test(password),
     /[a-z]/.test(password),
     /[0-9]/.test(password),
-    /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(password),
+    /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?`~]/.test(password),
   ]
   const score = checks.filter(Boolean).length
   const colors = ['#ff4444', '#ff8c42', '#ffd700', '#00aa44', '#00cc66']
@@ -121,7 +121,7 @@ export default function AdminLogin() {
   const [resetToken, setResetToken] = useState('')
   const [resetCode, setResetCode] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirm] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const toastStyle = {
     background: dark ? '#1e1e1e' : '#fff',
@@ -210,7 +210,7 @@ export default function AdminLogin() {
       // Clear sensitive state
       setResetCode('')
       setNewPassword('')
-      setConfirm('')
+      setConfirmPassword('')
       setResetToken('')
       setForgotEmail('')
       setStep('login')
@@ -395,7 +395,7 @@ export default function AdminLogin() {
                     id="confirm-password"
                     label="Confirm Password"
                     value={confirmPassword}
-                    onChange={e => setConfirm(e.target.value)}
+                    onChange={e => setConfirmPassword(e.target.value)}
                     placeholder="Re-enter new password"
                     autoComplete="new-password"
                   />

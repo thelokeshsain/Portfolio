@@ -10,12 +10,15 @@ import { useEffect, useState } from 'react'
 export default function NotFound() {
   const nav      = useNavigate()
   const location = useLocation()
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    return document.documentElement.classList.contains('dark') || mq.matches;
+  })
 
   // Detect dark mode independently (ThemeContext may not be available)
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    setDark(document.documentElement.classList.contains('dark') || mq.matches)
     const listener = (e) => setDark(e.matches)
     mq.addEventListener('change', listener)
     return () => mq.removeEventListener('change', listener)

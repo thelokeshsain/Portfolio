@@ -7,21 +7,19 @@ import { useState, useEffect } from 'react'
 export default function usePWA() {
   const [installPrompt, setInstallPrompt]   = useState(null)
   const [isInstallable, setIsInstallable]   = useState(false)
-  const [isInstalled, setIsInstalled]       = useState(false)
+  const [isInstalled, setIsInstalled]       = useState(() => {
+    return typeof window !== 'undefined' && (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true
+    )
+  })
   const [swRegistered, setSwRegistered]     = useState(false)
 
   useEffect(() => {
-    // Check if already installed (standalone mode)
-    const standalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      window.navigator.standalone === true
-
-    if (standalone) { setIsInstalled(true); return }
-
     // Register Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        .then(reg => {
+        .then(() => {
           setSwRegistered(true)
           // SW registered
         })

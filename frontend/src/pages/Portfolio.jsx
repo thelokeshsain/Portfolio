@@ -1,3 +1,14 @@
+/**
+ * Portfolio.jsx — Main page shell (redesigned)
+ *
+ * All existing hooks and data flow preserved:
+ * - useData() for section visibility
+ * - useTheme() for toast styling
+ * - usePWA() for install prompts
+ * - Toaster with custom styling
+ * - Section conditional rendering via data.sections
+ * - InstallBanner
+ */
 import { Toaster } from 'react-hot-toast'
 import Navbar from '../components/layout/Navbar'
 import ScrollProgress from '../components/ui/ScrollProgress'
@@ -13,6 +24,47 @@ import usePWA from '../hooks/usePWA'
 import { useData } from '../context/DataContext'
 import { useTheme } from '../context/ThemeContext'
 
+import useParallax from '../hooks/useParallax'
+
+function ParallaxBanner({ image, quote, author, height = 'clamp(200px, 30vh, 280px)' }) {
+  const imgRef = useParallax(-0.12)
+
+  return (
+    <div className="parallax-banner" style={{
+      position: 'relative',
+      height: height,
+      overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderTop: '1px solid var(--border)',
+      borderBottom: '1px solid var(--border)',
+      background: 'var(--bg-primary)',
+    }}>
+      {/* Background image layer */}
+      <img
+        ref={imgRef}
+        src={image}
+        alt="Parallax background element"
+        className="parallax-banner-img"
+      />
+      {/* Overlay: blending to dark background in dark mode, or solid light background watermark in light mode */}
+      <div className="parallax-banner-overlay" />
+      {/* Content */}
+      <div className="inner" style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 20px' }}>
+        <p className="parallax-banner-quote">
+          "{quote}"
+        </p>
+        {author && (
+          <p className="parallax-banner-author">
+            — {author}
+          </p>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Portfolio() {
   const { data, loading } = useData()
   const { dark } = useTheme()
@@ -22,13 +74,14 @@ export default function Portfolio() {
   if (loading) return <Loader />
 
   const toastStyle = {
-    background:  dark ? '#1e1e1e' : '#fff',
-    color:        dark ? '#e8e8e8' : '#000',
-    border:       '2px solid var(--ink)',
-    borderRadius: 'var(--r)',
-    fontFamily:   'var(--font)',
-    fontWeight:   600,
-    boxShadow:    'var(--sh)',
+    background: dark ? 'var(--bg-secondary)' : '#ffffff',
+    color: dark ? 'var(--text-primary)' : '#09090b',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-md)',
+    fontFamily: 'var(--font-body)',
+    fontWeight: 600,
+    boxShadow: 'var(--shadow-lg)',
+    fontSize: 14,
   }
 
   return (
@@ -37,31 +90,67 @@ export default function Portfolio() {
       <ScrollProgress />
       <Navbar isInstallable={isInstallable} onInstall={triggerInstall} />
 
-      <main style={{ paddingTop: 56 }}>
+      <main id="main-content" style={{ paddingTop: 64 }}>
         {s.hero       !== false && <Hero />}
         {s.about      !== false && <About />}
+        {s.about      !== false && s.experience !== false && (
+          <ParallaxBanner
+            image="/images/editor_mockup.webp"
+            quote="First, solve the problem. Then, write the code."
+            author="John Johnson"
+          />
+        )}
         {s.experience !== false && <Experience />}
         {s.projects   !== false && <Projects />}
         {s.skills     !== false && <Skills />}
+        {s.skills     !== false && s.contact !== false && (
+          <ParallaxBanner
+            image="/images/cloud_network_mesh.webp"
+            quote="Simplicity is the soul of efficiency."
+            author="Austin Freeman"
+          />
+        )}
         {s.contact    !== false && <Contact />}
       </main>
 
-      {/* PWA install banner — appears at bottom when installable */}
+      {/* PWA install banner */}
       <InstallBanner isInstallable={isInstallable} onInstall={triggerInstall} />
 
+      {/* Footer */}
       <footer style={{
-        padding: 'clamp(20px,3vw,28px) clamp(16px,5vw,60px)',
-        borderTop: '2px solid var(--ink)',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        flexWrap: 'wrap', gap: 12, background: 'var(--cream)',
+        padding: 'clamp(24px, 3vw, 32px) clamp(20px, 5vw, 60px)',
+        borderTop: '1px solid var(--border)',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 16,
+        background: 'var(--bg-secondary)',
       }}>
-        <div style={{ fontWeight: 900, fontSize: 'clamp(15px,2vw,18px)', letterSpacing: '-0.04em', color: 'var(--ink)' }}>
-          Lokesh<mark style={{ background: 'var(--yellow)', padding: '0 5px 1px', border: '2px solid var(--ink)', borderRadius: 4, marginLeft: 2, color: '#000' }}>Sain</mark>
+        <div style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 800,
+          fontSize: 'clamp(16px, 2vw, 18px)',
+          letterSpacing: '-0.03em',
+          color: 'var(--text-primary)',
+        }}>
+          Lokesh<span className="gradient-text">Sain</span>
         </div>
-        <div style={{ fontSize: 13, color: 'var(--muted)', fontFamily: 'var(--mono)' }}>
-          © {new Date().getFullYear()} · React + Vite + Tailwind v4
+        <div style={{
+          fontSize: 13,
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font-mono)',
+        }}>
+          © {new Date().getFullYear()} · Built with React + Vite
         </div>
-        <div style={{ fontSize: 12, color: 'var(--subtle)', fontFamily: 'var(--mono)', display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{
+          fontSize: 12,
+          color: 'var(--text-muted)',
+          fontFamily: 'var(--font-mono)',
+          display: 'flex',
+          gap: 12,
+          alignItems: 'center',
+        }}>
           <span>Software Engineer · Jaipur</span>
         </div>
       </footer>
