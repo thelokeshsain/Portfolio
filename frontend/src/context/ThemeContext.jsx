@@ -8,6 +8,7 @@ export function ThemeProvider({ children }) {
   })
   useEffect(() => {
     document.body.classList.toggle('dark', dark)
+    document.body.classList.toggle('light', !dark)
     localStorage.setItem('theme', dark ? 'dark' : 'light')
   }, [dark])
   return <Ctx.Provider value={{ dark, toggle: () => setDark(d => !d) }}>{children}</Ctx.Provider>

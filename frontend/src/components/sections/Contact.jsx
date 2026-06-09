@@ -1,7 +1,14 @@
 /**
- * Contact Section — Production-hardened
- * Fix QA-01: use publicClient (no auth token) for the public contact endpoint
- * Fix QA-05: rel="noopener noreferrer" on all external links
+ * Contact.jsx — Immersive contact section with gradient background
+ *
+ * Features:
+ * - Frosted glass form card
+ * - Hover-animated info cards
+ * - Gradient mesh background
+ * - Smooth submit feedback
+ *
+ * All preserved: form state, validation, publicClient.post('/contact'),
+ * toast notifications, contact info items.
  */
 import { useState } from 'react'
 import { publicClient } from '../../context/DataContext'
@@ -9,7 +16,7 @@ import toast from 'react-hot-toast'
 import { Send, Mail, MapPin } from 'lucide-react'
 import useScrollFade from '../../hooks/useScrollFade'
 import { useData } from '../../context/DataContext'
-import { useTheme } from '../../context/ThemeContext'
+import GlowCard from '../ui/GlowCard'
 
 const GHIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -24,8 +31,7 @@ const LIIcon = () => (
 
 export default function Contact() {
   const { data } = useData()
-  const { dark } = useTheme()
-  const ref = useScrollFade()
+  const ref = useScrollFade('fade-up')
   const h = data.hero || {}
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [loading, setLoading] = useState(false)
@@ -42,7 +48,6 @@ export default function Contact() {
 
     setLoading(true)
     try {
-      // Fix QA-01: publicClient has no auth header — correct for a public endpoint
       await publicClient.post('/contact', form)
       toast.success("Message sent! I'll get back to you soon ✓")
       setForm({ name: '', email: '', message: '' })
@@ -53,84 +58,141 @@ export default function Contact() {
   }
 
   const INFO = [
-    { Icon: Mail, label: 'Email', val: h.email, href: `mailto:${h.email}`, bg: 'var(--yellow)', color: '#000', iconBg: 'var(--yellow)' },
-    { Icon: MapPin, label: 'Location', val: h.location, href: null, bg: 'var(--cream)', color: 'var(--ink)', iconBg: 'var(--cream)' },
-    { Icon: GHIcon, label: 'GitHub', val: 'thelokeshsain', href: h.github, bg: 'var(--surface)', color: 'var(--ink)', iconBg: '#24292e' },
-    { Icon: LIIcon, label: 'LinkedIn', val: 'in/thelokeshsain', href: h.linkedin, bg: 'var(--surface)', color: 'var(--ink)', iconBg: '#0A66C2' },
+    { Icon: Mail, label: 'Email', val: h.email, href: `mailto:${h.email}`, color: '#818cf8', iconBg: 'rgba(99, 102, 241, 0.15)' },
+    { Icon: MapPin, label: 'Location', val: h.location, href: null, color: '#4ade80', iconBg: 'rgba(34, 197, 94, 0.15)' },
+    { Icon: GHIcon, label: 'GitHub', val: 'thelokeshsain', href: h.github, color: 'var(--text-primary)', iconBg: 'var(--surface-hover)' },
+    { Icon: LIIcon, label: 'LinkedIn', val: 'in/thelokeshsain', href: h.linkedin, color: '#60a5fa', iconBg: 'rgba(59, 130, 246, 0.15)' },
   ]
 
   return (
-    <section id="contact" className="section fade-up" ref={ref}>
+    <section id="contact" className="section" ref={ref} style={{ position: 'relative' }}>
+      {/* Immersive background */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at 30% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%), radial-gradient(ellipse at 70% 30%, rgba(139, 92, 246, 0.04) 0%, transparent 50%)',
+        pointerEvents: 'none',
+      }} />
+
       <div className="inner">
-        <div className="label">Contact</div>
-        <h2 className="h2" style={{ marginBottom: 14 }}>
-          Let's build something <span className="mark">great.</span>
+        <div className="section-label">Contact</div>
+        <h2 className="section-heading" style={{ marginBottom: 16 }}>
+          Let's build something <span className="gradient-text">great.</span>
         </h2>
-        <p style={{ fontSize: 'clamp(14px,1.8vw,17px)', color: 'var(--muted)', marginBottom: 48, maxWidth: 480, lineHeight: 1.75 }}>
+        <p style={{
+          fontSize: 'clamp(15px, 1.8vw, 17px)',
+          color: 'var(--text-secondary)',
+          marginBottom: 56,
+          maxWidth: 500,
+          lineHeight: 1.75,
+        }}>
           I'm always excited about new projects, collaborations, or just a friendly chat.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: 'clamp(20px,3vw,32px)' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+          gap: 'clamp(24px, 3vw, 36px)',
+        }}>
           {/* Contact Form */}
-          <div className="mac">
-            <div className="mac-bar">
-              <div className="mac-dot" style={{ background: '#ff5f57' }} />
-              <div className="mac-dot" style={{ background: '#febc2e' }} />
-              <div className="mac-dot" style={{ background: '#28c840' }} />
-              <span className="mac-bar-title">contact.send()</span>
-            </div>
-            <div style={{ padding: 'clamp(18px,3vw,28px)' }}>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--muted)', marginBottom: 7 }}>Name</label>
+          <GlowCard style={{ overflow: 'hidden' }}>
+            {/* Gradient accent */}
+            <div style={{ height: 2, background: 'var(--gradient-accent)' }} />
+
+            <div style={{ padding: 'clamp(24px, 3vw, 32px)' }}>
+              <div style={{ marginBottom: 20 }}>
+                <label htmlFor="contact-name" style={{
+                  display: 'block', fontSize: 12, fontWeight: 600,
+                  fontFamily: 'var(--font-mono)', textTransform: 'uppercase',
+                  letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 8,
+                }}>Name</label>
                 <input
+                  id="contact-name"
                   value={form.name} onChange={e => setField('name', e.target.value)}
                   className="field" placeholder="Your name" maxLength={100}
                 />
               </div>
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--muted)', marginBottom: 7 }}>Email</label>
+              <div style={{ marginBottom: 20 }}>
+                <label htmlFor="contact-email" style={{
+                  display: 'block', fontSize: 12, fontWeight: 600,
+                  fontFamily: 'var(--font-mono)', textTransform: 'uppercase',
+                  letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 8,
+                }}>Email</label>
                 <input
+                  id="contact-email"
                   type="email" value={form.email} onChange={e => setField('email', e.target.value)}
                   className="field" placeholder="your@email.com" maxLength={254}
                 />
               </div>
-              <div style={{ marginBottom: 20 }}>
-                <label style={{ display: 'block', fontSize: 11, fontWeight: 700, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--muted)', marginBottom: 7 }}>
+              <div style={{ marginBottom: 24 }}>
+                <label htmlFor="contact-message" style={{
+                  display: 'block', fontSize: 12, fontWeight: 600,
+                  fontFamily: 'var(--font-mono)', textTransform: 'uppercase',
+                  letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 8,
+                }}>
                   Message
-                  <span style={{ float: 'right', fontWeight: 400, letterSpacing: 0 }}>{form.message.length}/2000</span>
+                  <span style={{ float: 'right', fontWeight: 400, letterSpacing: 0, fontSize: 11 }}>{form.message.length}/2000</span>
                 </label>
                 <textarea
+                  id="contact-message"
                   rows={5} value={form.message} onChange={e => setField('message', e.target.value)}
-                  className="field" placeholder="Tell me about your project..." style={{ resize: 'vertical', lineHeight: 1.7 }}
+                  className="field" placeholder="Tell me about your project..."
+                  style={{ resize: 'vertical', lineHeight: 1.7 }}
                   maxLength={2000}
                 />
               </div>
-              <button onClick={submit} disabled={loading} className="btn btn-yellow" style={{ width: '100%', justifyContent: 'center', opacity: loading ? 0.7 : 1 }}>
+              <button
+                onClick={submit}
+                disabled={loading}
+                className="btn btn-primary"
+                style={{
+                  width: '100%',
+                  justifyContent: 'center',
+                  opacity: loading ? 0.7 : 1,
+                  padding: '14px 24px',
+                }}
+              >
                 <Send size={14} />{loading ? 'Sending…' : 'Send Message'}
               </button>
             </div>
-          </div>
+          </GlowCard>
 
           {/* Contact Info */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {INFO.map(({ Icon, label, val, href, bg, color, iconBg }) => {
-              // Icon text color: white for dark icon backgrounds (GitHub/LinkedIn), else same as row color
-              const iconColor = (iconBg === '#24292e' || iconBg === '#0A66C2') ? '#ffffff' : color
-              return (
-                <div key={label} style={{ border: '2px solid var(--ink)', borderRadius: 'var(--r)', padding: '16px 20px', background: bg, boxShadow: 'var(--sh)', display: 'flex', alignItems: 'center', gap: 14 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 8, border: '2px solid var(--ink)', background: iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: iconColor }}>
-                    <Icon />
-                  </div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--muted)', marginBottom: 2 }}>{label}</div>
-                    {href
-                      ? <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color, wordBreak: 'break-all', textDecoration: 'none' }}>{val}</a>
-                      : <span style={{ fontSize: 14, fontWeight: 600, color }}>{val}</span>
-                    }
-                  </div>
+            {INFO.map((item) => (
+              <GlowCard key={item.label} style={{
+                padding: '18px 22px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
+              }}>
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border)',
+                  background: item.iconBg,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  color: item.color,
+                }}>
+                  <item.Icon />
                 </div>
-              )
-            })}
+                <div style={{ minWidth: 0 }}>
+                  <div style={{
+                    fontSize: 11, fontWeight: 600, fontFamily: 'var(--font-mono)',
+                    textTransform: 'uppercase', letterSpacing: '.08em',
+                    color: 'var(--text-muted)', marginBottom: 3,
+                  }}>{item.label}</div>
+                  {item.href
+                    ? <a href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', wordBreak: 'break-all', textDecoration: 'none', transition: 'color 0.2s' }}>{item.val}</a>
+                    : <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>{item.val}</span>
+                  }
+                </div>
+              </GlowCard>
+            ))}
           </div>
         </div>
       </div>
