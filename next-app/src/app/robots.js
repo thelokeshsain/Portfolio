@@ -1,0 +1,12 @@
+export default function robots() {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://lokeshsain.vercel.app';
+
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: ['/admin', '/api/admin/'],
+    },
+    sitemap: `${baseUrl}/sitemap.xml`,
+  }
+}
