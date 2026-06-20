@@ -23,12 +23,16 @@ function getTransporter() {
 
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || "587", 10),
-    secure: parseInt(process.env.SMTP_PORT || "587", 10) === 465, // true for 465, false for 587
+    port: parseInt(process.env.SMTP_PORT || "465", 10),
+    secure: parseInt(process.env.SMTP_PORT || "465", 10) === 465,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
+    pool: false, // Don't reuse connections — serverless functions are short-lived
+    connectionTimeout: 10000,  // 10s to establish TCP connection
+    greetingTimeout: 10000,    // 10s for SMTP greeting
+    socketTimeout: 15000,      // 15s for socket inactivity
   });
 
   return transporter;
