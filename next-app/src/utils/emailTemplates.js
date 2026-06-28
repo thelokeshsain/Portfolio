@@ -200,7 +200,7 @@ exports.confirmationEmail = (name) =>
     bodyContent: `
     <h1 style="font-size:26px;font-weight:900;color:#000000;margin:0 0 6px;letter-spacing:-0.04em;">Thank You!</h1>
     <p style="font-size:15px;color:#555555;margin:0 0 28px;line-height:1.7;">
-      You have received a new message from your portfolio
+      Your message has been successfully delivered.
     </p>
 
     <p style="font-size:19px;font-weight:900;color:#000000;margin:0 0 8px;letter-spacing:-0.03em;">Hi ${esc(name)}!</p>
