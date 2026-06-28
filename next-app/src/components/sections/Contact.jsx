@@ -11,7 +11,6 @@
  * toast notifications, contact info items.
  */
 import { useState } from 'react'
-import { publicClient } from '../../context/DataContext'
 import toast from 'react-hot-toast'
 import { Send, Mail, MapPin } from 'lucide-react'
 import useScrollFade from '../../hooks/useScrollFade'
@@ -48,12 +47,17 @@ export default function Contact() {
 
     setLoading(true)
     try {
-      await publicClient.post('/contact', form)
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.message || 'Send failed')
       toast.success("Message sent! I'll get back to you soon ✓")
       setForm({ name: '', email: '', message: '' })
     } catch (err) {
-      const msg = err.response?.data?.message || 'Send failed. Please email directly.'
-      toast.error(msg)
+      toast.error(err.message || 'Send failed. Please email directly.')
     } finally { setLoading(false) }
   }
 

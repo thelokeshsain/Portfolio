@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import connectDB from "@/lib/db";
 import Portfolio from "@/models/Portfolio";
 import toPublicPortfolio from "@/utils/publicPortfolio";
@@ -31,20 +30,8 @@ export async function GET(request) {
       cache.set("portfolio", portfolio, 300);
     }
 
-    const hash = crypto
-      .createHash("sha1")
-      .update(JSON.stringify(portfolio))
-      .digest("base64");
-    const etag = `W/"${hash}"`;
-
-    if (request.headers.get("if-none-match") === etag) {
-      return new NextResponse(null, { status: 304 });
-    }
-
     const response = NextResponse.json(portfolio);
     response.headers.set("Cache-Control", PUBLIC_CACHE_CONTROL);
-    response.headers.set("ETag", etag);
-
     return response;
   } catch (err) {
     console.error("[Portfolio]", err.message);

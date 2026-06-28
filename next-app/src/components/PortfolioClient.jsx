@@ -52,6 +52,8 @@ function ParallaxBanner({ image, quote, author, height = 'clamp(200px, 30vh, 280
         className="parallax-banner-img"
         fill
         sizes="100vw"
+        quality={50}
+        loading="lazy"
         style={{ objectFit: 'cover' }}
       />
       {/* Overlay: blending to dark background in dark mode, or solid light background watermark in light mode */}

@@ -12,7 +12,7 @@ export async function generateMetadata() {
   let data = null;
   try {
     await connectDB();
-    const raw = await Portfolio.findOne({}).lean();
+    const raw = await Portfolio.findOne({}).select("-__v").lean();
     data = toPublicPortfolio(raw);
   } catch (err) {
     console.warn("DB failed in generateMetadata:", err.message);
@@ -57,7 +57,7 @@ export default async function Page() {
   let serverData = null;
   try {
     await connectDB();
-    const raw = await Portfolio.findOne({}).lean();
+    const raw = await Portfolio.findOne({}).select("-__v").lean();
     serverData = toPublicPortfolio(raw);
   } catch (err) {
     console.warn("DB failed in Page:", err.message);
