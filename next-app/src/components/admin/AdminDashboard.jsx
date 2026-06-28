@@ -233,13 +233,13 @@ export default function AdminDashboard() {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div
-          style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex" }}
+          style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", background: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(4px)" }}
           onClick={() => setSidebar(false)}
         >
           <aside
             style={{
               width: 240,
-              background: "var(--surface)",
+              background: "var(--paper)",
               borderRight: "2px solid var(--ink)",
               display: "flex",
               flexDirection: "column",
