@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Portfolio from "@/models/Portfolio";
 import toPublicPortfolio from "@/utils/publicPortfolio";
 import { DataProvider } from "@/context/DataContext";
+import AdminAuthWrapper from "@/components/admin/AdminAuthWrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,9 @@ export default async function AdminLayout({ children }) {
 
   return (
     <DataProvider serverData={serverData}>
-      {children}
+      <AdminAuthWrapper>
+        {children}
+      </AdminAuthWrapper>
     </DataProvider>
   );
 }

@@ -1,13 +1,11 @@
 "use client";
 
 /**
- * DataContext — Production-hardened
- * Fix M-01: updateSection uses scoped apiClient, not raw axios
- * Fix QA-01 separation: public data uses publicClient (no auth header)
+ * DataContext — Performance-optimized
+ * - Uses native fetch instead of axios for public requests
+ * - updateSection lazily imports apiClient only when called (admin only)
  */
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { apiClient } from "./AuthContext";
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { PORTFOLIO } from "../lib/data";
 
 const Ctx = createContext();
@@ -15,13 +13,6 @@ const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 const CACHE_KEY = "portfolio-cache-v1";
 const CACHE_TS_KEY = "portfolio-cache-v1-ts";
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
-const REQUEST_TIMEOUT_MS = 8000;
-
-// Public client — no auth header, separate from admin apiClient
-const publicClient = axios.create({
-  baseURL: API,
-  timeout: REQUEST_TIMEOUT_MS,
-});
 
 function normalize(raw) {
   if (!raw) return PORTFOLIO;
@@ -81,7 +72,7 @@ function writeCachedPortfolio(data) {
     window.localStorage.setItem(CACHE_KEY, JSON.stringify(data));
     window.localStorage.setItem(CACHE_TS_KEY, String(Date.now()));
   } catch {
-    // Storage can fail in private mode or when large image payloads exceed quota.
+    // Storage can fail in private mode or when quota exceeded
   }
 }
 
@@ -95,16 +86,17 @@ export function DataProvider({ children, serverData }) {
   const [loading] = useState(false);
 
   useEffect(() => {
-    if (serverData) return; // If we have server data, we don't need to fetch
+    if (serverData) return; // Server data available — skip client fetch
 
-    let cancelled = false;
     const controller = new AbortController();
 
-    publicClient
-      .get("/portfolio", { signal: controller.signal })
+    fetch(`${API}/portfolio`, { signal: controller.signal })
       .then((r) => {
-        if (cancelled) return;
-        const normalized = normalize(r.data);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((json) => {
+        const normalized = normalize(json);
         setData(normalized);
         writeCachedPortfolio(normalized);
       })
@@ -112,28 +104,25 @@ export function DataProvider({ children, serverData }) {
         /* API unavailable — static fallback used */
       });
 
-    return () => {
-      cancelled = true;
-      controller.abort();
-    };
+    return () => controller.abort();
   }, [serverData]);
 
-  // Fix M-01: use scoped apiClient (has auth token) — not raw axios
-  const updateSection = async (section, payload) => {
+  // Lazy-load apiClient only when admin calls updateSection
+  const updateSection = useCallback(async (section, payload) => {
+    const { apiClient } = await import("../context/AuthContext");
     const r = await apiClient.put(`/admin/portfolio/${section}`, payload);
     setData((prev) => {
       const next = normalize({ ...prev, [section]: r.data[section] });
       writeCachedPortfolio(next);
       return next;
     });
-  };
+  }, []);
 
   return (
-    <Ctx.Provider value={{ data, loading, updateSection, publicClient }}>
+    <Ctx.Provider value={{ data, loading, updateSection }}>
       {children}
     </Ctx.Provider>
   );
 }
 
 export const useData = () => useContext(Ctx);
-export { publicClient };

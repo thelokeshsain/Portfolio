@@ -1,4 +1,4 @@
-@import "tailwindcss";
+
 
 /* ═══════════════════════════════════════════════════════════
    DESIGN SYSTEM — "Luminous Void"
@@ -456,6 +456,8 @@ select {
   position: relative;
   padding: clamp(80px, 12vw, 140px) clamp(20px, 5vw, 60px);
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
 }
 
 .section-border {
