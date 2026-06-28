@@ -29,23 +29,26 @@ export async function POST(request) {
 
     await Contact.create({ name, email, message, ip, userAgent, browser, device });
 
-    sendMail({
-      to: email,
-      subject: "Got your message - Lokesh Sain",
-      html: confirmationEmail(name),
-    }).catch((e) => console.error("[Contact] Confirmation email failed:", e.message));
-
     const dateStr = new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
       dateStyle: "full",
       timeStyle: "medium",
     });
-    
-    sendMail({
-      to: process.env.OWNER_EMAIL,
-      subject: `New message from ${name}`,
-      html: notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr }),
-    }).catch((e) => console.error("[Contact] Admin notification failed:", e.message));
+
+    // IMPORTANT: Must await emails on Vercel — serverless kills the process after response
+    await Promise.allSettled([
+      sendMail({
+        to: email,
+        subject: "Got your message - Lokesh Sain",
+        html: confirmationEmail(name),
+      }).catch((e) => console.error("[Contact] Confirmation email failed:", e.message)),
+
+      sendMail({
+        to: process.env.OWNER_EMAIL,
+        subject: `New message from ${name}`,
+        html: notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr }),
+      }).catch((e) => console.error("[Contact] Admin notification failed:", e.message)),
+    ]);
 
     return NextResponse.json({ message: "Message sent successfully" }, { status: 201 });
   } catch (err) {
