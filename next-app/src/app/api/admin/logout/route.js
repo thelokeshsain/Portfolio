@@ -63,12 +63,15 @@ export const POST = withAuth(async (request) => {
   request.authSession.revokedReason = "logout";
   await request.authSession.save();
 
-  const meta = buildRequestMeta(request);
-  sendMail({
-    to: request.admin?.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-    subject: "🚪 Admin Logout — Lokesh Portfolio",
-    html: logoutAlertEmail(meta),
-  }).catch((e) => console.error("[Logout alert]", e.message));
+  try {
+    await sendMail({
+      to: request.admin?.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
+      subject: "🚪 Admin Logout — Lokesh Portfolio",
+      html: logoutAlertEmail(meta),
+    });
+  } catch (e) {
+    console.error("[Logout alert]", e.message);
+  }
 
   return response;
 });
