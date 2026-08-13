@@ -156,12 +156,15 @@ export async function POST(request) {
 
     const { accessToken, refreshToken, csrfToken } = await issueSession(request, admin);
 
-    const meta = buildRequestMeta(request);
-    sendMail({
-      to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-      subject: "⚡ Admin Login Detected — Lokesh Portfolio",
-      html: loginAlertEmail(meta),
-    }).catch((e) => console.error("[Login alert]", e.message));
+    try {
+      await sendMail({
+        to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
+        subject: "⚡ Admin Login Detected — Lokesh Portfolio",
+        html: loginAlertEmail(meta),
+      });
+    } catch (e) {
+      console.error("[Login alert]", e.message);
+    }
 
     const response = NextResponse.json({
       token: accessToken,
