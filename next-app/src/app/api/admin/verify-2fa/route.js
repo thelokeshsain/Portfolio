@@ -164,8 +164,8 @@ export async function POST(request) {
 
     const meta = buildRequestMeta(request);
     sendMail({
-      to: admin.email,
-      subject: "🔐 Admin Login Detected — Lokesh Portfolio",
+      to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
+      subject: "⚡ Admin Login Detected — Lokesh Portfolio",
       html: loginAlertEmail(meta),
     }).catch((e) => console.error("[Login alert 2FA]", e.message));
 

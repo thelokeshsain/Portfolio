@@ -110,7 +110,7 @@ export async function POST(request) {
           expiresAt: new Date(Date.now() + REFRESH_TOKEN_MS),
         },
       },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!updatedSession) {
