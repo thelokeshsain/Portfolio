@@ -7,26 +7,35 @@ import otpStore from "@/utils/otpStore";
 export async function POST(request) {
   try {
     await connectDB();
-    const { email, otp, newPassword } = await request.json().catch(() => ({}));
+    const { email, otp, code, newPassword, token } = await request.json().catch(() => ({}));
 
-    if (!otp || !newPassword) {
-      return NextResponse.json({ message: "OTP code and new password are required" }, { status: 400 });
+    const inputCode = String(code || otp || "").replace(/\s/g, "");
+    if (!inputCode || inputCode.length < 6 || !newPassword) {
+      return NextResponse.json({ message: "6-digit OTP code and new password are required" }, { status: 400 });
     }
 
     if (newPassword.length < 12) {
       return NextResponse.json({ message: "Password must be at least 12 characters" }, { status: 400 });
     }
 
-    const targetEmail = email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com";
-    const admin = await Admin.findOne({ email: targetEmail.toLowerCase().trim() });
+    let admin;
+    if (token && token !== "sent") {
+      admin = await Admin.findById(token);
+    }
+    if (!admin && email) {
+      admin = await Admin.findOne({ email: email.toLowerCase().trim() });
+    }
+    if (!admin) {
+      admin = await Admin.findOne({ email: process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com" });
+    }
 
     if (!admin) {
-      return NextResponse.json({ message: "Invalid request or expired OTP" }, { status: 400 });
+      return NextResponse.json({ message: "Invalid request or admin user not found" }, { status: 400 });
     }
 
     const storedOtpData = await otpStore.get(`reset_${admin._id}`);
 
-    if (!storedOtpData || storedOtpData.code !== String(otp).trim()) {
+    if (!storedOtpData || String(storedOtpData.code).trim() !== inputCode) {
       return NextResponse.json({ message: "Invalid or expired OTP code" }, { status: 400 });
     }
 
