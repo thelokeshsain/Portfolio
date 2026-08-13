@@ -1,17 +1,16 @@
 /**
- * Mailer config — Supports Resend HTTP API and Nodemailer SMTP (Gmail, Outlook, etc.)
+ * Mailer config — Supports Resend HTTP API (recommended for Vercel & Advanced Protection) and Nodemailer SMTP.
  *
  * Env options:
- *   Option A (Recommended for Vercel):
+ *   Option A (Recommended for Vercel & Advanced Protection):
  *     RESEND_API_KEY  — e.g. "re_123456789..."
- *     FROM_EMAIL      — e.g. "Lokesh Sain <onboarding@resend.dev>" or "contact@thelokeshsain.dev"
+ *     OWNER_EMAIL     — e.g. "iamlokeshsain@gmail.com"
  *
- *   Option B (Gmail / Google Workspace with 2FA / Advanced Protection):
+ *   Option B (SMTP fallback):
  *     SMTP_HOST       — e.g. "smtp.gmail.com"
- *     SMTP_PORT       — e.g. "465" or "587"
+ *     SMTP_PORT       — e.g. "465"
  *     SMTP_USER       — e.g. "iamlokeshsain@gmail.com"
- *     SMTP_PASS       — 16-character App Password from https://myaccount.google.com/apppasswords
- *     FROM_EMAIL      — e.g. "iamlokeshsain@gmail.com"
+ *     SMTP_PASS       — 16-character App Password
  */
 const nodemailer = require("nodemailer");
 
@@ -32,7 +31,7 @@ function getTransporter() {
     secure: port === 465,
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS.replace(/\s+/g, ""), // strip any spaces from App Password
+      pass: process.env.SMTP_PASS.replace(/\s+/g, ""),
     },
     pool: false,
     connectionTimeout: 10000,
@@ -48,7 +47,11 @@ async function sendViaResend({ to, subject, html }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return null;
 
-  const from = process.env.FROM_EMAIL || "Lokesh Sain Portfolio <onboarding@resend.dev>";
+  // IMPORTANT: For unverified domain addresses (e.g. gmail.com), Resend requires sending from onboarding@resend.dev
+  let from = process.env.RESEND_FROM_EMAIL || "Lokesh Sain Portfolio <onboarding@resend.dev>";
+  if (from.includes("@gmail.com")) {
+    from = "Lokesh Sain Portfolio <onboarding@resend.dev>";
+  }
 
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -73,16 +76,19 @@ async function sendViaResend({ to, subject, html }) {
 }
 
 async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
-  // Option A: Try Resend API first if configured
+  // Option 1: Use Resend API if RESEND_API_KEY is configured
   if (process.env.RESEND_API_KEY) {
     try {
-      return await sendViaResend({ to, subject, html });
+      const resendResult = await sendViaResend({ to, subject, html });
+      if (resendResult) return resendResult;
     } catch (err) {
       console.error(`[Mailer] Resend API send failed: ${err.message}`);
+      // Do not fall back to SMTP if SMTP is unconfigured or failing BadCredentials
     }
+    return null;
   }
 
-  // Option B: Try SMTP (Nodemailer)
+  // Option 2: Fall back to SMTP only if Resend API key is not provided
   const transport = getTransporter();
   if (!transport) {
     console.warn("[Mailer] Neither Resend nor SMTP is configured — skipping email send (message saved in DB).");
@@ -102,7 +108,7 @@ async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
   } catch (err) {
     console.error(`[Mailer] SMTP send failed (attempt ${attempt}/3): ${err.message}`);
     if (attempt < 3) {
-      const delay = Math.pow(2, attempt) * 1000; // 2s, 4s
+      const delay = Math.pow(2, attempt) * 1000;
       await new Promise((resolve) => setTimeout(resolve, delay));
       return sendMailWithRetry({ to, subject, html }, attempt + 1);
     }
@@ -115,7 +121,6 @@ module.exports = async function sendMail({ to, subject, html }) {
     return await sendMailWithRetry({ to, subject, html });
   } catch (err) {
     console.error("[Mailer] Permanent failure sending email:", err.message);
-    // Don't crash request — return null so contact form creation still succeeds in DB
     return null;
   }
 };
