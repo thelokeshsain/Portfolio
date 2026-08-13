@@ -10,7 +10,11 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     const s = localStorage.getItem('theme');
-    setDark(s ? s === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (s) {
+      setDark(s === 'dark');
+    } else {
+      setDark(true); // Default to sleek Black & Orange Dark mode
+    }
     setMounted(true);
   }, []);
 

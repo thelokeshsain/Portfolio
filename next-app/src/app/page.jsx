@@ -1,22 +1,42 @@
+import { cache } from "react";
 import connectDB from "@/lib/db";
 import Portfolio from "@/models/Portfolio";
 import toPublicPortfolio from "@/utils/publicPortfolio";
 import PortfolioClient from "@/components/PortfolioClient";
 import { DataProvider } from "@/context/DataContext";
 
-export const revalidate = 60; // ISR: revalidate every 60 seconds
+export const revalidate = 3600; // ISR: revalidate pre-rendered HTML every 1 hour for instant initial page loads
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://lokeshsain.vercel.app';
 
-export async function generateMetadata() {
-  let data = null;
+// Cached MongoDB fetcher shared across generateMetadata and Page execution
+const getPortfolioData = cache(async () => {
   try {
     await connectDB();
     const raw = await Portfolio.findOne({}).select("-__v").lean();
-    data = toPublicPortfolio(raw);
+    return toPublicPortfolio(raw);
   } catch (err) {
-    console.warn("DB failed in generateMetadata:", err.message);
+    console.warn("DB fetch failed in getPortfolioData:", err.message);
+    return null;
   }
+});
+
+// Helper to guarantee 100% valid absolute URLs for Google Search Console & Social Crawlers
+function toAbsoluteUrl(urlStr) {
+  if (!urlStr || typeof urlStr !== 'string') {
+    return `${BASE_URL}/images/social_preview.webp`;
+  }
+  if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) {
+    return urlStr;
+  }
+  if (urlStr.startsWith('/')) {
+    return `${BASE_URL}${urlStr}`;
+  }
+  return `${BASE_URL}/${urlStr}`;
+}
+
+export async function generateMetadata() {
+  const data = await getPortfolioData();
 
   const name = data?.hero?.name || "Lokesh Sain";
   const role = data?.hero?.role || data?.hero?.title || "Software Engineer";
@@ -24,6 +44,7 @@ export async function generateMetadata() {
 
   const title = `${name} — ${role} | React & MERN Stack Developer in Jaipur`;
   const description = `${desc} Currently working at 3Handshake Techsoft. View projects, skills, and experience.`;
+  const socialImgUrl = toAbsoluteUrl('/images/social_preview.webp');
 
   return {
     title,
@@ -36,7 +57,7 @@ export async function generateMetadata() {
       siteName: `${name} — Portfolio`,
       images: [
         {
-          url: "/images/social_preview.webp",
+          url: socialImgUrl,
           width: 1200,
           height: 630,
           alt: `${name} — ${role}`,
@@ -48,28 +69,21 @@ export async function generateMetadata() {
       card: "summary_large_image",
       title,
       description,
-      images: ["/images/social_preview.webp"],
+      images: [socialImgUrl],
     },
   };
 }
 
 export default async function Page() {
-  let serverData = null;
-  try {
-    await connectDB();
-    const raw = await Portfolio.findOne({}).select("-__v").lean();
-    serverData = toPublicPortfolio(raw);
-  } catch (err) {
-    console.warn("DB failed in Page:", err.message);
-  }
+  const serverData = await getPortfolioData();
 
   const h = serverData?.hero || {};
-  const exp = serverData?.experience || [];
-  const projects = serverData?.projects || [];
   const skills = serverData?.skills || {};
   const allSkills = Object.values(skills).flat();
 
-  // Rich structured data for Google Knowledge Panel & AI search engines
+  const personImageUrl = toAbsoluteUrl(h.image);
+
+  // Rich structured data for Google Knowledge Panel & Search Console validation
   const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -79,8 +93,8 @@ export default async function Page() {
     familyName: "Sain",
     jobTitle: h.role || "Software Engineer",
     url: BASE_URL,
-    image: h.image || `${BASE_URL}/images/social_preview.webp`,
-    email: h.email,
+    image: personImageUrl,
+    email: h.email || undefined,
     sameAs: [
       h.linkedin,
       h.github,
@@ -89,11 +103,11 @@ export default async function Page() {
     knowsAbout: allSkills.length > 0 ? allSkills : ["React.js", "Node.js", "MongoDB", "Next.js", "JavaScript", "Express.js", "MERN Stack"],
     alumniOf: [
       {
-        "@type": "EducationOrganization",
+        "@type": "EducationalOrganization",
         name: "DY Patil Institute of MCA & Management",
       },
       {
-        "@type": "EducationOrganization",
+        "@type": "EducationalOrganization",
         name: "S.S. Jain Subodh PG College",
       },
     ],
@@ -125,15 +139,20 @@ export default async function Page() {
     author: { "@id": `${BASE_URL}/#person` },
   };
 
-  // Professional profile / resume schema
+  // Professional profile / resume schema — Valid ISO 8601 datetimes for Search Console
   const profileSchema = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
     "@id": `${BASE_URL}/#profilepage`,
     url: BASE_URL,
-    mainEntity: { "@id": `${BASE_URL}/#person` },
-    dateCreated: "2024-01-01",
-    dateModified: new Date().toISOString().split("T")[0],
+    mainEntity: {
+      "@type": "Person",
+      "@id": `${BASE_URL}/#person`,
+      name: h.name || "Lokesh Sain",
+      image: personImageUrl,
+    },
+    dateCreated: "2024-01-01T00:00:00Z",
+    dateModified: new Date().toISOString(),
   };
 
   return (

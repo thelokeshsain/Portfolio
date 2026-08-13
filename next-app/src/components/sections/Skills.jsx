@@ -3,10 +3,10 @@ import { useData } from '../../context/DataContext'
 import GlowCard from '../ui/GlowCard'
 
 const CAT = {
-  Frontend: { icon: '⬡', gradient: 'linear-gradient(135deg, #6366f1, #818cf8)', color: '#818cf8' },
-  Backend:  { icon: '◈', gradient: 'linear-gradient(135deg, #22c55e, #4ade80)', color: '#4ade80' },
-  Database: { icon: '◉', gradient: 'linear-gradient(135deg, #ec4899, #f472b6)', color: '#f472b6' },
-  Tools:    { icon: '⊞', gradient: 'linear-gradient(135deg, #3b82f6, #60a5fa)', color: '#60a5fa' },
+  Frontend: { icon: '⬡', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)', color: '#ff6b00' },
+  Backend:  { icon: '◈', gradient: 'linear-gradient(135deg, #ff7d1a, #ffaa00)', color: '#ff8800' },
+  Database: { icon: '◉', gradient: 'linear-gradient(135deg, #ff9900, #ffc800)', color: '#ff9e00' },
+  Tools:    { icon: '⊞', gradient: 'linear-gradient(135deg, #e05500, #ff7d1a)', color: '#e05500' },
 }
 
 const STACK_TAGS = ['tag-y', 'tag-g', 'tag-pk', 'tag-bl', 'tag-pu', 'tag-or', 'tag-cr']

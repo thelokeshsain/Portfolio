@@ -3,10 +3,17 @@
  * All modal logic preserved: scroll lock, achievement rendering, external links.
  */
 import { X, ExternalLink } from 'lucide-react'
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState } from 'react'
+import { createPortal } from 'react-dom'
 import GlowCard from './GlowCard'
 
 export default function CertificationsModal({ isOpen, onClose, achievements }) {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   // Prevent scrolling when modal is open
   useEffect(() => {
     if (isOpen) {
@@ -29,15 +36,20 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
     }
   }, [isOpen, handleKeyDown])
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
-  return (
+  const modalContent = (
     <div
       style={{
         position: 'fixed',
-        inset: 0,
-        zIndex: 9999,
-        background: 'rgba(0, 0, 0, 0.6)',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
+        background: 'rgba(0, 0, 0, 0.65)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         display: 'flex',
@@ -61,7 +73,7 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
           maxHeight: '85vh',
           borderRadius: 'var(--radius-xl)',
           border: '1px solid var(--border)',
-          boxShadow: 'var(--shadow-xl)',
+          boxShadow: 'var(--shadow-3d-lg), 0 0 60px rgba(0, 0, 0, 0.3)',
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
@@ -94,7 +106,7 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
           <button
             onClick={onClose}
             style={{
-              background: 'var(--surface)',
+              background: 'var(--surface-hover)',
               border: '1px solid var(--border)',
               borderRadius: '50%',
               width: 36,
@@ -103,9 +115,10 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              color: 'var(--text-secondary)',
+              color: 'var(--text-primary)',
               transition: 'all 0.2s',
               padding: 0,
+              boxShadow: 'var(--shadow-3d-sm)',
             }}
             aria-label="Close modal"
           >
@@ -149,6 +162,7 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
                     justifyContent: 'center',
                     flexShrink: 0,
                     fontSize: 18,
+                    boxShadow: 'var(--depth-2), inset -1px -1px 2px rgba(0, 0, 0, 0.15), inset 1px 1px 2px rgba(255, 255, 255, 0.1)',
                   }}>
                     {item.icon || '🏆'}
                   </div>
@@ -199,4 +213,6 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
       </div>
     </div>
   )
+
+  return createPortal(modalContent, document.body)
 }

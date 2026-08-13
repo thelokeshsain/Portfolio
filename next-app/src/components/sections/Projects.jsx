@@ -11,14 +11,14 @@ const GHIcon = ({ size = 14 }) => (
 )
 
 const accentMap = {
-  'var(--yellow)': { bg: 'rgba(99, 102, 241, 0.06)', border: 'rgba(99, 102, 241, 0.15)', gradient: 'linear-gradient(135deg, #6366f1, #818cf8)' },
-  'var(--green)': { bg: 'rgba(34, 197, 94, 0.06)', border: 'rgba(34, 197, 94, 0.15)', gradient: 'linear-gradient(135deg, #22c55e, #4ade80)' },
-  'var(--pink)': { bg: 'rgba(236, 72, 153, 0.06)', border: 'rgba(236, 72, 153, 0.15)', gradient: 'linear-gradient(135deg, #ec4899, #f472b6)' },
-  'var(--blue)': { bg: 'rgba(59, 130, 246, 0.06)', border: 'rgba(59, 130, 246, 0.15)', gradient: 'linear-gradient(135deg, #3b82f6, #60a5fa)' },
-  'var(--purple)': { bg: 'rgba(139, 92, 246, 0.06)', border: 'rgba(139, 92, 246, 0.15)', gradient: 'linear-gradient(135deg, #8b5cf6, #a78bfa)' },
+  'var(--yellow)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)' },
+  'var(--green)': { bg: 'var(--bg-secondary)', border: 'rgba(52, 199, 89, 0.35)', gradient: 'linear-gradient(135deg, #34c759, #30d158)' },
+  'var(--pink)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff6b00, #ff8800)' },
+  'var(--blue)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 158, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff8800, #ffaa00)' },
+  'var(--purple)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)' },
 }
 
-const fallbackAccent = { bg: 'rgba(99, 102, 241, 0.06)', border: 'rgba(99, 102, 241, 0.15)', gradient: 'var(--gradient-accent)' }
+const fallbackAccent = { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'var(--gradient-accent)' }
 
 const cardVariants = {
   hidden: { opacity: 0, y: 35 },

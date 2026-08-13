@@ -87,7 +87,7 @@ export default function Loader({ message = 'Initializing...' }) {
         background: termBg,
         border: `1px solid ${border}`,
         borderRadius: 16,
-        boxShadow: shadow,
+        boxShadow: `${shadow}, inset 0 1px 0 rgba(255, 255, 255, ${dark ? '0.05' : '0.3'})`,
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
@@ -101,9 +101,9 @@ export default function Loader({ message = 'Initializing...' }) {
           alignItems: 'center',
           gap: 8,
         }}>
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57', boxShadow: 'inset -1px -1px 2px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.25), 0 1px 3px rgba(0,0,0,0.2)' }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e', boxShadow: 'inset -1px -1px 2px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.25), 0 1px 3px rgba(0,0,0,0.2)' }} />
+          <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840', boxShadow: 'inset -1px -1px 2px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.25), 0 1px 3px rgba(0,0,0,0.2)' }} />
           <span style={{
             flex: 1,
             textAlign: 'center',

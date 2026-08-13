@@ -18,8 +18,8 @@ const TERMINAL_FIELDS = [
 ]
 
 const eduColors = [
-  { bg: 'rgba(99, 102, 241, 0.08)', border: 'rgba(99, 102, 241, 0.15)', accent: '#818cf8' },
-  { bg: 'rgba(236, 72, 153, 0.08)', border: 'rgba(236, 72, 153, 0.15)', accent: '#f472b6' },
+  { bg: 'rgba(255, 107, 0, 0.12)', border: 'rgba(255, 107, 0, 0.3)', accent: '#ff8800' },
+  { bg: 'rgba(255, 158, 0, 0.12)', border: 'rgba(255, 158, 0, 0.3)', accent: '#ff9e00' },
 ]
 
 export default function About() {
@@ -184,6 +184,7 @@ export default function About() {
 
             <motion.div 
               className="terminal"
+              style={{ boxShadow: 'var(--shadow-3d-lg)' }}
               initial={{ opacity: 0, scale: 0.97 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.25 }}

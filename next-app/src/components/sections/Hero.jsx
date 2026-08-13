@@ -35,10 +35,10 @@ export default function Hero() {
   const yOrb3 = useSpring(useTransform(scrollY, [0, 1000], [0, -40]), { stiffness: 80, damping: 25 })
 
   const statColors = [
-    { bg: 'rgba(99, 102, 241, 0.08)', border: 'rgba(99, 102, 241, 0.15)', color: '#818cf8' },
-    { bg: 'rgba(236, 72, 153, 0.08)', border: 'rgba(236, 72, 153, 0.15)', color: '#f472b6' },
-    { bg: 'rgba(34, 197, 94, 0.08)', border: 'rgba(34, 197, 94, 0.15)', color: '#4ade80' },
-    { bg: 'rgba(59, 130, 246, 0.08)', border: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa' },
+    { bg: 'rgba(255, 107, 0, 0.12)', border: 'rgba(255, 107, 0, 0.35)', color: '#ff8800' },
+    { bg: 'rgba(255, 158, 0, 0.12)', border: 'rgba(255, 158, 0, 0.35)', color: '#ff9e00' },
+    { bg: 'rgba(255, 85, 0, 0.12)', border: 'rgba(255, 85, 0, 0.35)', color: '#ff5500' },
+    { bg: 'rgba(255, 170, 0, 0.12)', border: 'rgba(255, 170, 0, 0.35)', color: '#ffaa00' },
   ]
 
   // Container variants for staggered entrance animations
@@ -292,7 +292,7 @@ function ProfileCard({ h, stats, statColors }) {
       </motion.div>
 
       {/* Terminal-style profile card */}
-      <div className="terminal" style={{ transition: 'all 0.4s var(--ease-out-quart)', marginBottom: 12 }}>
+      <div className="terminal" style={{ transition: 'all 0.4s var(--ease-out-quart)', marginBottom: 12, boxShadow: 'var(--shadow-3d-lg)' }}>
         <div className="terminal-bar">
           <div className="terminal-dot" style={{ background: '#ff5f57' }} />
           <div className="terminal-dot" style={{ background: '#febc2e' }} />
@@ -323,6 +323,7 @@ function ProfileCard({ h, stats, statColors }) {
               textAlign: 'center',
               background: c.bg,
               borderColor: c.border,
+              boxShadow: `var(--depth-2), var(--highlight-edge), 0 0 15px ${c.color}15`,
             }}>
               <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.04em', fontFamily: 'var(--font-display)', color: c.color }}>{s.num}</div>
               <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', marginTop: 4, color: 'var(--text-muted)' }}>{s.label}</div>
@@ -377,6 +378,7 @@ function MobileStatsBar({ h, stats, statColors }) {
               textAlign: 'center',
               background: c.bg,
               borderColor: c.border,
+              boxShadow: `var(--depth-2), var(--highlight-edge), 0 0 12px ${c.color}15`,
             }}>
               <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.04em', fontFamily: 'var(--font-display)', color: c.color }}>{s.num}</div>
               <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', marginTop: 3, color: 'var(--text-muted)' }}>{s.label}</div>
