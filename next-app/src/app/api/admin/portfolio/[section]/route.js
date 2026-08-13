@@ -160,7 +160,7 @@ export const PUT = withAuth(async (request, context) => {
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       {},
       { $set: { [section]: cleanPayload } },
-      { new: true, upsert: true, runValidators: true }
+      { returnDocument: 'after', upsert: true, runValidators: true }
     ).lean();
 
     cache.set("portfolio", toPublicPortfolio(updatedPortfolio), 300);

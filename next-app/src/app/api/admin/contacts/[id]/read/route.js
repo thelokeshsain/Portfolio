@@ -21,7 +21,7 @@ export async function PUT(request, { params }) {
     const contact = await Contact.findByIdAndUpdate(
       id,
       { read: true },
-      { new: true }
+      { returnDocument: 'after' }
     ).lean();
 
     if (!contact) {

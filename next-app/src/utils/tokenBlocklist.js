@@ -21,7 +21,7 @@ class DatabaseTokenBlocklist {
     await RevokedToken.findOneAndUpdate(
       { tokenHash: jtiHash },
       { tokenHash: jtiHash, expiresAt: expDate },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true }
     );
 
     // Cache locally as revoked

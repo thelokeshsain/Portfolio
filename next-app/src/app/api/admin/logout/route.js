@@ -65,8 +65,8 @@ export const POST = withAuth(async (request) => {
 
   const meta = buildRequestMeta(request);
   sendMail({
-    to: request.admin.email,
-    subject: "Admin Logout — Lokesh Portfolio",
+    to: request.admin?.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
+    subject: "🚪 Admin Logout — Lokesh Portfolio",
     html: logoutAlertEmail(meta),
   }).catch((e) => console.error("[Logout alert]", e.message));
 
