@@ -162,6 +162,7 @@ export async function POST(request) {
 
     const { accessToken, refreshToken, csrfToken } = await issueSession(request, admin);
 
+    const meta = buildRequestMeta(request);
     try {
       await sendMail({
         to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
