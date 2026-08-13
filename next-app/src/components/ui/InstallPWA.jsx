@@ -19,7 +19,7 @@ export function InstallBanner({ isInstallable, onInstall }) {
       background: 'var(--bg-secondary)',
       backdropFilter: 'blur(20px)',
       WebkitBackdropFilter: 'blur(20px)',
-      boxShadow: 'var(--shadow-xl), var(--shadow-glow)',
+      boxShadow: 'var(--shadow-3d-lg), var(--shadow-glow)',
       padding: '16px 20px',
       display: 'flex', alignItems: 'center', gap: 14,
       animation: 'slideUp .3s var(--ease-out-expo)',
@@ -30,6 +30,7 @@ export function InstallBanner({ isInstallable, onInstall }) {
         width: 40, height: 40, borderRadius: 'var(--radius-md)',
         background: 'var(--gradient-accent)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        boxShadow: 'var(--depth-2), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
       }}>
         <Smartphone size={18} color="#fff" />
       </div>

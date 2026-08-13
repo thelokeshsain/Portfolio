@@ -134,6 +134,7 @@ export default function Portfolio() {
         flexWrap: 'wrap',
         gap: 16,
         background: 'var(--bg-secondary)',
+        boxShadow: 'var(--shadow-3d-sm), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
       }}>
         <div style={{
           fontFamily: 'var(--font-display)',

@@ -62,10 +62,10 @@ export default function Contact() {
   }
 
   const INFO = [
-    { Icon: Mail, label: 'Email', val: h.email, href: `mailto:${h.email}`, color: '#818cf8', iconBg: 'rgba(99, 102, 241, 0.15)' },
-    { Icon: MapPin, label: 'Location', val: h.location, href: null, color: '#4ade80', iconBg: 'rgba(34, 197, 94, 0.15)' },
+    { Icon: Mail, label: 'Email', val: h.email, href: `mailto:${h.email}`, color: 'var(--accent)', iconBg: 'var(--accent-glow)' },
+    { Icon: MapPin, label: 'Location', val: h.location, href: null, color: 'var(--success)', iconBg: 'rgba(52, 199, 89, 0.12)' },
     { Icon: GHIcon, label: 'GitHub', val: 'thelokeshsain', href: h.github, color: 'var(--text-primary)', iconBg: 'var(--surface-hover)' },
-    { Icon: LIIcon, label: 'LinkedIn', val: 'in/thelokeshsain', href: h.linkedin, color: '#60a5fa', iconBg: 'rgba(59, 130, 246, 0.15)' },
+    { Icon: LIIcon, label: 'LinkedIn', val: 'in/thelokeshsain', href: h.linkedin, color: 'var(--accent)', iconBg: 'var(--accent-glow)' },
   ]
 
   return (
@@ -181,6 +181,7 @@ export default function Contact() {
                   justifyContent: 'center',
                   flexShrink: 0,
                   color: item.color,
+                  boxShadow: 'var(--shadow-3d-sm)',
                 }}>
                   <item.Icon />
                 </div>

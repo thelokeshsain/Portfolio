@@ -125,7 +125,7 @@ export default function Experience() {
                         lineHeight: 1.7,
                       }}>
                         <span style={{
-                          color: 'var(--accent-light)',
+                          color: 'var(--accent)',
                           fontWeight: 700,
                           flexShrink: 0,
                           marginTop: 2,
