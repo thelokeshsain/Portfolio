@@ -1,14 +1,17 @@
 /**
- * Mailer config — SMTP-based email sending via Nodemailer.
- * Supports any SMTP provider (Gmail, Outlook, custom SMTP, etc.)
- * Implements exponential backoff retries.
+ * Mailer config — Supports Resend HTTP API and Nodemailer SMTP (Gmail, Outlook, etc.)
  *
- * Required env vars:
- *   SMTP_HOST     — e.g. "smtp.gmail.com"
- *   SMTP_PORT     — e.g. "587"
- *   SMTP_USER     — e.g. "you@gmail.com"
- *   SMTP_PASS     — e.g. "your-app-password"
- *   FROM_EMAIL    — e.g. "you@gmail.com" (defaults to SMTP_USER)
+ * Env options:
+ *   Option A (Recommended for Vercel):
+ *     RESEND_API_KEY  — e.g. "re_123456789..."
+ *     FROM_EMAIL      — e.g. "Lokesh Sain <onboarding@resend.dev>" or "contact@thelokeshsain.dev"
+ *
+ *   Option B (Gmail / Google Workspace with 2FA / Advanced Protection):
+ *     SMTP_HOST       — e.g. "smtp.gmail.com"
+ *     SMTP_PORT       — e.g. "465" or "587"
+ *     SMTP_USER       — e.g. "iamlokeshsain@gmail.com"
+ *     SMTP_PASS       — 16-character App Password from https://myaccount.google.com/apppasswords
+ *     FROM_EMAIL      — e.g. "iamlokeshsain@gmail.com"
  */
 const nodemailer = require("nodemailer");
 
@@ -21,27 +24,68 @@ function getTransporter() {
     return null;
   }
 
+  const port = parseInt(process.env.SMTP_PORT || "465", 10);
+
   transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || "465", 10),
-    secure: parseInt(process.env.SMTP_PORT || "465", 10) === 465,
+    port,
+    secure: port === 465,
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      pass: process.env.SMTP_PASS.replace(/\s+/g, ""), // strip any spaces from App Password
     },
-    pool: false, // Don't reuse connections — serverless functions are short-lived
-    connectionTimeout: 10000,  // 10s to establish TCP connection
-    greetingTimeout: 10000,    // 10s for SMTP greeting
-    socketTimeout: 15000,      // 15s for socket inactivity
+    pool: false,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 
   return transporter;
 }
 
+// Send email via Resend HTTP API (Zero SMTP dependency)
+async function sendViaResend({ to, subject, html }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+
+  const from = process.env.FROM_EMAIL || "Lokesh Sain Portfolio <onboarding@resend.dev>";
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(`Resend API error (${res.status}): ${errData.message || res.statusText}`);
+  }
+
+  return await res.json();
+}
+
 async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
+  // Option A: Try Resend API first if configured
+  if (process.env.RESEND_API_KEY) {
+    try {
+      return await sendViaResend({ to, subject, html });
+    } catch (err) {
+      console.error(`[Mailer] Resend API send failed: ${err.message}`);
+    }
+  }
+
+  // Option B: Try SMTP (Nodemailer)
   const transport = getTransporter();
   if (!transport) {
-    console.warn("[Mailer] SMTP not configured — skipping email send");
+    console.warn("[Mailer] Neither Resend nor SMTP is configured — skipping email send (message saved in DB).");
     return null;
   }
 
@@ -54,10 +98,9 @@ async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
       subject,
       html,
     });
-
     return info;
   } catch (err) {
-    console.error(`[Mailer] Send failed (attempt ${attempt}/3): ${err.message}`);
+    console.error(`[Mailer] SMTP send failed (attempt ${attempt}/3): ${err.message}`);
     if (attempt < 3) {
       const delay = Math.pow(2, attempt) * 1000; // 2s, 4s
       await new Promise((resolve) => setTimeout(resolve, delay));
@@ -72,6 +115,7 @@ module.exports = async function sendMail({ to, subject, html }) {
     return await sendMailWithRetry({ to, subject, html });
   } catch (err) {
     console.error("[Mailer] Permanent failure sending email:", err.message);
-    throw err;
+    // Don't crash request — return null so contact form creation still succeeds in DB
+    return null;
   }
 };
