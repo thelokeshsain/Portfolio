@@ -1,16 +1,8 @@
 /**
- * Email Templates — v15 Production
- *
- * Changes from v14:
- *  - confirmationEmail: removed green avatar circle; added real branded
- *    social icon circles (LinkedIn #0A66C2, GitHub #24292e, Portfolio
- *    using the actual favicon.svg as a base64 <img> on yellow bg)
- *  - Added resetPasswordEmail for the forgot-password OTP flow
- *  - IP normalisation retained
- *  - Location field remains removed
+ * Email Templates — Sleek 3D Spatial Obsidian Black & Electric Amber Orange Theme
+ * Matches Portfolio Design System (Obsidian canvas, Electric Orange #ff6b00 accents, 3D card borders)
  */
 
-/* ─── IP normalisation ──────────────────────────────────────────────────── */
 function normaliseIp(ip) {
   if (!ip || ip === "—") return "Unknown";
   if (ip === "::1" || ip === "127.0.0.1") return "127.0.0.1 (localhost)";
@@ -18,7 +10,6 @@ function normaliseIp(ip) {
   return ip;
 }
 
-/* ─── HTML escape ───────────────────────────────────────────────────────── */
 function esc(s) {
   return String(s ?? "")
     .replace(/&/g, "&amp;")
@@ -27,30 +18,18 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
-/* ─── Portfolio branding icon (CDN) for email ────────────────────────────── */
-const FAVICON_IMG = `<img src="https://raw.githubusercontent.com/thelokeshsain/Weather-App/refs/heads/main/public/icon-512.png" width="22" height="21" alt="LS" style="display:block;border:0;" />`;
+/* ─── 3D LS Monogram Brand Icon ────────────────────────────── */
+const LS_BRAND_ICON = `<table width="40" height="40" cellpadding="0" cellspacing="0" border="0" style="border-radius:10px;background:linear-gradient(135deg, #1f2128 0%, #111216 100%);border:1px solid #ff6b00;">
+  <tr>
+    <td align="center" valign="middle" style="font-family:'Outfit',Arial,sans-serif;font-size:16px;font-weight:900;color:#ff8800;letter-spacing:-1px;">LS</td>
+  </tr>
+</table>`;
 
-/* ─── Brand-colored icons (CDN) ─────────────────────────────────────────── */
-const ICONS = {
-  github: `<img src="https://cdn.simpleicons.org/github/white" width="18" height="18" alt="GitHub" style="display:block;border:0;" />`,
-  linkedin: `<img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/linkedin.svg" width="18" height="18" alt="LinkedIn" style="display:block;border:0;" />`,
-  mail: `<img src="https://cdn.simpleicons.org/gmail" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  user: `<img src="https://img.icons8.com/ios-glyphs/30/888888/user.png" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  clock: `<img src="https://img.icons8.com/ios-glyphs/30/888888/clock.png" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  wifi: `<img src="https://img.icons8.com/ios-glyphs/30/888888/wifi.png" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  monitor: `<img src="https://img.icons8.com/ios-glyphs/30/888888/monitor.png" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  cpu: `<img src="https://img.icons8.com/ios-glyphs/30/888888/processor.png" width="14" height="14" alt="" style="display:inline-block;vertical-align:middle;border:0;" />`,
-  check: `<img src="https://img.icons8.com/material-rounded/60/000000/checkmark.png" width="16" height="16" alt="✓" style="display:block;border:0;" />`,
-  shield: `<img src="https://img.icons8.com/ios-glyphs/60/ffde2d/security-shield.png" width="22" height="22" alt="🛡️" style="display:block;border:0;" />`,
-  lock: `<img src="https://img.icons8.com/ios-glyphs/60/ffde2d/lock.png" width="22" height="22" alt="🔒" style="display:block;border:0;" />`,
-  logout: `<img src="https://img.icons8.com/ios-glyphs/60/000000/exit.png" width="22" height="22" alt="🚪" style="display:block;border:0;" />`,
-  msg: `<img src="https://img.icons8.com/ios-glyphs/60/ffde2d/chat.png" width="22" height="22" alt="💬" style="display:block;border:0;" />`,
-  key: `<img src="https://img.icons8.com/ios-glyphs/60/ffde2d/key.png" width="22" height="22" alt="🔑" style="display:block;border:0;" />`,
-};
-
-/* ─── Base email wrapper ─────────────────────────────────────────────────── */
-function base({ headerBg, headerContent, bodyContent, footerNote }) {
+/* ─── Base email wrapper — 3D Obsidian & Electric Orange ──────────────────────────────── */
+function base({ headerBg = "#14151a", headerContent, bodyContent, footerNote }) {
   const year = new Date().getFullYear();
+  const siteUrl = process.env.CLIENT_URL || "https://lokeshsain.vercel.app";
+
   return `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -64,51 +43,58 @@ function base({ headerBg, headerContent, bodyContent, footerNote }) {
   img{border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;display:block;}
   a{color:inherit;}
   @media only screen and (max-width:600px){
-    .email-card{width:100%!important;border-radius:0!important;border-left:0!important;border-right:0!important;}
-    .pad{padding:20px 16px!important;}
-    .pad-hd{padding:22px 16px!important;}
-    .pad-ft{padding:14px 16px!important;}
-    .hd-title{font-size:18px!important;}
+    .email-card{width:100%!important;border-radius:0!important;border:none!important;}
+    .pad{padding:24px 18px!important;}
+    .pad-hd{padding:24px 18px!important;}
+    .pad-ft{padding:16px 18px!important;}
     .code-box{font-size:36px!important;letter-spacing:0.25em!important;}
-    .btn-main{padding:13px 20px!important;font-size:14px!important;}
-    .social-cell{display:block!important;padding:0 0 10px 0!important;}
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background-color:#f0ebe0;font-family:Arial,Helvetica,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation"
-       style="background-color:#f0ebe0;padding:32px 12px;">
+<body style="margin:0;padding:0;background-color:#08080a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation" style="background-color:#08080a;padding:36px 12px;">
 <tr><td align="center" valign="top">
   <table class="email-card" width="100%" cellpadding="0" cellspacing="0" border="0"
-         style="max-width:560px;background:#ffffff;border:2px solid #000000;border-radius:16px;overflow:hidden;">
+         style="max-width:560px;background:#111216;border:1px solid rgba(255,107,0,0.3);border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.8);">
+    <!-- Top 3D Accent Line -->
+    <tr><td style="height:3px;background:linear-gradient(90deg, #ff5500 0%, #ff8800 50%, #ffaa00 100%);"></td></tr>
+    
+    <!-- Mac Terminal Bar Header -->
     <tr>
-      <td class="pad-hd" style="background:${headerBg};padding:28px 32px;border-bottom:2px solid #000000;">
-        ${headerContent}
-      </td>
-    </tr>
-    <tr>
-      <td style="background:#f5f0e8;border-bottom:2px solid #000000;padding:10px 16px;">
-        <table cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background:#161820;padding:12px 24px;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="width:12px;height:12px;background:#ff5f57;border-radius:50%;"></td>
           <td width="7"></td>
           <td style="width:12px;height:12px;background:#febc2e;border-radius:50%;"></td>
           <td width="7"></td>
           <td style="width:12px;height:12px;background:#28c840;border-radius:50%;"></td>
           <td width="12"></td>
-          <td style="font-family:monospace;font-size:11px;color:#888888;vertical-align:middle;">${process.env.CLIENT_URL ? new URL(process.env.CLIENT_URL).hostname : "lokeshsain.vercel.app"}</td>
+          <td style="font-family:monospace;font-size:12px;color:#858899;vertical-align:middle;">lokesh@dev — portfolio</td>
+          <td align="right">${LS_BRAND_ICON}</td>
         </tr></table>
       </td>
     </tr>
+
+    <!-- Main Header -->
     <tr>
-      <td class="pad" style="padding:28px 32px;background:#ffffff;">
+      <td class="pad-hd" style="background:${headerBg};padding:28px 32px;border-bottom:1px solid rgba(255,107,0,0.2);">
+        ${headerContent}
+      </td>
+    </tr>
+
+    <!-- Body Content -->
+    <tr>
+      <td class="pad" style="padding:32px;background:#111216;color:#e1e4ed;">
         ${bodyContent}
       </td>
     </tr>
+
+    <!-- Footer -->
     <tr>
-      <td class="pad-ft" style="background:#f5f0e8;border-top:2px solid #000000;padding:16px 32px;">
+      <td class="pad-ft" style="background:#090a0d;border-top:1px solid rgba(255,255,255,0.08);padding:20px 32px;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-          <td style="font-size:11px;color:#888888;font-family:monospace;">&#169; ${year} Lokesh Sain</td>
-          <td align="right" style="font-size:11px;color:#888888;font-family:monospace;">${footerNote || "Automated message."}</td>
+          <td style="font-size:12px;color:#7a7e8c;font-family:monospace;">&#169; ${year} <a href="${siteUrl}" style="color:#ff8800;text-decoration:none;font-weight:bold;">Lokesh Sain</a></td>
+          <td align="right" style="font-size:11px;color:#606370;font-family:monospace;">${footerNote || "Automated Message"}</td>
         </tr></table>
       </td>
     </tr>
@@ -119,49 +105,42 @@ function base({ headerBg, headerContent, bodyContent, footerNote }) {
 </html>`;
 }
 
-/* ─── Info row ───────────────────────────────────────────────────────────── */
-function infoRow(icon, label, value, isLast = false) {
-  const border = isLast ? "none" : "1px solid #e8e0d0";
+function infoRow(label, value, isLast = false) {
+  const border = isLast ? "none" : "1px solid rgba(255,255,255,0.08)";
   return `
   <tr>
-    <td style="padding:10px 0 4px 0;border-bottom:none;">
-      <table cellpadding="0" cellspacing="0" border="0"><tr>
-        <td style="width:20px;vertical-align:middle;color:#888888;padding-right:6px;">${icon}</td>
-        <td style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#888888;font-family:monospace;vertical-align:middle;">${esc(label)}</td>
-      </tr></table>
+    <td style="padding:10px 0 4px 0;">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#ff8800;font-family:monospace;">${esc(label)}</span>
     </td>
   </tr>
   <tr>
-    <td style="padding:2px 0 10px 0;border-bottom:${border};font-size:14px;color:#111111;font-family:monospace;word-break:break-word;overflow-wrap:anywhere;line-height:1.5;">${value}</td>
+    <td style="padding:2px 0 10px 0;border-bottom:${border};font-size:14px;color:#f0f2f8;font-family:monospace;word-break:break-word;line-height:1.6;">${value}</td>
   </tr>`;
 }
 
-/* ─── Info block ─────────────────────────────────────────────────────────── */
-function infoBlock(title, headerBg, headerColor, rows) {
+function infoBlock(title, rows) {
   return `
   <table width="100%" cellpadding="0" cellspacing="0" border="0"
-         style="border:2px solid #000000;border-radius:12px;overflow:hidden;margin-bottom:20px;border-collapse:separate;">
+         style="background:#181a22;border:1px solid rgba(255,107,0,0.25);border-radius:12px;overflow:hidden;margin-bottom:24px;">
     <tr>
-      <td style="background:${headerBg};padding:9px 16px;border-bottom:2px solid #000000;">
-        <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${headerColor};font-family:monospace;">${title}</span>
+      <td style="background:#1f222e;padding:10px 18px;border-bottom:1px solid rgba(255,107,0,0.2);">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#ff8800;font-family:monospace;">${title}</span>
       </td>
     </tr>
     <tr>
-      <td style="padding:0 16px;">
+      <td style="padding:8px 18px;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0">${rows}</table>
       </td>
     </tr>
   </table>`;
 }
 
-/* ─── CTA Button ─────────────────────────────────────────────────────────── */
-function ctaBtn(href, label, bg = "#000000", color = "#ffffff") {
+function ctaBtn(href, label, bg = "linear-gradient(135deg, #ff6b00 0%, #ff8800 100%)", color = "#ffffff") {
   return `
   <table cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
     <tr>
-      <td style="border-radius:12px;background:${bg};border:2px solid #000000;">
-        <a class="btn-main" href="${href}"
-           style="display:inline-block;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;color:${color};font-family:Arial,sans-serif;border-radius:10px;letter-spacing:-0.01em;">
+      <td style="border-radius:10px;background:${bg};box-shadow:0 4px 16px rgba(255,107,0,0.3);">
+        <a href="${href}" style="display:inline-block;padding:14px 28px;font-size:14px;font-weight:800;text-decoration:none;color:${color};font-family:-apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:0.02em;">
           ${label}
         </a>
       </td>
@@ -169,94 +148,57 @@ function ctaBtn(href, label, bg = "#000000", color = "#ffffff") {
   </table>`;
 }
 
-/* ─── Social icon circle ─────────────────────────────────────────────────── */
-function socialCircle(href, bg, icon, alt) {
-  return `
-  <td class="social-cell" style="padding-right:10px;">
-    <a href="${href}" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:${bg};border:2px solid #000000;text-decoration:none;">
-      <table width="44" height="44" cellpadding="0" cellspacing="0" border="0">
-        <tr><td align="center" valign="middle">${icon}</td></tr>
-      </table>
-    </a>
-  </td>`;
-}
-
 /* ════════════════════════════════════════════════════════════════════════════
-   1. CONFIRMATION EMAIL — to the person who submitted the contact form
- ════════════════════════════════════════════════════════════════════════════ */
+   1. CONFIRMATION EMAIL — 3D Spatial Black & Electric Orange Theme
+  ════════════════════════════════════════════════════════════════════════════ */
 exports.confirmationEmail = (name) =>
   base({
-    headerBg: "#ffde2d",
+    headerBg: "linear-gradient(135deg, #181a24 0%, #111218 100%)",
     headerContent: `
     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
       <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;letter-spacing:-0.04em;color:#000000;">Lokesh Sain</div>
-        <div style="font-size:12px;color:#333333;margin-top:4px;font-family:monospace;">Software Engineer &middot; Jaipur, India</div>
-      </td>
-      <td align="right" valign="middle" style="padding-left:16px;">
-        ${ICONS.check}
+        <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em;color:#ffffff;">Lokesh Sain</div>
+        <div style="font-size:13px;color:#ff8800;margin-top:4px;font-family:monospace;font-weight:600;">Software Engineer &middot; React & MERN Stack</div>
       </td>
     </tr></table>`,
     bodyContent: `
-    <h1 style="font-size:26px;font-weight:900;color:#000000;margin:0 0 6px;letter-spacing:-0.04em;">Thank You!</h1>
-    <p style="font-size:15px;color:#555555;margin:0 0 28px;line-height:1.7;">
-      Your message has been successfully delivered.
+    <h1 style="font-size:26px;font-weight:900;color:#ffffff;margin:0 0 8px;letter-spacing:-0.03em;">Message Received!</h1>
+    <p style="font-size:15px;color:#a0a5b5;margin:0 0 24px;line-height:1.7;">
+      Hi <strong style="color:#ffffff;">${esc(name)}</strong>, thank you for reaching out!
+    </p>
+    <p style="font-size:15px;color:#d1d5e3;margin:0 0 28px;line-height:1.75;">
+      I have received your message and will review it carefully. You can expect a response within <strong style="color:#ff8800;">24–48 hours</strong>.
     </p>
 
-    <p style="font-size:19px;font-weight:900;color:#000000;margin:0 0 8px;letter-spacing:-0.03em;">Hi ${esc(name)}!</p>
-    <p style="font-size:15px;color:#444444;margin:0 0 28px;line-height:1.75;">
-      Thank you for reaching out! I&rsquo;ve received your message and will get back to you as soon as possible.
-    </p>
-
-    <!-- What happens next -->
     <table width="100%" cellpadding="0" cellspacing="0" border="0"
-           style="background:#f5f0e8;border-radius:12px;border:2px solid #000000;margin-bottom:24px;overflow:hidden;">
+           style="background:#181a22;border-radius:12px;border:1px solid rgba(255,107,0,0.3);margin-bottom:28px;">
       <tr>
-        <td style="padding:16px 20px;border-left:4px solid #ffde2d;">
-          <p style="font-size:13px;font-weight:700;color:#000000;margin:0 0 12px;font-family:monospace;text-transform:uppercase;letter-spacing:0.05em;">What happens next?</p>
-          <table cellpadding="0" cellspacing="0" border="0"><tr>
-            <td style="font-size:14px;color:#333333;line-height:2;">
-              &bull;&nbsp; I&rsquo;ll review your message carefully<br/>
-              &bull;&nbsp; You&rsquo;ll hear back from me within 24&ndash;48 hours<br/>
-              &bull;&nbsp; Feel free to check out my work in the meantime
-            </td>
-          </tr></table>
+        <td style="padding:18px 20px;border-left:4px solid #ff6b00;">
+          <p style="font-size:12px;font-weight:700;color:#ff8800;margin:0 0 10px;font-family:monospace;text-transform:uppercase;letter-spacing:0.08em;">What Happens Next?</p>
+          <p style="font-size:14px;color:#c4c8d6;line-height:1.8;margin:0;">
+            &bull; Message stored in admin portal<br/>
+            &bull; Reviewing project details & inquiries<br/>
+            &bull; Direct reply sent to your email inbox
+          </p>
         </td>
       </tr>
     </table>
 
-    <!-- Connect with me -->
-    <p style="font-size:13px;color:#888888;text-align:center;margin:0 0 16px;font-family:monospace;text-transform:uppercase;letter-spacing:0.08em;">Connect with me</p>
-    <table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 24px;">
-      <tr>
-        ${socialCircle("https://linkedin.com/in/thelokeshsain", "#0A66C2", ICONS.linkedin, "LinkedIn")}
-        ${socialCircle("https://github.com/thelokeshsain", "#24292e", ICONS.github, "GitHub")}
-        <td class="social-cell" style="padding-right:0;">
-          <a href="${process.env.CLIENT_URL || "https://lokeshsain.vercel.app"}" style="display:inline-block;width:44px;height:44px;border-radius:50%;background:#ffde2d;border:2px solid #000000;text-decoration:none;">
-            <table width="44" height="44" cellpadding="0" cellspacing="0" border="0">
-              <tr><td align="center" valign="middle">${FAVICON_IMG}</td></tr>
-            </table>
-          </a>
-        </td>
-      </tr>
-    </table>
+    ${ctaBtn(process.env.CLIENT_URL || "https://lokeshsain.vercel.app", "Explore Portfolio &rarr;")}
 
-    ${ctaBtn(process.env.CLIENT_URL || "https://lokeshsain.vercel.app", "View My Portfolio &rarr;", "#000000", "#ffffff")}
-
-    <!-- Signature -->
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:2px solid #000000;margin-top:28px;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid rgba(255,255,255,0.08);margin-top:32px;">
       <tr><td style="padding-top:20px;">
-        <p style="font-size:14px;color:#555555;margin:0 0 4px;">Best Regards,</p>
-        <p style="font-size:18px;font-weight:900;color:#000000;margin:0 0 3px;letter-spacing:-0.03em;">Lokesh Sain</p>
-        <p style="font-size:12px;color:#888888;margin:0;font-family:monospace;">Software Engineer</p>
+        <p style="font-size:13px;color:#858899;margin:0 0 4px;">Best regards,</p>
+        <p style="font-size:17px;font-weight:900;color:#ffffff;margin:0 0 2px;">Lokesh Sain</p>
+        <p style="font-size:12px;color:#ff8800;margin:0;font-family:monospace;">Software Engineer</p>
       </td></tr>
     </table>`,
-    footerNote: "This is an automated response. Please do not reply.",
+    footerNote: "Automated confirmation response",
   });
 
 /* ════════════════════════════════════════════════════════════════════════════
-   2. ADMIN NOTIFICATION — contact form submission
- ════════════════════════════════════════════════════════════════════════════ */
+   2. ADMIN NOTIFICATION EMAIL — 3D Spatial Theme
+  ════════════════════════════════════════════════════════════════════════════ */
 exports.notificationEmail = ({
   name,
   email,
@@ -267,192 +209,153 @@ exports.notificationEmail = ({
   dateStr,
 }) =>
   base({
-    headerBg: "#000000",
+    headerBg: "linear-gradient(135deg, #1c1512 0%, #111216 100%)",
     headerContent: `
     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
       <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;color:#ffde2d;letter-spacing:-0.03em;">New Contact Message</div>
-        <div style="font-size:12px;color:#aaaaaa;margin-top:4px;font-family:monospace;">You have received a new message from your portfolio</div>
+        <div style="font-size:22px;font-weight:900;color:#ff8800;letter-spacing:-0.03em;">⚡ New Contact Submission</div>
+        <div style="font-size:12px;color:#a0a5b5;margin-top:4px;font-family:monospace;">Portfolio Contact Form</div>
       </td>
-      <td align="right" valign="middle" style="padding-left:16px;">${ICONS.msg}</td>
     </tr></table>`,
     bodyContent: `
     ${infoBlock(
       "Sender Details",
-      "#ffde2d",
-      "#000000",
-      infoRow(ICONS.user, "Name", esc(name)) +
-      infoRow(
-        ICONS.mail,
-        "Email",
-        `<a href="mailto:${esc(email)}" style="color:#000000;font-weight:700;">${esc(email)}</a>`,
-      ) +
-      infoRow(
-        ICONS.clock,
-        "Time",
-        esc(
-          dateStr ||
-          new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-        ),
-        true,
-      ),
+      infoRow("Name", esc(name)) +
+      infoRow("Email", `<a href="mailto:${esc(email)}" style="color:#ff8800;font-weight:bold;text-decoration:none;">${esc(email)}</a>`) +
+      infoRow("Time", esc(dateStr || new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })), true)
     )}
-    <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#888888;font-family:monospace;margin:0 0 8px;">Message</p>
+
+    <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#ff8800;font-family:monospace;margin:0 0 8px;">Message</p>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
       <tr>
-        <td style="background:#f5f0e8;border:2px solid #000000;border-radius:10px;padding:16px;font-size:14px;color:#111111;line-height:1.75;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;">
+        <td style="background:#181a22;border:1px solid rgba(255,107,0,0.3);border-radius:12px;padding:18px;font-size:14px;color:#f0f2f8;line-height:1.75;white-space:pre-wrap;word-break:break-word;">
           ${esc(message)}
         </td>
       </tr>
     </table>
-    ${ctaBtn(`mailto:${esc(email)}?subject=Re: Your message&body=Hi ${esc(name)},`, `Reply to ${esc(name)} &rarr;`, "#ffde2d", "#000000")}
-    <div style="margin-top:24px;">
+
+    ${ctaBtn(`mailto:${esc(email)}?subject=Re: Your message&body=Hi ${esc(name)},`, `Reply to ${esc(name)} &rarr;`)}
+
+    <div style="margin-top:28px;">
     ${infoBlock(
-      "Submission Details",
-      "#f5f0e8",
-      "#555555",
-      infoRow(ICONS.wifi, "IP Address", esc(normaliseIp(ip))) +
-      infoRow(ICONS.monitor, "Device", esc(device || "Unknown")) +
-      infoRow(ICONS.cpu, "Browser", esc(browser || "Unknown"), true),
+      "Technical Details",
+      infoRow("IP Address", esc(normaliseIp(ip))) +
+      infoRow("Device", esc(device || "Unknown")) +
+      infoRow("Browser", esc(browser || "Unknown"), true)
     )}
     </div>`,
-    footerNote: "Sent from your portfolio contact form",
+    footerNote: "Portfolio Admin Notification",
   });
 
 /* ════════════════════════════════════════════════════════════════════════════
-   3. LOGIN ALERT
- ════════════════════════════════════════════════════════════════════════════ */
+   3. LOGIN ALERT EMAIL
+  ════════════════════════════════════════════════════════════════════════════ */
 exports.loginAlertEmail = ({ ip, browser, device, dateStr }) =>
   base({
-    headerBg: "#000000",
+    headerBg: "linear-gradient(135deg, #1c1512 0%, #111216 100%)",
     headerContent: `
     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
       <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;color:#ffde2d;letter-spacing:-0.03em;">Admin Login Detected</div>
-        <div style="font-size:12px;color:#aaaaaa;margin-top:4px;font-family:monospace;">${esc(dateStr || new Date().toLocaleString())}</div>
+        <div style="font-size:22px;font-weight:900;color:#ff8800;letter-spacing:-0.03em;">🔐 Admin Login Detected</div>
+        <div style="font-size:12px;color:#a0a5b5;margin-top:4px;font-family:monospace;">${esc(dateStr || new Date().toLocaleString())}</div>
       </td>
-      <td align="right" valign="middle" style="padding-left:16px;">${ICONS.lock}</td>
     </tr></table>`,
     bodyContent: `
-    <p style="font-size:15px;line-height:1.75;color:#333333;margin:0 0 24px;">
-      A successful login was recorded on your portfolio admin account.
-      If this was you, no action is needed.<br/><br/>
-      <strong style="color:#000000;">If this wasn&rsquo;t you &mdash; change your password immediately.</strong>
-    </p>
-    ${infoBlock(
-      "Login Details",
-      "#ffde2d",
-      "#000000",
-      infoRow(ICONS.clock, "Time", esc(dateStr || "Unknown")) +
-      infoRow(ICONS.wifi, "IP Address", esc(normaliseIp(ip))) +
-      infoRow(ICONS.monitor, "Device", esc(device || "Unknown")) +
-      infoRow(ICONS.cpu, "Browser", esc(browser || "Unknown"), true),
-    )}
-    ${ctaBtn((process.env.CLIENT_URL || "http://localhost:5174") + "/admin", "Go to Admin Panel &rarr;", "#ffde2d", "#000000")}`,
-    footerNote: "Lokesh Portfolio Security Alert",
-  });
-
-/* ════════════════════════════════════════════════════════════════════════════
-   4. LOGOUT ALERT
- ════════════════════════════════════════════════════════════════════════════ */
-exports.logoutAlertEmail = ({ ip, browser, device, dateStr }) =>
-  base({
-    headerBg: "#f5f0e8",
-    headerContent: `
-    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-      <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;color:#000000;letter-spacing:-0.03em;">Admin Logout</div>
-        <div style="font-size:12px;color:#555555;margin-top:4px;font-family:monospace;">${esc(dateStr || new Date().toLocaleString())}</div>
-      </td>
-      <td align="right" valign="middle" style="padding-left:16px;">${ICONS.logout}</td>
-    </tr></table>`,
-    bodyContent: `
-    <p style="font-size:15px;line-height:1.75;color:#333333;margin:0 0 24px;">
-      Your admin session was ended. Your JWT token has been invalidated.
+    <p style="font-size:15px;line-height:1.75;color:#c4c8d6;margin:0 0 24px;">
+      A successful login was recorded on your portfolio admin dashboard.
     </p>
     ${infoBlock(
       "Session Details",
-      "#f5f0e8",
-      "#555555",
-      infoRow(ICONS.clock, "Time", esc(dateStr || "Unknown")) +
-      infoRow(ICONS.wifi, "IP Address", esc(normaliseIp(ip))) +
-      infoRow(ICONS.monitor, "Device", esc(device || "Unknown")) +
-      infoRow(ICONS.cpu, "Browser", esc(browser || "Unknown"), true),
+      infoRow("Time", esc(dateStr || "Unknown")) +
+      infoRow("IP Address", esc(normaliseIp(ip))) +
+      infoRow("Device", esc(device || "Unknown")) +
+      infoRow("Browser", esc(browser || "Unknown"), true)
+    )}
+    ${ctaBtn((process.env.CLIENT_URL || "https://lokeshsain.vercel.app") + "/admin", "Go to Admin Dashboard &rarr;")}`,
+    footerNote: "Security Alert",
+  });
+
+/* ════════════════════════════════════════════════════════════════════════════
+   4. LOGOUT ALERT EMAIL
+  ════════════════════════════════════════════════════════════════════════════ */
+exports.logoutAlertEmail = ({ ip, browser, device, dateStr }) =>
+  base({
+    headerBg: "linear-gradient(135deg, #181a24 0%, #111218 100%)",
+    headerContent: `
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td>
+        <div style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:-0.03em;">🚪 Admin Logout</div>
+        <div style="font-size:12px;color:#858899;margin-top:4px;font-family:monospace;">${esc(dateStr || new Date().toLocaleString())}</div>
+      </td>
+    </tr></table>`,
+    bodyContent: `
+    <p style="font-size:15px;line-height:1.75;color:#c4c8d6;margin:0 0 24px;">
+      Your admin session was ended. JWT session token invalidated.
+    </p>
+    ${infoBlock(
+      "Session Details",
+      infoRow("Time", esc(dateStr || "Unknown")) +
+      infoRow("IP Address", esc(normaliseIp(ip))) +
+      infoRow("Device", esc(device || "Unknown")) +
+      infoRow("Browser", esc(browser || "Unknown"), true)
     )}`,
-    footerNote: "Lokesh Portfolio Security Alert",
+    footerNote: "Security Alert",
   });
 
 /* ════════════════════════════════════════════════════════════════════════════
    5. 2FA CODE EMAIL
- ════════════════════════════════════════════════════════════════════════════ */
+  ════════════════════════════════════════════════════════════════════════════ */
 exports.twoFactorEmail = (code) =>
   base({
-    headerBg: "#000000",
+    headerBg: "linear-gradient(135deg, #1c1512 0%, #111216 100%)",
     headerContent: `
     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
       <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;color:#ffde2d;letter-spacing:-0.03em;">Verification Code</div>
-        <div style="font-size:12px;color:#aaaaaa;margin-top:4px;font-family:monospace;">Two-Factor Authentication</div>
+        <div style="font-size:22px;font-weight:900;color:#ff8800;letter-spacing:-0.03em;">🛡️ Verification Code</div>
+        <div style="font-size:12px;color:#a0a5b5;margin-top:4px;font-family:monospace;">Two-Factor Authentication</div>
       </td>
-      <td align="right" valign="middle" style="padding-left:16px;">${ICONS.shield}</td>
     </tr></table>`,
     bodyContent: `
-    <p style="font-size:15px;line-height:1.8;color:#333333;margin:0 0 24px;">Enter this code to complete your admin login:</p>
+    <p style="font-size:15px;line-height:1.8;color:#c4c8d6;margin:0 0 24px;">Enter this code to complete admin login:</p>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
       <tr>
-        <td align="center" style="background:#ffde2d;border:2px solid #000000;border-radius:14px;padding:28px 20px;">
-          <div class="code-box" style="font-size:44px;font-weight:900;letter-spacing:0.35em;font-family:monospace;color:#000000;line-height:1;">${esc(code)}</div>
+        <td align="center" style="background:#181a22;border:1px solid #ff6b00;border-radius:14px;padding:28px 20px;">
+          <div style="font-size:44px;font-weight:900;letter-spacing:0.35em;font-family:monospace;color:#ff8800;line-height:1;">${esc(code)}</div>
         </td>
       </tr>
     </table>
-    <p style="font-size:13px;color:#888888;text-align:center;margin:0;font-family:monospace;">
-      Expires in <strong style="color:#000000;">10 minutes</strong> &nbsp;&bull;&nbsp; Never share this code
+    <p style="font-size:13px;color:#7a7e8c;text-align:center;margin:0;font-family:monospace;">
+      Expires in <strong style="color:#ffffff;">10 minutes</strong> &bull; Do not share this code
     </p>`,
-    footerNote: "Lokesh Portfolio Admin Security",
+    footerNote: "Admin Security",
   });
 
 /* ════════════════════════════════════════════════════════════════════════════
-   6. PASSWORD RESET OTP EMAIL — forgot password flow
- ════════════════════════════════════════════════════════════════════════════ */
+   6. PASSWORD RESET OTP EMAIL
+  ════════════════════════════════════════════════════════════════════════════ */
 exports.resetPasswordEmail = (code) =>
   base({
-    headerBg: "#000000",
+    headerBg: "linear-gradient(135deg, #1c1512 0%, #111216 100%)",
     headerContent: `
     <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
       <td>
-        <div class="hd-title" style="font-size:22px;font-weight:900;color:#ffde2d;letter-spacing:-0.03em;">Reset Your Password</div>
-        <div style="font-size:12px;color:#aaaaaa;margin-top:4px;font-family:monospace;">Admin Password Recovery</div>
+        <div style="font-size:22px;font-weight:900;color:#ff8800;letter-spacing:-0.03em;">🔑 Reset Your Password</div>
+        <div style="font-size:12px;color:#a0a5b5;margin-top:4px;font-family:monospace;">Admin Password Recovery</div>
       </td>
-      <td align="right" valign="middle" style="padding-left:16px;">${ICONS.key}</td>
     </tr></table>`,
     bodyContent: `
-    <p style="font-size:15px;line-height:1.8;color:#333333;margin:0 0 8px;">
-      You requested a password reset for your admin account.
-    </p>
-    <p style="font-size:14px;line-height:1.7;color:#666666;margin:0 0 24px;">
-      Enter this code on the reset page. It expires in <strong style="color:#000000;">10 minutes</strong>.
-      If you didn&rsquo;t request this, you can safely ignore this email.
+    <p style="font-size:15px;line-height:1.8;color:#c4c8d6;margin:0 0 24px;">
+      Password reset code requested for admin account:
     </p>
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
       <tr>
-        <td align="center" style="background:#ffde2d;border:2px solid #000000;border-radius:14px;padding:28px 20px;">
-          <div class="code-box" style="font-size:44px;font-weight:900;letter-spacing:0.35em;font-family:monospace;color:#000000;line-height:1;">${esc(code)}</div>
+        <td align="center" style="background:#181a22;border:1px solid #ff6b00;border-radius:14px;padding:28px 20px;">
+          <div style="font-size:44px;font-weight:900;letter-spacing:0.35em;font-family:monospace;color:#ff8800;line-height:1;">${esc(code)}</div>
         </td>
       </tr>
     </table>
-    <table width="100%" cellpadding="0" cellspacing="0" border="0"
-           style="background:#fff3cd;border:2px solid #000000;border-radius:10px;margin-bottom:20px;overflow:hidden;">
-      <tr>
-        <td style="padding:14px 16px;border-left:4px solid #ffde2d;">
-          <p style="font-size:13px;color:#333333;margin:0;line-height:1.7;">
-            <strong>Security reminder:</strong> Lokesh Portfolio will never ask for your password via email.
-            This code only grants access to the reset form.
-          </p>
-        </td>
-      </tr>
-    </table>
-    <p style="font-size:13px;color:#888888;text-align:center;margin:0;font-family:monospace;">
-      Expires in <strong style="color:#000000;">10 minutes</strong> &nbsp;&bull;&nbsp; Do not share this code
+    <p style="font-size:13px;color:#7a7e8c;text-align:center;margin:0;font-family:monospace;">
+      Expires in <strong style="color:#ffffff;">10 minutes</strong> &bull; Do not share this code
     </p>`,
-    footerNote: "Lokesh Portfolio Security",
+    footerNote: "Admin Password Recovery",
   });
