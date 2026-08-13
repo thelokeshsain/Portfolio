@@ -63,13 +63,12 @@ function base({ headerBg = "#14151a", headerContent, bodyContent, footerNote }) 
     <tr>
       <td style="background:#161820;padding:12px 24px;border-bottom:1px solid rgba(255,255,255,0.08);">
         <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-          <td style="width:12px;height:12px;background:#ff5f57;border-radius:50%;"></td>
-          <td width="7"></td>
-          <td style="width:12px;height:12px;background:#febc2e;border-radius:50%;"></td>
-          <td width="7"></td>
-          <td style="width:12px;height:12px;background:#28c840;border-radius:50%;"></td>
-          <td width="12"></td>
-          <td style="font-family:monospace;font-size:12px;color:#858899;vertical-align:middle;">lokesh@dev — portfolio</td>
+          <td style="font-size:1px;line-height:1px;vertical-align:middle;">
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff5f57;margin-right:6px;vertical-align:middle;"></span>
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#febc2e;margin-right:6px;vertical-align:middle;"></span>
+            <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#28c840;margin-right:12px;vertical-align:middle;"></span>
+            <span style="font-family:monospace;font-size:12px;color:#858899;vertical-align:middle;line-height:1;">lokesh@dev — portfolio</span>
+          </td>
           <td align="right">${LS_BRAND_ICON}</td>
         </tr></table>
       </td>

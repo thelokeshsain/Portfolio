@@ -1609,6 +1609,23 @@ select {
   --shadow-3d-sm: 0 4px 14px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03);
   --shadow-3d-md: 0 10px 28px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.03);
   --shadow-3d-lg: 0 20px 48px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  /* Legacy compat & Admin Dashboard Light Mode Tokens */
+  --ink: #0a0a0d;
+  --paper: #ffffff;
+  --cream: #f8f9fa;
+  --yellow: #ff6b00;
+  --green: #34c759;
+  --pink: #ff2d55;
+  --blue: #ff8800;
+  --purple: #ff9e00;
+  --orange: #ff6b00;
+  --muted: #4a4b55;
+  --subtle: #6e6f7a;
+  --bw: 1px;
+  --sh: 0 6px 20px rgba(0, 0, 0, 0.06);
+  --sh-lg: 0 12px 36px rgba(0, 0, 0, 0.09);
+  --sh-xl: 0 20px 48px rgba(0, 0, 0, 0.12);
 }
 
 /* Background Images — 100% Visible & Crisp in Light Mode */
@@ -1669,4 +1686,33 @@ select {
 .light .tag {
   font-weight: 600 !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Crisp High-Contrast Admin Dashboard Controls in Light Mode */
+.light input,
+.light textarea,
+.light select,
+.light .field {
+  background: #ffffff !important;
+  color: #0a0a0d !important;
+  border: 1px solid rgba(0, 0, 0, 0.18) !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #6e6f7a !important;
+}
+
+.light .btn-primary,
+.light .btn-yellow {
+  background: linear-gradient(135deg, #ff6b00 0%, #ff8800 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.light .btn-secondary,
+.light .btn-ghost {
+  background: #f1f3f5 !important;
+  color: #0a0a0d !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
 }
