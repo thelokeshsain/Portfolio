@@ -14,8 +14,8 @@ export async function POST(request) {
     const admin = await Admin.findOne({ email: targetEmail.toLowerCase().trim() });
 
     if (!admin) {
-      // Return success to prevent email enumeration
-      return NextResponse.json({ message: "If account exists, OTP sent to email" });
+      // Return success with dummy token to transition UI without revealing non-existent email
+      return NextResponse.json({ message: "If account exists, OTP sent to email", token: "sent" });
     }
 
     // Generate 6-digit OTP code
@@ -29,7 +29,11 @@ export async function POST(request) {
       html: resetPasswordEmail(otpCode),
     });
 
-    return NextResponse.json({ message: "OTP sent successfully to your email", email: admin.email });
+    return NextResponse.json({
+      message: "OTP sent successfully to your email",
+      email: admin.email,
+      token: String(admin._id),
+    });
   } catch (err) {
     console.error("[Forgot Password API]", err.message);
     return NextResponse.json({ message: "Failed to process request" }, { status: 500 });
