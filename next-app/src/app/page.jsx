@@ -5,7 +5,8 @@ import toPublicPortfolio from "@/utils/publicPortfolio";
 import PortfolioClient from "@/components/PortfolioClient";
 import { DataProvider } from "@/context/DataContext";
 
-export const revalidate = 3600; // ISR: revalidate pre-rendered HTML every 1 hour for instant initial page loads
+export const revalidate = 0; // Dynamic: Always fetch real-time portfolio updates from MongoDB Atlas
+export const dynamic = "force-dynamic";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://lokeshsain.vercel.app';
 

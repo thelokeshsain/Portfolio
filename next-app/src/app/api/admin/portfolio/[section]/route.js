@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { withAuth } from "@/lib/auth";
 import Portfolio from "@/models/Portfolio";
 import toPublicPortfolio from "@/utils/publicPortfolio";
@@ -163,11 +164,21 @@ export const PUT = withAuth(async (request, context) => {
       { returnDocument: 'after', upsert: true, runValidators: true }
     ).lean();
 
-    cache.set("portfolio", toPublicPortfolio(updatedPortfolio), 300);
+    const publicData = toPublicPortfolio(updatedPortfolio);
+    cache.set("portfolio", publicData, 300);
+
+    // Force Next.js to purge static page cache and regenerate UI immediately
+    try {
+      revalidatePath("/", "page");
+      revalidatePath("/api/portfolio");
+    } catch (e) {
+      console.warn("[UpdateSection] revalidatePath warning:", e.message);
+    }
 
     return NextResponse.json({
       message: "Updated successfully",
       [section]: updatedPortfolio[section],
+      portfolio: publicData,
     });
   } catch (err) {
     console.error("[UpdateSection]", err.message);
