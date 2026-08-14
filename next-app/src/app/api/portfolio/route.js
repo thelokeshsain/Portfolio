@@ -6,7 +6,7 @@ import cache from "@/utils/responseCache";
 import { PORTFOLIO } from "@/lib/data";
 
 const PUBLIC_CACHE_CONTROL =
-  "public, max-age=120, s-maxage=300, stale-while-revalidate=60";
+  "no-store, no-cache, must-revalidate, proxy-revalidate";
 
 export async function GET(request) {
   try {

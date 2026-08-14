@@ -1,18 +1,14 @@
 "use client";
 
 /**
- * DataContext — Performance-optimized
- * - Uses native fetch instead of axios for public requests
- * - updateSection lazily imports apiClient only when called (admin only)
+ * DataContext — Real-time Realized State
+ * Guarantees that updates made in Admin Dashboard instantly reflect across the entire app
  */
 import { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
 import { PORTFOLIO } from "../lib/data";
 
 const Ctx = createContext();
 const API = process.env.NEXT_PUBLIC_API_URL || "/api";
-const CACHE_KEY = "portfolio-cache-v1";
-const CACHE_TS_KEY = "portfolio-cache-v1-ts";
-const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 function normalize(raw) {
   if (!raw) return PORTFOLIO;
@@ -45,81 +41,77 @@ function normalize(raw) {
   };
 }
 
-function readCachedPortfolio() {
-  if (typeof window === "undefined") return null;
-  try {
-    const cached = window.localStorage.getItem(CACHE_KEY);
-    if (!cached) return null;
-
-    const cachedAt = Number(window.localStorage.getItem(CACHE_TS_KEY) || 0);
-    if (cachedAt && Date.now() - cachedAt > CACHE_MAX_AGE_MS) {
-      window.localStorage.removeItem(CACHE_KEY);
-      window.localStorage.removeItem(CACHE_TS_KEY);
-      return null;
-    }
-
-    return normalize(JSON.parse(cached));
-  } catch {
-    window.localStorage.removeItem(CACHE_KEY);
-    window.localStorage.removeItem(CACHE_TS_KEY);
-    return null;
-  }
-}
-
-function writeCachedPortfolio(data) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-    window.localStorage.setItem(CACHE_TS_KEY, String(Date.now()));
-  } catch {
-    // Storage can fail in private mode or when quota exceeded
-  }
-}
-
 export function DataProvider({ children, serverData }) {
-  const initialData = useMemo(() => {
-    if (serverData) return normalize(serverData);
-    return readCachedPortfolio() || PORTFOLIO;
-  }, [serverData]);
-  
+  const initialData = useMemo(() => normalize(serverData), [serverData]);
   const [data, setData] = useState(initialData);
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
+  // Sync serverData updates
   useEffect(() => {
-    if (serverData) return; // Server data available — skip client fetch
-
-    const controller = new AbortController();
-
-    fetch(`${API}/portfolio`, { signal: controller.signal })
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((json) => {
-        const normalized = normalize(json);
-        setData(normalized);
-        writeCachedPortfolio(normalized);
-      })
-      .catch(() => {
-        /* API unavailable — static fallback used */
-      });
-
-    return () => controller.abort();
+    if (serverData) {
+      setData(normalize(serverData));
+    }
   }, [serverData]);
 
-  // Lazy-load apiClient only when admin calls updateSection
+  // Clean up legacy stale localStorage cache from user browsers once
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.removeItem("portfolio-cache-v1");
+        window.localStorage.removeItem("portfolio-cache-v1-ts");
+      } catch {
+        /* Ignore */
+      }
+    }
+  }, []);
+
+  // Fetch real-time portfolio updates on mount
+  const refreshData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch(`${API}/portfolio`, { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        setData(normalize(json));
+      }
+    } catch {
+      /* Fallback to serverData */
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Update section from Admin Dashboard — instantly updates state & notifies listeners
   const updateSection = useCallback(async (section, payload) => {
     const { apiClient } = await import("../context/AuthContext");
     const r = await apiClient.put(`/admin/portfolio/${section}`, payload);
+    
+    const updatedSectionData = r.data[section];
+    const fullUpdatedPortfolio = r.data.portfolio;
+
     setData((prev) => {
-      const next = normalize({ ...prev, [section]: r.data[section] });
-      writeCachedPortfolio(next);
-      return next;
+      if (fullUpdatedPortfolio) {
+        return normalize(fullUpdatedPortfolio);
+      }
+      return normalize({ ...prev, [section]: updatedSectionData });
     });
+
+    // Notify any open tabs / components of real-time update
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("portfolio-data-updated", { detail: { section } }));
+    }
   }, []);
 
+  // Listen for real-time portfolio updates across tabs/components
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const handleUpdate = () => refreshData();
+    window.addEventListener("portfolio-data-updated", handleUpdate);
+    return () => window.removeEventListener("portfolio-data-updated", handleUpdate);
+  }, [refreshData]);
+
   return (
-    <Ctx.Provider value={{ data, loading, updateSection }}>
+    <Ctx.Provider value={{ data, loading, updateSection, refreshData }}>
       {children}
     </Ctx.Provider>
   );
