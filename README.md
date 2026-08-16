@@ -1,65 +1,65 @@
-# 💼 Full-Stack Portfolio Application
+# Full-Stack Portfolio Application
 
-A production-grade developer portfolio architecture featuring an authenticated Express/MongoDB backend with Two-Factor Authentication (2FA/TOTP), transactional email delivery, and dynamic React & Next.js frontend interfaces.
+A full-stack developer portfolio project consisting of an Express and MongoDB backend API with JWT authentication and TOTP 2FA, paired with React and Next.js frontend interfaces.
 
 🔗 **Live Site:** [lokeshsain.vercel.app](https://lokeshsain.vercel.app)
 
 ---
 
-## ✨ Architecture & Features
+## Architecture & Features
 
 ### Backend Service (`backend/`)
-* **REST API:** Built with Express 5 and Mongoose for managing project showcases, work experience, and incoming contact requests.
-* **Security & Hardening:** Includes Helmet HTTP security headers, CORS origin validation, input sanitization, and request rate limiting.
-* **Authentication & 2FA:** JWT-based administrative sessions paired with RFC 6238 TOTP two-factor authentication via `otpauth` and QR code provisioning.
-* **Transactional Email Routing:** Contact form message processing and administrative alert dispatch powered by Resend API.
+* **REST API:** Express 5 and Mongoose managing project showcases and contact inquiries.
+* **Authentication & 2FA:** JWT authentication with TOTP two-factor authentication via `otpauth` and QR code generation (`qrcode`).
+* **Email Handling:** Contact message notifications routed through Resend API.
+* **Security & Middleware:** Helmet, CORS configuration, rate limiting, and request logging with Morgan.
 
-### Frontend Application (`frontend/` & `next-app/`)
-* **React 19 Frontend:** High-performance single-page portfolio interface using Vite, Tailwind CSS, Framer Motion transitions, and React Router.
-* **Next.js Application:** Alternate Next.js 16 setup with server actions, Lucide icons, and integrated MongoDB/Nodemailer support.
+### Frontend Options
+* **React Frontend (`frontend/`):** Single-page portfolio application built with React 19, Vite, Tailwind CSS v4, Framer Motion, and React Router.
+* **Next.js Frontend (`next-app/`):** Alternative frontend built with Next.js 16 and React 19.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer | Technologies |
+| Component | Technologies |
 |---|---|
-| **Backend** | Node.js (>=18), Express 5, MongoDB / Mongoose, JWT, OTPAuth, Resend API, Helmet, Morgan |
-| **Frontend (React)** | React 19, Vite 8, Tailwind CSS v4, Framer Motion, React Router v7, Lucide React, React Hot Toast |
+| **Backend** | Node.js, Express 5, MongoDB / Mongoose, JWT, OTPAuth, Resend API, Helmet |
+| **Frontend (React)** | React 19, Vite, Tailwind CSS v4, Framer Motion, React Router v7, Lucide React |
 | **Frontend (Next.js)** | Next.js 16, React 19, Framer Motion, Nodemailer, Lucide React |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Portfolio/
-├── backend/                 # Node.js Express REST API
-│   ├── config/              # Database (db.js) & Mailer configuration
-│   ├── controllers/         # Admin, Contact, and Portfolio controllers
-│   ├── middleware/          # Auth, CSRF, Rate Limiting, Sanitization
-│   ├── models/              # Mongoose data schemas
-│   ├── routes/              # Express API route declarations
+├── backend/                 # Express REST API
+│   ├── config/              # db.js, mailer.js
+│   ├── controllers/         # adminController, contactController, portfolioController
+│   ├── middleware/          # auth, csrf, rateLimit, sanitize
+│   ├── models/              # Admin, Contact, OtpToken, Portfolio, RefreshSession, RevokedToken
+│   ├── routes/              # adminRoutes, contactRoutes, portfolioRoutes
 │   ├── server.js            # Server entry point
-│   └── .env.example         # Environment template
-├── frontend/                # React + Vite client
-│   ├── src/                 # Pages, components, hooks, assets
+│   └── .env.example
+├── frontend/                # React 19 + Vite app
+│   ├── src/
 │   ├── package.json
 │   └── vite.config.js
-└── next-app/                # Next.js 16 implementation
-    ├── app/                 # Next.js app router structure
+└── next-app/                # Next.js 16 app
+    ├── app/
     └── package.json
 ```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-* **Node.js:** v18.0.0 or higher
-* **MongoDB:** Local instance or MongoDB Atlas cluster URI
-* **Resend API Key:** For email delivery
+* Node.js (v18.0.0 or higher)
+* MongoDB connection URI
+* Resend API Key (for backend contact emails)
 
 ### 1. Backend Setup
 
@@ -68,12 +68,12 @@ cd backend
 npm install
 ```
 
-Create a `.env` file inside `backend/` using `.env.example`:
+Create `backend/.env` from `backend/.env.example`:
 ```env
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/portfolio
-JWT_SECRET=your_super_secret_jwt_key
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=24h
 CLIENT_URL=http://localhost:5173
 TRUST_PROXY=true
@@ -81,10 +81,10 @@ TRUST_PROXY=true
 ADMIN_EMAIL=admin@example.com
 OWNER_EMAIL=your_email@example.com
 FROM_EMAIL=onboarding@resend.dev
-RESEND_API_KEY=re_your_resend_api_key
+RESEND_API_KEY=your_resend_api_key
 ```
 
-Run the backend server:
+Start backend:
 ```bash
 npm run dev
 ```
@@ -97,16 +97,10 @@ npm install
 npm run dev
 ```
 
-### 3. Next.js App Setup (Alternative Frontend)
+### 3. Next.js App Setup (Alternative)
 
 ```bash
 cd ../next-app
 npm install
 npm run dev
 ```
-
----
-
-## 📄 License
-
-This repository is maintained for personal portfolio demonstration.
