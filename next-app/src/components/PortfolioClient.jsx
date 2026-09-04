@@ -13,6 +13,7 @@
  */
 import { Toaster } from 'react-hot-toast'
 import Image from 'next/image'
+import Link from 'next/link'
 import Navbar from '../components/layout/Navbar'
 import ScrollProgress from '../components/ui/ScrollProgress'
 import Hero from '../components/sections/Hero'
@@ -150,7 +151,7 @@ export default function Portfolio() {
           color: 'var(--text-secondary)',
           fontFamily: 'var(--font-mono)',
         }}>
-          © {new Date().getFullYear()} · Built with Next.js
+          © {new Date().getFullYear()} • Built with Next.js
         </div>
         <div style={{
           fontSize: 12,
@@ -160,7 +161,20 @@ export default function Portfolio() {
           gap: 12,
           alignItems: 'center',
         }}>
-          <span>Software Engineer · Jaipur</span>
+          <span>Software Engineer • Jaipur</span>
+          <span>•</span>
+          <Link 
+            href="/privacy-policy" 
+            style={{ 
+              color: 'var(--text-secondary)', 
+              textDecoration: 'none',
+              transition: 'color 0.2s'
+            }}
+            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
+            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
+          >
+            Privacy Policy
+          </Link>
         </div>
       </footer>
     </div>
