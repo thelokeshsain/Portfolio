@@ -8,6 +8,7 @@ import otpStore from "@/utils/otpStore";
 import sendMail from "@/lib/mailer";
 import { twoFactorEmail, loginAlertEmail } from "@/utils/emailTemplates";
 import jwt from "jsonwebtoken";
+import rateLimiter from "@/utils/rateLimiter";
 
 const REFRESH_TOKEN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -111,6 +112,18 @@ async function issueSession(request, admin) {
 
 export async function POST(request) {
   try {
+    const ip = getClientIp(request);
+    const rateCheck = rateLimiter.check(`admin-login:${ip}`, 5, 15 * 60 * 1000);
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { message: `Too many login attempts. Please wait ${rateCheck.retryAfter} seconds before trying again.` },
+        { 
+          status: 429,
+          headers: { "Retry-After": String(rateCheck.retryAfter) }
+        }
+      );
+    }
+
     await connectDB();
     const { email, password } = await request.json();
 
@@ -181,14 +194,14 @@ export async function POST(request) {
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: isSecure,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/api/admin",
       maxAge: REFRESH_TOKEN_MS / 1000,
     });
     response.cookies.set("csrfToken", csrfToken, {
       httpOnly: false,
       secure: isSecure,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/",
       maxAge: REFRESH_TOKEN_MS / 1000,
     });

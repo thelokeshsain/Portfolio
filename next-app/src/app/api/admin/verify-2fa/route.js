@@ -190,14 +190,14 @@ export async function POST(request) {
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: isSecure,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/api/admin",
       maxAge: REFRESH_TOKEN_MS / 1000,
     });
     response.cookies.set("csrfToken", csrfToken, {
       httpOnly: false,
       secure: isSecure,
-      sameSite: "lax",
+      sameSite: "strict",
       path: "/",
       maxAge: REFRESH_TOKEN_MS / 1000,
     });

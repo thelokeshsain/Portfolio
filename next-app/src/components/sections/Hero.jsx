@@ -122,8 +122,12 @@ export default function Hero() {
             {/* Action Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 36 }}>
               {/* Primary: White Pill View My Work */}
-              <button
-                onClick={() => scrollTo('projects')}
+              <a
+                href="#projects"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollTo('projects');
+                }}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -134,7 +138,7 @@ export default function Hero() {
                   fontWeight: 600,
                   padding: '12px 24px',
                   borderRadius: 9999,
-                  border: 'none',
+                  textDecoration: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                   boxShadow: '0 4px 16px rgba(255, 255, 255, 0.1)',
@@ -150,7 +154,7 @@ export default function Hero() {
               >
                 <span>View My Work</span>
                 <ArrowRight size={15} strokeWidth={2.5} />
-              </button>
+              </a>
 
               {/* Secondary: Dark Pill Download Resume */}
               <a
@@ -192,7 +196,7 @@ export default function Hero() {
                 href={h.github || 'https://github.com/thelokeshsain'}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub"
+                aria-label="GitHub Profile"
                 style={{
                   width: 42,
                   height: 42,
@@ -223,7 +227,7 @@ export default function Hero() {
                 href={h.linkedin || 'https://linkedin.com/in/thelokeshsain'}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn"
+                aria-label="LinkedIn Profile"
                 style={{
                   width: 42,
                   height: 42,
@@ -252,7 +256,7 @@ export default function Hero() {
 
               <a
                 href={h.email ? `mailto:${h.email}` : 'mailto:iamlokeshsain@gmail.com'}
-                aria-label="Email"
+                aria-label="Send email to Lokesh Sain"
                 style={{
                   width: 42,
                   height: 42,
@@ -331,10 +335,11 @@ export default function Hero() {
             }}>
               <Image
                 src="/images/hero_laptop_mockup.webp"
-                alt="VS Code development environment"
+                alt="VS Code development environment showing modern web applications"
                 width={800}
                 height={500}
                 priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                 style={{
                   width: '100%',
                   height: 'auto',

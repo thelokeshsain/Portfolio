@@ -32,5 +32,5 @@ export default function ScrollProgress() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  return <div id="sp" ref={ref} />
+  return <div id="sp" ref={ref} aria-hidden="true" />
 }

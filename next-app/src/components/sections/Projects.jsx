@@ -52,7 +52,7 @@ export default function Projects() {
       <div className="inner">
         {/* Section Header */}
         <div style={{ marginBottom: 36 }}>
-          <div className="section-label" style={{ marginBottom: 12 }}>02 / FEATURED PROJECTS</div>
+          <div className="section-label" style={{ marginBottom: 12 }}>03 / FEATURED PROJECTS</div>
 
           <div style={{
             display: 'flex',
@@ -257,6 +257,7 @@ export default function Projects() {
                         href={p.link || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`Live demo of ${p.title}`}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -285,6 +286,7 @@ export default function Projects() {
                         href={p.link || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`View details of ${p.title}`}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -312,6 +314,7 @@ export default function Projects() {
                       href={p.github || 'https://github.com/thelokeshsain'}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`View source code for ${p.title} on GitHub`}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',

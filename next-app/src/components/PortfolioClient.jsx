@@ -169,36 +169,25 @@ export default function Portfolio() {
       <Navbar isInstallable={isInstallable} onInstall={triggerInstall} />
 
       <main id="main-content" style={{ paddingTop: 64 }}>
-        {/* 1. Hero */}
+        {/* 1. Hero (#home) */}
         {s.hero !== false && <Hero />}
 
-        {/* 2. Tech Strip below hero */}
+        {/* Tech Strip below hero */}
         {s.hero !== false && <TechStrip />}
 
-        {/* 3. 02 / Featured Projects */}
-        {s.projects !== false && <Projects />}
-
-        {/* 4. 03 / Experience & 04 / Skills — 2-Column Side-by-Side Container */}
-        {(s.experience !== false || s.skills !== false) && (
-          <section className="section section-border" style={{ position: 'relative' }}>
-            <div className="inner">
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)',
-                gap: 'clamp(32px, 5vw, 64px)',
-                alignItems: 'flex-start',
-              }}>
-                {s.experience !== false && <Experience />}
-                {s.skills !== false && <Skills />}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* 5. 05 / About & Approach */}
+        {/* 2. About (#about) */}
         {s.about !== false && <About />}
 
-        {/* 6. 06 / Contact */}
+        {/* 3. Featured Projects (#projects) */}
+        {s.projects !== false && <Projects />}
+
+        {/* 4. Experience (#experience) */}
+        {s.experience !== false && <Experience />}
+
+        {/* 5. Skills (#skills) */}
+        {s.skills !== false && <Skills />}
+
+        {/* 6. Contact (#contact) */}
         {s.contact !== false && <Contact />}
       </main>
 

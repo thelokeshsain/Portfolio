@@ -34,11 +34,12 @@ const EXPERIENCE_ITEMS = [
 
 export default function Experience() {
   return (
-    <div id="experience" style={{ display: 'flex', flexDirection: 'column' }}>
-      <div className="section-label" style={{ marginBottom: 12 }}>03 / EXPERIENCE</div>
-      <h2 className="section-heading" style={{ marginBottom: 36 }}>
-        My Professional Journey
-      </h2>
+    <section id="experience" className="section section-border" style={{ position: 'relative' }}>
+      <div className="inner">
+        <div className="section-label" style={{ marginBottom: 12 }}>04 / EXPERIENCE</div>
+        <h2 className="section-heading" style={{ marginBottom: 36 }}>
+          My Professional Journey
+        </h2>
 
       {/* Timeline List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, position: 'relative' }}>
@@ -155,6 +156,7 @@ export default function Experience() {
           </motion.div>
         ))}
       </div>
-    </div>
+      </div>
+    </section>
   )
 }

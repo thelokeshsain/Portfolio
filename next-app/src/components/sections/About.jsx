@@ -19,12 +19,12 @@ export default function About() {
   return (
     <section id="about" className="section section-border" style={{ position: 'relative' }}>
       <div className="inner">
-        <div className="section-label" style={{ marginBottom: 12 }}>05 / ABOUT</div>
+        <div className="section-label" style={{ marginBottom: 12 }}>02 / ABOUT</div>
 
         {/* Two Column Layout: Left (About Me) & Right (My Approach) */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.4fr)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
           gap: 'clamp(32px, 5vw, 64px)',
           alignItems: 'flex-start',
         }}>

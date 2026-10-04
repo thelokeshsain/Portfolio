@@ -227,10 +227,12 @@ export default function Contact() {
 
             <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <label htmlFor="contact-name" style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Name
                 </label>
                 <input
+                  id="contact-name"
+                  name="name"
                   type="text"
                   required
                   value={form.name}
@@ -250,10 +252,12 @@ export default function Contact() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <label htmlFor="contact-email" style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Email
                 </label>
                 <input
+                  id="contact-email"
+                  name="email"
                   type="email"
                   required
                   value={form.email}
@@ -273,10 +277,12 @@ export default function Contact() {
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                <label htmlFor="contact-message" style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#94A3B8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                   Message
                 </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   required
                   rows={4}
                   value={form.message}

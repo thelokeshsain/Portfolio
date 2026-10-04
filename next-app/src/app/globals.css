@@ -366,11 +366,30 @@ section,
 
 .hamburger {
   display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hamburger:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 768px) {
+  .nav-desktop-links { display: none !important; }
   .hide-mobile { display: none !important; }
-  .hamburger { display: flex; }
+  .hamburger { display: flex !important; }
+}
+
+@media (min-width: 769px) {
+  .show-mobile-inline { display: none !important; }
 }
 
 
