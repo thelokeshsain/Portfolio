@@ -23,10 +23,12 @@ export async function POST(request) {
     await otpStore.set(`reset_${admin._id}`, { code: otpCode, adminId: admin._id }, 10 * 60 * 1000);
 
     // Send reset password OTP email
+    const resetTpl = resetPasswordEmail(otpCode);
     await sendMail({
       to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-      subject: "🔑 Reset Your Password — Lokesh Portfolio",
-      html: resetPasswordEmail(otpCode),
+      subject: "Password Reset Request — Lokesh Sain",
+      html: resetTpl.html,
+      text: resetTpl.text,
     });
 
     return NextResponse.json({

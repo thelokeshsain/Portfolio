@@ -137,25 +137,25 @@ export function AuthProvider({ children }) {
   }, [admin, resetIdleTimer])
 
   useEffect(() => {
-    // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
-    // The backend enforces actual cryptographic token/session lifetime checks.
-    const loginTime = parseInt(localStorage.getItem('adminLoginTime') || '0')
-
-    //belt-and-suspenders session age check
-    if (loginTime && (Date.now() - loginTime > MAX_AGE_MS)) {
-      doLogout()
-      setLoading(false)
-      return
-    }
-
-    if (!loginTime) {
-      setLoading(false)
-      return
-    }
-
     let cancelled = false
 
     async function restoreSession() {
+      // ADVISORY NOTE: adminLoginTime is client-side only and can be tampered with.
+      // The backend enforces actual cryptographic token/session lifetime checks.
+      const loginTime = parseInt(localStorage.getItem('adminLoginTime') || '0')
+
+      // belt-and-suspenders session age check inside async restore
+      if (loginTime && (Date.now() - loginTime > MAX_AGE_MS)) {
+        await doLogout()
+        if (!cancelled) setLoading(false)
+        return
+      }
+
+      if (!loginTime) {
+        if (!cancelled) setLoading(false)
+        return
+      }
+
       try {
         const token = await refreshAccessToken()
         const r = await apiClient.get('/admin/me', {

@@ -156,7 +156,7 @@ export default function ContactsViewer() {
               { Icon: Clock, label: "Received", val: fmt(selected.createdAt) },
               { Icon: Monitor, label: "Device", val: selected.device || "—" },
               { Icon: Wifi, label: "IP", val: selected.ip || "—" },
-            ].map(({ Icon: ItemIcon, label, val }) => ( // eslint-disable-line no-unused-vars
+            ].map(({ Icon: ItemIcon, label, val }) => (
               <div
                 key={label}
                 style={{
@@ -192,7 +192,7 @@ export default function ContactsViewer() {
                   style={{
                     fontSize: 13,
                     fontWeight: 600,
-                    color: "var(--ink)",
+                    color: "#F0F2F5",
                     wordBreak: "break-all",
                   }}
                 >
@@ -210,7 +210,7 @@ export default function ContactsViewer() {
               background: "var(--paper)",
               fontSize: 15,
               lineHeight: 1.8,
-              color: "var(--ink)",
+              color: "#F0F2F5",
               whiteSpace: "pre-wrap",
               marginBottom: 20,
               minHeight: 80,
@@ -378,14 +378,14 @@ export default function ContactsViewer() {
                     width: 42,
                     height: 42,
                     borderRadius: "50%",
-                    background: c.read ? "var(--muted)" : "var(--yellow)",
-                    border: "2px solid var(--ink)",
+                    background: c.read ? "rgba(255, 255, 255, 0.05)" : "rgba(56, 189, 248, 0.15)",
+                    border: "1px solid rgba(255, 255, 255, 0.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontWeight: 900,
+                    fontWeight: 800,
                     fontSize: 16,
-                    color: "#000",
+                    color: c.read ? "#8B93A7" : "#38BDF8",
                     flexShrink: 0,
                   }}
                 >
@@ -405,7 +405,7 @@ export default function ContactsViewer() {
                       style={{
                         fontWeight: c.read ? 600 : 800,
                         fontSize: 15,
-                        color: "var(--ink)",
+                        color: "#F0F2F5",
                       }}
                     >
                       {c.name}
@@ -449,8 +449,8 @@ export default function ContactsViewer() {
                       width: 8,
                       height: 8,
                       borderRadius: "50%",
-                      background: "var(--yellow)",
-                      border: "2px solid var(--ink)",
+                      background: "#38BDF8",
+                      boxShadow: "0 0 8px rgba(56, 189, 248, 0.8)",
                       flexShrink: 0,
                     }}
                     title="Unread"

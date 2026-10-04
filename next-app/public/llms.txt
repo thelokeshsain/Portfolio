@@ -1,0 +1,49 @@
+# Lokesh Sain — Software Engineer Portfolio
+> Fast, accessible, and structured portfolio information for machine and human readers.
+
+## Identity & Professional Role
+- **Name**: Lokesh Sain
+- **Role**: Software Engineer
+- **Location**: Jaipur, Rajasthan, India
+- **Primary Website**: https://lokeshsain.vercel.app/
+- **GitHub**: https://github.com/thelokeshsain
+- **LinkedIn**: https://linkedin.com/in/thelokeshsain
+- **Email**: iamlokeshsain@gmail.com
+
+## Professional Summary
+Software Engineer specializing in building responsive web applications with React.js, integrating LLM APIs into product workflows, and architecting scalable full-stack web and mobile solutions.
+
+## Experience
+- **Software Engineer** | 3Handshake Techsoft Private Limited (Jul 2025 – Present) | Jaipur, Rajasthan
+  - Developed and maintained responsive web applications using React.js, JavaScript, and Node.js.
+  - Integrated RESTful APIs and modern state management to enhance application functionality.
+  - Implemented LLM API integrations for intelligent automation and conversational interfaces.
+  - Collaborated with cross-functional teams to deliver scalable, user-centric software features.
+- **Web Developer Intern** | 3Handshake Techsoft Private Limited (Jan 2025 – Jul 2025) | Jaipur, Rajasthan
+  - Built interactive UI components with React.js, CSS3, and JavaScript following UX best practices.
+  - Assisted in designing and consuming RESTful APIs for database synchronization.
+  - Debugged front-end issues, improved cross-browser compatibility, and optimized page load speed.
+  - Participated in code reviews, daily stand-ups, and sprint planning following Agile methodologies.
+
+## Featured Projects
+- **Apna Backup**: Online backup platform with real-time synchronization and secure cloud file storage. Built with React.js, REST APIs, and responsive design. (Live: https://www.apnabackup.com/ | Repo: https://github.com/thelokeshsain/Apna-Backup)
+- **FoodCourt Mobile App**: Native Android mobile application for cafeteria food ordering and real-time order tracking. Built with Android, Java, and XML. (Repo: https://github.com/thelokeshsain/FoodCourt)
+- **Sizzling Hair Salon Platform**: Full-stack salon booking and management platform with appointment scheduling. Built with HTML5, CSS3, and JavaScript. (Repo: https://github.com/thelokeshsain/Sizzling)
+
+## Core Technologies
+- **Frontend**: React.js, JavaScript, HTML5, CSS3, REST APIs, Responsive Design
+- **Backend & Database**: Node.js, Python, MySQL, MongoDB
+- **AI & Integrations**: LLM APIs, Gemini, OpenAI, Claude, OpenRouter
+- **Tools**: Git, GitHub, VS Code
+
+## Education
+- **Master of Computer Applications (MCA)**: DY Patil Institute of MCA and Management (CGPA: 8.29/10)
+- **Bachelor of Computer Applications (BCA)**: S.S. Jain Subodh PG College (81.64%)
+
+## Certifications & Achievements
+- Python Programming — IIT Bombay Spoken Tutorial
+- HTML Web Development — IIT Bombay Spoken Tutorial
+- Codeathon Hackathon Participant — MIT-WPU School of Business
+
+## Supplementary Full Documentation
+- Full Documentation: https://lokeshsain.vercel.app/llms-full.txt

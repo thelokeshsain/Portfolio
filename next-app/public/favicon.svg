@@ -1,20 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#14151a"/>
-      <stop offset="100%" stop-color="#08080a"/>
+    <radialGradient id="ambientGlow" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.16"/>
+      <stop offset="60%" stop-color="#0F172A" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#05070A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
     </linearGradient>
-    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff8800"/>
-      <stop offset="100%" stop-color="#ff5500"/>
-    </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="8" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
-    </filter>
   </defs>
-  <!-- 3D Obsidian Canvas -->
-  <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#bgGrad)" stroke="#ff6b00" stroke-width="12" stroke-opacity="0.6"/>
-  <!-- Electric Orange Monogram LS -->
-  <text x="256" y="315" font-family="-apple-system, BlinkMacSystemFont, 'Outfit', 'Inter', sans-serif" font-size="210" font-weight="900" fill="url(#orangeGrad)" text-anchor="middle" letter-spacing="-8" filter="url(#glow)">LS</text>
+
+  <!-- Squircle Obsidian Canvas -->
+  <rect width="512" height="512" rx="128" fill="#05070A"/>
+  <rect width="512" height="512" rx="128" fill="url(#ambientGlow)"/>
+  <rect x="8" y="8" width="496" height="496" rx="122" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="8"/>
+
+  <!-- Bold Geometric Monogram 'LS' -->
+  <g fill="#F8FAFC">
+    <!-- Letter L -->
+    <path d="M 112 144 C 112 133 121 124 132 124 L 176 124 C 187 124 196 133 196 144 L 196 320 L 254 320 C 265 320 274 329 274 340 L 274 368 C 274 379 265 388 254 388 L 132 388 C 121 388 112 379 112 368 Z" />
+
+    <!-- Letter S -->
+    <path d="M 314 200 C 314 178 332 160 354 160 L 388 160 C 400 160 408 152 408 140 C 408 128 400 120 388 120 L 324 120 C 313 120 304 111 304 100 L 304 76 C 304 65 313 56 324 56 L 396 56 C 444 56 476 88 476 136 C 476 182 444 208 396 220 L 362 228 C 342 233 334 242 334 256 C 334 270 344 280 366 280 L 436 280 C 447 280 456 289 456 300 L 456 324 C 456 335 447 344 436 344 L 358 344 C 308 344 274 310 274 260 C 274 212 306 186 354 174 L 388 166 C 394 164 398 160 398 154 C 398 148 394 144 388 144 L 334 144 C 323 144 314 153 314 164 Z" transform="translate(-10, 44)" />
+  </g>
+
+  <!-- Cyan Accent Dot -->
+  <circle cx="438" cy="130" r="28" fill="url(#cyanGrad)"/>
 </svg>

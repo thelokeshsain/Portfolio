@@ -1,18 +1,19 @@
 "use client";
 
 /**
- * Portfolio.jsx — Main page shell (redesigned)
+ * PortfolioClient.jsx — Main client layout matching reference design
  *
- * All existing hooks and data flow preserved:
- * - useData() for section visibility
- * - useTheme() for toast styling
- * - usePWA() for install prompts
- * - Toaster with custom styling
- * - Section conditional rendering via data.sections
- * - InstallBanner
+ * Sequence:
+ * 1. Navbar
+ * 2. Hero
+ * 3. TechStrip (Tech I Work With)
+ * 4. 02 / Featured Projects
+ * 5. 03 / Experience & 04 / Skills (side by side in 2-column grid)
+ * 6. 05 / About & Approach
+ * 7. 06 / Contact Banner
+ * 8. Footer
  */
 import { Toaster } from 'react-hot-toast'
-import Image from 'next/image'
 import Link from 'next/link'
 import Navbar from '../components/layout/Navbar'
 import ScrollProgress from '../components/ui/ScrollProgress'
@@ -26,157 +27,186 @@ import Skills from '../components/sections/Skills'
 import Contact from '../components/sections/Contact'
 import usePWA from '../hooks/usePWA'
 import { useData } from '../context/DataContext'
-import { useTheme } from '../context/ThemeContext'
 
-import useParallax from '../hooks/useParallax'
+import { BrandIcon } from '../config/brandAssets'
 
-function ParallaxBanner({ image, quote, author, height = 'clamp(200px, 30vh, 280px)' }) {
-  const imgRef = useParallax(-0.12)
+/* ── Tech Strip Logos matching reference & Brand Registry ── */
+const TECH_STRIP_NAMES = [
+  'React.js',
+  'JavaScript',
+  'Node.js',
+  'Python',
+  'MySQL',
+  'MongoDB',
+  'OpenAI',
+  'Gemini',
+]
 
+function TechStrip() {
   return (
-    <div className="parallax-banner" style={{
-      position: 'relative',
-      height: height,
-      overflow: 'hidden',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderTop: '1px solid var(--border)',
-      borderBottom: '1px solid var(--border)',
-      background: 'var(--bg-primary)',
+    <div style={{
+      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+      padding: '20px 0',
+      background: 'rgba(5, 7, 10, 0.6)',
     }}>
-      {/* Background image layer */}
-      <Image
-        ref={imgRef}
-        src={image}
-        alt="Parallax background element"
-        className="parallax-banner-img"
-        fill
-        sizes="100vw"
-        quality={50}
-        loading="lazy"
-        style={{ objectFit: 'cover' }}
-      />
-      {/* Overlay: blending to dark background in dark mode, or solid light background watermark in light mode */}
-      <div className="parallax-banner-overlay" />
-      {/* Content */}
-      <div className="inner" style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 20px' }}>
-        <p className="parallax-banner-quote">
-          "{quote}"
-        </p>
-        {author && (
-          <p className="parallax-banner-author">
-            — {author}
-          </p>
-        )}
+      <div className="inner" style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: 24,
+      }}>
+        <span style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 11,
+          fontWeight: 600,
+          letterSpacing: '0.14em',
+          textTransform: 'uppercase',
+          color: '#64748B',
+          whiteSpace: 'nowrap',
+        }}>
+          TECH I WORK WITH
+        </span>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 'clamp(20px, 3.2vw, 36px)',
+          flexWrap: 'wrap',
+        }}>
+          {TECH_STRIP_NAMES.map(name => (
+            <div
+              key={name}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                fontSize: 13.5,
+                fontWeight: 500,
+                color: '#CBD5E1',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <BrandIcon name={name} size={19} />
+              <span>{name}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
 }
 
+function Footer() {
+  return (
+    <footer style={{
+      padding: '24px 0',
+      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+      background: '#040609',
+    }}>
+      <div className="inner" style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        gap: 16,
+      }}>
+        <div style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 700,
+          fontSize: 15,
+          color: '#F8FAFC',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+        }}>
+          Lokesh Sain
+          <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#38BDF8' }} />
+        </div>
+
+        <div style={{ fontSize: 13, color: '#64748B' }}>
+          Built with React.js & Next.js
+        </div>
+
+        <div style={{ fontSize: 12.5, color: '#64748B', display: 'flex', gap: 12, alignItems: 'center' }}>
+          <span>© {new Date().getFullYear()} Lokesh Sain</span>
+          <span>•</span>
+          <Link
+            href="/privacy-policy"
+            style={{ color: '#64748B', textDecoration: 'none' }}
+          >
+            Privacy
+          </Link>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
 export default function Portfolio() {
   const { data, loading } = useData()
-  const { dark } = useTheme()
   const { isInstallable, triggerInstall } = usePWA()
   const s = data.sections || {}
 
   if (loading) return <Loader />
 
   const toastStyle = {
-    background: dark ? 'var(--bg-secondary)' : '#ffffff',
-    color: dark ? 'var(--text-primary)' : '#09090b',
-    border: '1px solid var(--border)',
-    borderRadius: 'var(--radius-md)',
+    background: '#0B0F17',
+    color: '#F8FAFC',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '12px',
     fontFamily: 'var(--font-body)',
     fontWeight: 600,
-    boxShadow: 'var(--shadow-lg)',
+    boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6)',
     fontSize: 14,
   }
 
   return (
-    <div>
+    <div style={{ background: '#05070A', minHeight: '100vh', color: '#F8FAFC' }}>
       <Toaster position="top-right" toastOptions={{ duration: 4000, style: toastStyle }} />
       <ScrollProgress />
       <Navbar isInstallable={isInstallable} onInstall={triggerInstall} />
 
       <main id="main-content" style={{ paddingTop: 64 }}>
-        {s.hero       !== false && <Hero />}
-        {s.about      !== false && <About />}
-        {s.about      !== false && s.experience !== false && (
-          <ParallaxBanner
-            image="/images/editor_mockup.webp"
-            quote="First, solve the problem. Then, write the code."
-            author="John Johnson"
-          />
+        {/* 1. Hero */}
+        {s.hero !== false && <Hero />}
+
+        {/* 2. Tech Strip below hero */}
+        {s.hero !== false && <TechStrip />}
+
+        {/* 3. 02 / Featured Projects */}
+        {s.projects !== false && <Projects />}
+
+        {/* 4. 03 / Experience & 04 / Skills — 2-Column Side-by-Side Container */}
+        {(s.experience !== false || s.skills !== false) && (
+          <section className="section section-border" style={{ position: 'relative' }}>
+            <div className="inner">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)',
+                gap: 'clamp(32px, 5vw, 64px)',
+                alignItems: 'flex-start',
+              }}>
+                {s.experience !== false && <Experience />}
+                {s.skills !== false && <Skills />}
+              </div>
+            </div>
+          </section>
         )}
-        {s.experience !== false && <Experience />}
-        {s.projects   !== false && <Projects />}
-        {s.skills     !== false && <Skills />}
-        {s.skills     !== false && s.contact !== false && (
-          <ParallaxBanner
-            image="/images/cloud_network_mesh.webp"
-            quote="Simplicity is the soul of efficiency."
-            author="Austin Freeman"
-          />
-        )}
-        {s.contact    !== false && <Contact />}
+
+        {/* 5. 05 / About & Approach */}
+        {s.about !== false && <About />}
+
+        {/* 6. 06 / Contact */}
+        {s.contact !== false && <Contact />}
       </main>
 
-      {/* PWA install banner */}
-      <InstallBanner isInstallable={isInstallable} onInstall={triggerInstall} />
+      {/* 7. Footer */}
+      <Footer />
 
-      {/* Footer */}
-      <footer style={{
-        padding: 'clamp(24px, 3vw, 32px) clamp(20px, 5vw, 60px)',
-        borderTop: '1px solid var(--border)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        gap: 16,
-        background: 'var(--bg-secondary)',
-        boxShadow: 'var(--shadow-3d-sm), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
-      }}>
-        <div style={{
-          fontFamily: 'var(--font-display)',
-          fontWeight: 800,
-          fontSize: 'clamp(16px, 2vw, 18px)',
-          letterSpacing: '-0.03em',
-          color: 'var(--text-primary)',
-        }}>
-          Lokesh<span className="gradient-text">Sain</span>
-        </div>
-        <div style={{
-          fontSize: 13,
-          color: 'var(--text-secondary)',
-          fontFamily: 'var(--font-mono)',
-        }}>
-          © {new Date().getFullYear()} • Built with Next.js
-        </div>
-        <div style={{
-          fontSize: 12,
-          color: 'var(--text-secondary)',
-          fontFamily: 'var(--font-mono)',
-          display: 'flex',
-          gap: 12,
-          alignItems: 'center',
-        }}>
-          <span>Software Engineer • Jaipur</span>
-          <span>•</span>
-          <Link 
-            href="/privacy-policy" 
-            style={{ 
-              color: 'var(--text-secondary)', 
-              textDecoration: 'none',
-              transition: 'color 0.2s'
-            }}
-            onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-secondary)'}
-          >
-            Privacy Policy
-          </Link>
-        </div>
-      </footer>
+      {/* PWA Install Banner */}
+      <InstallBanner />
     </div>
   )
 }

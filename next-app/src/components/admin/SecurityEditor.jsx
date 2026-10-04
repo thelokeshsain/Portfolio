@@ -332,19 +332,20 @@ export default function SecurityEditor() {
           </div>
           <span
             style={{
-              padding: "5px 14px",
+              padding: "4px 12px",
               borderRadius: 99,
-              border: "2px solid var(--ink)",
+              border: totpEnabled || step === "done" ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid rgba(245, 158, 11, 0.3)",
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: 12,
+              fontFamily: "var(--font-mono, monospace)",
               background:
                 totpEnabled || step === "done"
-                  ? "var(--green)"
-                  : "var(--yellow)",
-              color: "#000",
+                  ? "rgba(16, 185, 129, 0.1)"
+                  : "rgba(245, 158, 11, 0.1)",
+              color: totpEnabled || step === "done" ? "#10B981" : "#F59E0B",
             }}
           >
-            {totpEnabled || step === "done" ? "🔐 TOTP Active" : "📧 Email OTP"}
+            {totpEnabled || step === "done" ? "TOTP Active" : "Email OTP"}
           </span>
         </div>
       </Card>
@@ -412,7 +413,7 @@ export default function SecurityEditor() {
             }}
           >
             Open{" "}
-            <strong style={{ color: "var(--ink)" }}>
+            <strong style={{ color: "#F0F2F5" }}>
               Google Authenticator
             </strong>{" "}
             (or Authy, 1Password, etc.) on your phone and scan this QR code:
@@ -510,25 +511,25 @@ export default function SecurityEditor() {
       )}
 
       {step === "done" && (
-        <Card style={{ background: "var(--green)", borderColor: "var(--ink)" }}>
+        <Card style={{ background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.3)" }}>
           <div
             style={{
-              fontWeight: 900,
-              fontSize: 20,
+              fontWeight: 800,
+              fontSize: 18,
               marginBottom: 8,
-              color: "#000",
+              color: "#10B981",
             }}
           >
-            ✓ Google Authenticator Enabled!
+            Google Authenticator Enabled
           </div>
-          <p style={{ fontSize: 15, color: "#000", lineHeight: 1.7 }}>
-            From your next login you'll be asked for a code from your
+          <p style={{ fontSize: 14, color: "#CBD5E1", lineHeight: 1.7 }}>
+            From your next login you&apos;ll be asked for a code from your
             authenticator app.
           </p>
           <button
             onClick={() => setStep("idle")}
             className="btn btn-outline btn-sm"
-            style={{ marginTop: 14, borderColor: "#000", color: "#000" }}
+            style={{ marginTop: 14 }}
           >
             Done
           </button>
@@ -539,16 +540,17 @@ export default function SecurityEditor() {
       <div
         style={{
           marginTop: 28,
-          borderTop: "2px solid var(--ink)",
+          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
           paddingTop: 28,
         }}
       >
         <h3
           style={{
-            fontWeight: 900,
+            fontWeight: 800,
             fontSize: 17,
             letterSpacing: "-0.02em",
             marginBottom: 16,
+            color: "#F0F2F5",
           }}
         >
           Change Password
@@ -559,12 +561,12 @@ export default function SecurityEditor() {
             <p
               style={{
                 fontSize: 14,
-                color: "var(--muted)",
+                color: "#8B93A7",
                 marginBottom: 18,
                 lineHeight: 1.7,
               }}
             >
-              To change your password, we'll first send a verification code to
+              To change your password, we&apos;ll first send a verification code to
               your admin email to confirm your identity.
             </p>
             <button
@@ -603,7 +605,7 @@ export default function SecurityEditor() {
               }}
             >
               Enter the 6-digit code sent to{" "}
-              <strong style={{ color: "var(--ink)" }}>{admin?.email}</strong>
+              <strong style={{ color: "#F0F2F5" }}>{admin?.email}</strong>
             </p>
             <div style={{ marginBottom: 16 }}>
               <FL>Verification Code</FL>
@@ -705,7 +707,7 @@ export default function SecurityEditor() {
                       fontFamily: "var(--mono)",
                     }}
                   >
-                    ✓ Passwords match
+                    Passwords match
                   </p>
                 )}
               </div>

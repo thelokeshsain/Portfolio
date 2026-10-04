@@ -1,415 +1,382 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Image from 'next/image'
-import { Mail, FileText, ChevronDown } from 'lucide-react'
-import { motion, useScroll, useTransform, useSpring, useReducedMotion } from 'framer-motion'
-import useTyping from '../../hooks/useTyping'
+import { MapPin, ArrowRight, Download, Zap, Mail } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
-import { useTheme } from '../../context/ThemeContext'
-
-const WORDS = ['React Developer', 'MERN Engineer', 'Frontend Architect', 'Problem Solver']
-
-const GHIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-  </svg>
-)
-const LIIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-  </svg>
-)
+import { BrandIcon } from '../../config/brandAssets'
 
 export default function Hero() {
   const { data } = useData()
-  const typed = useTyping(WORDS)
-  const { scrollY } = useScroll()
   const shouldReduceMotion = useReducedMotion()
+  const h = data.hero || {}
 
-  const h     = data.hero  || {}
-  const stats = Array.isArray(data.stats) ? data.stats : []
-  const scrollTo = id => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-
-  // Parallax Scroll calculations (GPU accelerated spring values)
-  const yOrb1 = useSpring(useTransform(scrollY, [0, 1000], [0, -120]), { stiffness: 80, damping: 25 })
-  const yOrb2 = useSpring(useTransform(scrollY, [0, 1000], [0, 80]), { stiffness: 80, damping: 25 })
-  const yOrb3 = useSpring(useTransform(scrollY, [0, 1000], [0, -40]), { stiffness: 80, damping: 25 })
-
-  const statColors = [
-    { bg: 'rgba(255, 107, 0, 0.12)', border: 'rgba(255, 107, 0, 0.35)', color: '#ff8800' },
-    { bg: 'rgba(255, 158, 0, 0.12)', border: 'rgba(255, 158, 0, 0.35)', color: '#ff9e00' },
-    { bg: 'rgba(255, 85, 0, 0.12)', border: 'rgba(255, 85, 0, 0.35)', color: '#ff5500' },
-    { bg: 'rgba(255, 170, 0, 0.12)', border: 'rgba(255, 170, 0, 0.35)', color: '#ffaa00' },
-  ]
-
-  // Container variants for staggered entrance animations
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 80,
-        damping: 15,
-      },
-    },
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
     <section id="home" style={{
       position: 'relative',
-      minHeight: '100vh',
+      minHeight: '88vh',
       display: 'flex',
       alignItems: 'center',
+      paddingTop: 'clamp(36px, 5vw, 64px)',
+      paddingBottom: 'clamp(48px, 6vw, 72px)',
       overflow: 'hidden',
-      paddingTop: 'calc(64px + clamp(40px, 6vw, 60px))',
-      paddingBottom: 'clamp(40px, 6vw, 80px)',
     }}>
-      {/* Background Workstation Image with Premium Overlay */}
+      {/* Background ambient glow */}
       <div style={{
         position: 'absolute',
-        inset: 0,
-        zIndex: 0,
+        top: '-15%',
+        right: '5%',
+        width: '600px',
+        height: '600px',
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.08) 0%, rgba(99, 102, 241, 0.04) 45%, transparent 70%)',
         pointerEvents: 'none',
-      }}>
-        <Image
-          src="/images/developer_workspace.webp"
-          alt=""
-          aria-hidden="true"
-          className="hero-bg-img"
-          fill
-          priority
-          fetchPriority="high"
-          quality={60}
-          sizes="100vw"
-          style={{ objectFit: 'cover' }}
-        />
-        <div className="hero-bg-overlay" />
-      </div>
+        zIndex: 0,
+      }} />
 
-      {/* Background layers */}
-      <div className="mesh-bg" />
-      <div className="grid-pattern" />
-
-      {/* Floating orbs — Framer Motion Parallax */}
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1 }}>
-        <motion.div className="orb orb-accent" style={{ width: 400, height: 400, top: '10%', left: '-5%', y: shouldReduceMotion ? 0 : yOrb1 }} />
-        <motion.div className="orb orb-purple" style={{ width: 300, height: 300, top: '60%', right: '-10%', y: shouldReduceMotion ? 0 : yOrb2 }} />
-        <motion.div className="orb orb-blue" style={{ width: 200, height: 200, bottom: '10%', left: '30%', y: shouldReduceMotion ? 0 : yOrb3 }} />
-      </div>
-
-      {/* Content */}
-      <div className="inner" style={{ width: '100%', position: 'relative', zIndex: 2 }}>
-        <div className="hero-layout">
-
-          {/* Left: text content */}
+      <div className="inner" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)',
+          gap: 'clamp(32px, 5vw, 64px)',
+          alignItems: 'center',
+        }}>
+          {/* Left Column: Text & CTAs */}
           <motion.div
-            className="hero-text"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            {h.available && (
-              <motion.div className="status-badge" style={{ marginBottom: 32 }} variants={itemVariants}>
-                <span className="pulse" />
-                Open to opportunities
-              </motion.div>
-            )}
-
-            <motion.h1 className="display-heading" style={{ marginBottom: 20 }} variants={itemVariants}>
-              Hi, I'm<br />
-              <span className="gradient-text">{h.name || 'Lokesh Sain'}</span>
-            </motion.h1>
-
-            <motion.p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 'clamp(14px, 2vw, 18px)',
+            {/* Availability Badge */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 14px',
+              borderRadius: 9999,
+              background: 'rgba(34, 197, 94, 0.08)',
+              border: '1px solid rgba(34, 197, 94, 0.25)',
+              color: '#4ADE80',
+              fontSize: 13,
               fontWeight: 500,
-              color: 'var(--text-muted)',
-              marginBottom: 16,
-              minHeight: '1.8em',
-            }} variants={itemVariants}>
-              &gt; <span style={{ color: 'var(--text-primary)' }}>{typed}</span>
-              <span className="caret" />
-            </motion.p>
+              marginBottom: 28,
+            }}>
+              <span style={{
+                width: 7,
+                height: 7,
+                borderRadius: '50%',
+                background: '#22C55E',
+                boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
+              }} />
+              <span>Available for opportunities</span>
+            </div>
 
-            <motion.p style={{
-              fontSize: 'clamp(15px, 1.8vw, 17px)',
-              lineHeight: 1.8,
-              color: 'var(--text-secondary)',
-              maxWidth: 540,
-              marginBottom: 40,
-            }} variants={itemVariants}>
-              {h.description}
-            </motion.p>
+            {/* Main Headline */}
+            <h1 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(38px, 4.8vw, 62px)',
+              fontWeight: 700,
+              lineHeight: 1.08,
+              letterSpacing: '-0.035em',
+              color: '#FFFFFF',
+              marginBottom: 24,
+            }}>
+              Software Engineer<br />
+              who turns ideas into<br />
+              <span style={{
+                background: 'linear-gradient(135deg, #60A5FA 0%, #38BDF8 50%, #818CF8 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}>
+                real products.
+              </span>
+            </h1>
 
-            <motion.div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 36 }} variants={itemVariants}>
-              <button className="btn btn-primary btn-lg" onClick={() => scrollTo('projects')}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <rect x="2" y="3" width="20" height="14" rx="2"/>
-                  <path d="M8 21h8m-4-4v4"/>
-                </svg>
-                View Projects
+            {/* Description Paragraph */}
+            <p style={{
+              fontSize: 'clamp(15px, 1.3vw, 16.5px)',
+              lineHeight: 1.65,
+              color: '#94A3B8',
+              maxWidth: 520,
+              marginBottom: 20,
+            }}>
+              I build responsive web applications with React.js, integrate LLM APIs into product features, and enjoy solving real-world problems with clean, scalable and user-friendly solutions.
+            </p>
+
+            {/* Location */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 7,
+              fontSize: 14,
+              color: '#64748B',
+              marginBottom: 32,
+            }}>
+              <MapPin size={15} color="#94A3B8" />
+              <span>Jaipur, Rajasthan, India</span>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 36 }}>
+              {/* Primary: White Pill View My Work */}
+              <button
+                onClick={() => scrollTo('projects')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  background: '#FFFFFF',
+                  color: '#090D16',
+                  fontSize: 14,
+                  fontWeight: 600,
+                  padding: '12px 24px',
+                  borderRadius: 9999,
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  boxShadow: '0 4px 16px rgba(255, 255, 255, 0.1)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                  e.currentTarget.style.background = '#F8FAFC'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.background = '#FFFFFF'
+                }}
+              >
+                <span>View My Work</span>
+                <ArrowRight size={15} strokeWidth={2.5} />
               </button>
-              <a href={`mailto:${h.email}`} className="btn btn-secondary btn-lg">
-                <Mail size={16} /> Say Hello
-              </a>
-              {h.resumeUrl && (
-                <a href={h.resumeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-lg">
-                  <FileText size={16} /> Resume
-                </a>
-              )}
-            </motion.div>
 
-            <motion.div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }} variants={itemVariants}>
-              {h.github && (
-                <a href={h.github} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">
-                  <GHIcon /> GitHub
-                </a>
-              )}
-              {h.linkedin && (
-                <a href={h.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">
-                  <LIIcon /> LinkedIn
-                </a>
-              )}
-              {h.location && (
-                <span style={{ fontSize: 13, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
-                  📍 {h.location}
-                </span>
-              )}
-            </motion.div>
+              {/* Secondary: Dark Pill Download Resume */}
+              <a
+                href={h.resumeUrl || '/resume.pdf'}
+                download="Lokesh_Sain_Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  color: '#F8FAFC',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  padding: '12px 24px',
+                  borderRadius: 9999,
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)'
+                }}
+              >
+                <Download size={15} />
+                <span>Download Resume</span>
+              </a>
+            </div>
+
+            {/* Social Icons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <a
+                href={h.github || 'https://github.com/thelokeshsain'}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#FFFFFF'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                }}
+              >
+                <BrandIcon name="GitHub" size={18} />
+              </a>
+
+              <a
+                href={h.linkedin || 'https://linkedin.com/in/thelokeshsain'}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#FFFFFF'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                }}
+              >
+                <BrandIcon name="LinkedIn" size={18} />
+              </a>
+
+              <a
+                href={h.email ? `mailto:${h.email}` : 'mailto:iamlokeshsain@gmail.com'}
+                aria-label="Email"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#FFFFFF'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                }}
+              >
+                <Mail size={18} strokeWidth={2} />
+              </a>
+            </div>
           </motion.div>
 
-          {/* Right: profile card + stats (desktop) */}
+          {/* Right Column: 3D Laptop Display with floating annotations */}
           <motion.div
-            className="hero-right"
+            style={{ position: 'relative' }}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', stiffness: 50, damping: 15, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <ProfileCard h={h} stats={stats} statColors={statColors} />
+            {/* Top-Right Handwritten Annotation */}
+            <div style={{
+              position: 'absolute',
+              top: '-32px',
+              right: '24px',
+              zIndex: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              pointerEvents: 'none',
+            }}>
+              <span style={{
+                fontFamily: "'Caveat', 'Patrick Hand', cursive, sans-serif",
+                fontSize: 22,
+                color: '#CBD5E1',
+                lineHeight: 1.1,
+                transform: 'rotate(-6deg)',
+                textShadow: '0 2px 8px rgba(0,0,0,0.6)',
+              }}>
+                Building<br />what&apos;s next.
+              </span>
+              <svg width="40" height="30" viewBox="0 0 50 40" fill="none" style={{ marginTop: 2, transform: 'rotate(-10deg)' }}>
+                <path
+                  d="M40 5 C30 20, 20 25, 10 32"
+                  stroke="#94A3B8"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeDasharray="3 3"
+                />
+                <polyline points="15,26 8,33 16,35" stroke="#94A3B8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+              </svg>
+            </div>
+
+            {/* Laptop Image Mockup */}
+            <div style={{
+              position: 'relative',
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+            }}>
+              <Image
+                src="/images/hero_laptop_mockup.webp"
+                alt="VS Code development environment"
+                width={800}
+                height={500}
+                priority
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  transform: 'scale(1.02)',
+                }}
+              />
+            </div>
+
+            {/* Bottom-Right Floating Glass Badge */}
+            <div style={{
+              position: 'absolute',
+              bottom: '18px',
+              right: '18px',
+              zIndex: 10,
+              background: 'rgba(10, 14, 22, 0.85)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: 12,
+              padding: '12px 16px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 6,
+              boxShadow: '0 12px 30px rgba(0,0,0,0.5)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Zap size={13} color="#38BDF8" fill="#38BDF8" />
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#E2E8F0' }}>Clean Code</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Zap size={13} color="#38BDF8" fill="#38BDF8" />
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#E2E8F0' }}>Scalable Products</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Zap size={13} color="#38BDF8" fill="#38BDF8" />
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#E2E8F0' }}>Better Experiences</span>
+              </div>
+            </div>
           </motion.div>
         </div>
-
-        {/* Mobile stats */}
-        <div className="hero-mobile-stats">
-          <MobileStatsBar h={h} stats={stats} statColors={statColors} />
-        </div>
-
-        {/* Scroll indicator */}
-        <div style={{
-          position: 'absolute',
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 8,
-          opacity: 0.4,
-          animation: 'float 3s ease-in-out infinite',
-        }}>
-          <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Scroll</span>
-          <ChevronDown size={16} style={{ color: 'var(--text-muted)' }} />
-        </div>
       </div>
-
-      <style>{`
-        .hero-layout {
-          display: grid;
-          grid-template-columns: 1.1fr 0.9fr;
-          gap: clamp(40px, 6vw, 80px);
-          align-items: center;
-        }
-        .hero-right { display: flex; flex-direction: column; gap: 16px; }
-        .hero-mobile-stats { display: none; }
-
-        @media (max-width: 900px) {
-          .hero-layout { grid-template-columns: 1fr; }
-          .hero-right { display: none; }
-          .hero-mobile-stats { display: block; margin-top: 48px; }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(8px); }
-        }
-      `}</style>
     </section>
-  )
-}
-
-/* ── Profile card for desktop ── */
-function ProfileCard({ h, stats, statColors }) {
-  const { dark } = useTheme()
-  const { scrollY } = useScroll()
-  const shouldReduceMotion = useReducedMotion()
-
-  // Transform scroll position to vertical translate (Mockup element moves differently for depth)
-  const yVal = useTransform(scrollY, [0, 800], [0, -80])
-  const y = useSpring(yVal, { stiffness: 80, damping: 25 })
-
-  return (
-    <div style={{ position: 'relative' }}>
-      {/* Floating software engineer mock image */}
-      <motion.div
-        style={{
-          position: 'absolute',
-          top: '-20%',
-          right: '-25%',
-          width: '75%',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border)',
-          overflow: 'hidden',
-          boxShadow: dark ? 'var(--shadow-xl)' : 'var(--shadow-md)', // Soften shadow in light mode
-          zIndex: -1,
-          opacity: dark ? 0.65 : 0.35, // Increased from 0.15 to 0.35 in light mode for proper watermark visibility
-          pointerEvents: 'none',
-          background: 'var(--bg-secondary)',
-          y: shouldReduceMotion ? 0 : y,
-        }}
-      >
-        <Image
-          src="/images/editor_mockup.webp"
-          alt="Code Editor Mockup"
-          width={800}
-          height={600}
-          priority
-          quality={60}
-          style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
-        />
-      </motion.div>
-
-      {/* Terminal-style profile card */}
-      <div className="terminal" style={{ transition: 'all 0.4s var(--ease-out-quart)', marginBottom: 12, boxShadow: 'var(--shadow-3d-lg)' }}>
-        <div className="terminal-bar">
-          <div className="terminal-dot" style={{ background: '#ff5f57' }} />
-          <div className="terminal-dot" style={{ background: '#febc2e' }} />
-          <div className="terminal-dot" style={{ background: '#28c840' }} />
-          <span className="terminal-title">profile.json</span>
-        </div>
-        <div style={{ padding: 'clamp(20px, 3vw, 28px)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-          <AvatarImage h={h} size="clamp(80px, 10vw, 100px)" fontSize="clamp(26px, 4vw, 34px)" />
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontWeight: 700, fontSize: 'clamp(16px, 2vw, 18px)', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>{h.name}</div>
-            <div style={{ fontSize: 13, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)', marginTop: 4 }}>{h.role || h.title}</div>
-          </div>
-          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center' }}>
-            <span className="tag tag-y">React.js</span>
-            <span className="tag tag-g">Node.js</span>
-            <span className="tag tag-bl">MongoDB</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats 2x2 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-        {stats.map((s, i) => {
-          const c = statColors[i % statColors.length]
-          return (
-            <div key={`stat-${i}`} className="glass-card" style={{
-              padding: '18px 14px',
-              textAlign: 'center',
-              background: c.bg,
-              borderColor: c.border,
-              boxShadow: `var(--depth-2), var(--highlight-edge), 0 0 15px ${c.color}15`,
-            }}>
-              <div style={{ fontSize: 'clamp(22px, 3vw, 28px)', fontWeight: 800, letterSpacing: '-0.04em', fontFamily: 'var(--font-display)', color: c.color }}>{s.num}</div>
-              <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', marginTop: 4, color: 'var(--text-muted)' }}>{s.label}</div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Current work indicator */}
-      <div className="glass-card" style={{ padding: '14px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span className="pulse" style={{ flexShrink: 0 }} />
-        <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>
-          @ <strong style={{ color: 'var(--text-primary)' }}>3Handshake Techsoft</strong>
-        </span>
-      </div>
-    </div>
-  )
-}
-
-/* ── Mobile stats bar ── */
-function MobileStatsBar({ h, stats, statColors }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      {/* Avatar + name on mobile */}
-      <div className="glass-card" style={{ padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
-        <AvatarImage h={h} size="52px" fontSize="18px" />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--text-primary)' }}>{h.name}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontFamily: 'var(--font-mono)' }}>{h.role}</div>
-        </div>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 6,
-          fontSize: 11, color: '#4ade80', fontWeight: 600,
-          background: 'rgba(34, 197, 94, 0.1)',
-          padding: '6px 12px', borderRadius: 'var(--radius-full)',
-          border: '1px solid rgba(34, 197, 94, 0.2)',
-          flexShrink: 0,
-          fontFamily: 'var(--font-mono)',
-        }}>
-          <span className="pulse" style={{ width: 6, height: 6 }} />
-          3Handshake
-        </div>
-      </div>
-
-      {/* Stats grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        {stats.map((s, i) => {
-          const c = statColors[i % statColors.length]
-          return (
-            <div key={`mstat-${i}`} className="glass-card" style={{
-              padding: '16px 12px',
-              textAlign: 'center',
-              background: c.bg,
-              borderColor: c.border,
-              boxShadow: `var(--depth-2), var(--highlight-edge), 0 0 12px ${c.color}15`,
-            }}>
-              <div style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.04em', fontFamily: 'var(--font-display)', color: c.color }}>{s.num}</div>
-              <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', marginTop: 3, color: 'var(--text-muted)' }}>{s.label}</div>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-/* ── Avatar with image fallback ── */
-function AvatarImage({ h, size, fontSize }) {
-  const [imgError, setImgError] = useState(false)
-  const showInitials = !h.image || imgError
-
-  return (
-    <div className="av" style={{ width: size, height: size, fontSize, position: 'relative' }}>
-      {!showInitials ? (
-        <Image
-          src={h.image}
-          alt={h.name}
-          onError={() => setImgError(true)}
-          fill
-          priority
-          sizes="100px"
-          style={{ objectFit: 'cover' }}
-        />
-      ) : (
-        <span style={{ fontWeight: 800, color: 'var(--accent-light)', fontSize }}>{(h.name || 'LS').split(' ').map(w => w[0]).join('')}</span>
-      )}
-    </div>
   )
 }

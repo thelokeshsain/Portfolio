@@ -41,12 +41,9 @@ async function hardReloadClearCache() {
   window.location.replace(url.toString())
 }
 
-/* ─── Theme detection ────────────────────────────────────────────────────── */
+/* ─── Theme: Permanently Dark (Midnight Blueprint) ───────────────────────── */
 function isDarkMode() {
-  // Prefer the class set by ThemeContext; fall back to OS preference
-  if (document.documentElement.classList.contains('dark')) return true
-  if (window.matchMedia?.('(prefers-color-scheme: dark)').matches) return true
-  return false
+  return true
 }
 
 /* ─── Component ──────────────────────────────────────────────────────────── */

@@ -140,10 +140,12 @@ export async function POST(request) {
         type: "email",
       });
       try {
+        const otpTpl = twoFactorEmail(otpCode);
         await sendMail({
           to: admin.email,
-          subject: "🔐 Admin Login — Verification Code",
-          html: twoFactorEmail(otpCode),
+          subject: "Admin Verification Code — Lokesh Sain",
+          html: otpTpl.html,
+          text: otpTpl.text,
         });
       } catch (e) {
         console.error("[2FA email]", e.message);
@@ -158,10 +160,12 @@ export async function POST(request) {
 
     const meta = buildRequestMeta(request);
     try {
+      const alertTpl = loginAlertEmail(meta);
       await sendMail({
         to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-        subject: "⚡ Admin Login Detected — Lokesh Portfolio",
-        html: loginAlertEmail(meta),
+        subject: "Admin Login Detected — Lokesh Sain",
+        html: alertTpl.html,
+        text: alertTpl.text,
       });
     } catch (e) {
       console.error("[Login alert]", e.message);

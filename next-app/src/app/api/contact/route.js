@@ -35,18 +35,23 @@ export async function POST(request) {
       timeStyle: "medium",
     });
 
+    const confTpl = confirmationEmail(name);
+    const notifTpl = notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr });
+
     // IMPORTANT: Must await emails on Vercel — serverless kills the process after response
     await Promise.allSettled([
       sendMail({
         to: email,
-        subject: "Got your message - Lokesh Sain",
-        html: confirmationEmail(name),
+        subject: "Message Received — Lokesh Sain",
+        html: confTpl.html,
+        text: confTpl.text,
       }).catch((e) => console.error("[Contact] Confirmation email failed:", e.message)),
 
       sendMail({
         to: process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-        subject: `⚡ New message from ${name}`,
-        html: notificationEmail({ name, email, message, ip, userAgent, browser, device, dateStr }),
+        subject: `New Portfolio Contact — ${name}`,
+        html: notifTpl.html,
+        text: notifTpl.text,
       }).catch((e) => console.error("[Contact] Admin notification failed:", e.message)),
     ]);
 

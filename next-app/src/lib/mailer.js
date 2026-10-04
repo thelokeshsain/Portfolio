@@ -43,7 +43,7 @@ function getTransporter() {
 }
 
 // Send email via Resend HTTP API (Zero SMTP dependency)
-async function sendViaResend({ to, subject, html }) {
+async function sendViaResend({ to, subject, html, text }) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return null;
 
@@ -53,18 +53,23 @@ async function sendViaResend({ to, subject, html }) {
     from = "Lokesh Sain Portfolio <onboarding@resend.dev>";
   }
 
+  const payload = {
+    from,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+  };
+  if (text) {
+    payload.text = text;
+  }
+
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from,
-      to: Array.isArray(to) ? to : [to],
-      subject,
-      html,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
@@ -75,11 +80,11 @@ async function sendViaResend({ to, subject, html }) {
   return await res.json();
 }
 
-async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
+async function sendMailWithRetry({ to, subject, html, text }, attempt = 1) {
   // Option 1: Use Resend API if RESEND_API_KEY is configured
   if (process.env.RESEND_API_KEY) {
     try {
-      const resendResult = await sendViaResend({ to, subject, html });
+      const resendResult = await sendViaResend({ to, subject, html, text });
       if (resendResult) return resendResult;
     } catch (err) {
       console.error(`[Mailer] Resend API send failed: ${err.message}`);
@@ -98,27 +103,31 @@ async function sendMailWithRetry({ to, subject, html }, attempt = 1) {
   const from = process.env.FROM_EMAIL || process.env.SMTP_USER;
 
   try {
-    const info = await transport.sendMail({
+    const mailOptions = {
       from,
       to,
       subject,
       html,
-    });
+    };
+    if (text) {
+      mailOptions.text = text;
+    }
+    const info = await transport.sendMail(mailOptions);
     return info;
   } catch (err) {
     console.error(`[Mailer] SMTP send failed (attempt ${attempt}/3): ${err.message}`);
     if (attempt < 3) {
       const delay = Math.pow(2, attempt) * 1000;
       await new Promise((resolve) => setTimeout(resolve, delay));
-      return sendMailWithRetry({ to, subject, html }, attempt + 1);
+      return sendMailWithRetry({ to, subject, html, text }, attempt + 1);
     }
     throw err;
   }
 }
 
-module.exports = async function sendMail({ to, subject, html }) {
+module.exports = async function sendMail({ to, subject, html, text }) {
   try {
-    return await sendMailWithRetry({ to, subject, html });
+    return await sendMailWithRetry({ to, subject, html, text });
   } catch (err) {
     console.error("[Mailer] Permanent failure sending email:", err.message);
     return null;

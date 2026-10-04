@@ -41,7 +41,7 @@ export default function SectionsEditor({ data, onSave }) {
               alignItems: "center",
               padding: "16px 24px",
               borderBottom:
-                i < arr.length - 1 ? "2px solid var(--ink)" : "none",
+                i < arr.length - 1 ? "1px solid rgba(255, 255, 255, 0.08)" : "none",
             }}
           >
             <div>
@@ -50,6 +50,7 @@ export default function SectionsEditor({ data, onSave }) {
                   fontWeight: 700,
                   fontSize: 15,
                   textTransform: "capitalize",
+                  color: "#F0F2F5",
                 }}
               >
                 {key} Section
@@ -57,8 +58,8 @@ export default function SectionsEditor({ data, onSave }) {
               <div
                 style={{
                   fontSize: 12,
-                  color: "var(--muted)",
-                  fontFamily: "var(--mono)",
+                  color: "#8B93A7",
+                  fontFamily: "var(--font-mono, monospace)",
                   marginTop: 2,
                 }}
               >
@@ -71,9 +72,10 @@ export default function SectionsEditor({ data, onSave }) {
                 background: "none",
                 border: "none",
                 cursor: "pointer",
-                color: val ? "var(--green)" : "var(--muted)",
+                color: val ? "#10B981" : "#505872",
                 display: "flex",
               }}
+              aria-label={`Toggle ${key} section visibility`}
             >
               {val ? <ToggleRight size={30} /> : <ToggleLeft size={30} />}
             </button>

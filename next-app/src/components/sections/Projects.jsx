@@ -1,248 +1,345 @@
-import { useRef, useCallback } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-import { ExternalLink } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
+import { BrandIcon } from '../../config/brandAssets'
 
-const GHIcon = ({ size = 14 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-  </svg>
-)
-
-const accentMap = {
-  'var(--yellow)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)' },
-  'var(--green)': { bg: 'var(--bg-secondary)', border: 'rgba(52, 199, 89, 0.35)', gradient: 'linear-gradient(135deg, #34c759, #30d158)' },
-  'var(--pink)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff6b00, #ff8800)' },
-  'var(--blue)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 158, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff8800, #ffaa00)' },
-  'var(--purple)': { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)' },
-}
-
-const fallbackAccent = { bg: 'var(--bg-secondary)', border: 'rgba(255, 107, 0, 0.35)', gradient: 'var(--gradient-accent)' }
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 35 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { type: 'spring', stiffness: 70, damping: 15 }
-  }
-}
-
-function ProjectCard({ p }) {
-  const cardRef = useRef(null)
-  const tags = Array.isArray(p.tags)
-    ? p.tags.map(t => typeof t === 'string' ? t : t?.label || '')
-    : []
-  const isGithubLink = p.link?.includes('github.com')
-  const accent = accentMap[p.accentBg] || fallbackAccent
-
-  // 3D tilt on hover (using performant CSS Transforms)
-  const handleMouseMove = useCallback((e) => {
-    const card = cardRef.current
-    if (!card || window.innerWidth < 768) return
-    const rect = card.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    card.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-4px)`
-    
-    // Add glow cursor update
-    const glowX = e.clientX - rect.left
-    const glowY = e.clientY - rect.top
-    card.style.setProperty('--mouse-x', `${glowX}px`)
-    card.style.setProperty('--mouse-y', `${glowY}px`)
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    const card = cardRef.current
-    if (card) card.style.transform = 'perspective(800px) rotateY(0) rotateX(0) translateY(0)'
-  }, [])
-
-  return (
-    <motion.div
-      ref={cardRef}
-      variants={cardVariants}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        border: `1px solid ${accent.border}`,
-        borderRadius: 'var(--radius-lg)',
-        overflow: 'hidden',
-        background: accent.bg,
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.15s var(--ease-out-quart), box-shadow 0.3s',
-        willChange: 'transform',
-      }}
-    >
-      {/* Gradient accent bar */}
-      <div style={{
-        height: 3,
-        background: accent.gradient,
-      }} />
-
-      {/* Card content */}
-      <div style={{
-        padding: 'clamp(20px, 3vw, 28px)',
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-      }}>
-        {/* Header: category + period + logo */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          marginBottom: 16,
-          gap: 12,
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
-            <span className={`tag ${p.tagClass || 'tag-y'}`} style={{ fontSize: 11, alignSelf: 'flex-start' }}>
-              {p.category || 'Project'}
-            </span>
-            {p.period && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)' }}>
-                {p.period}
-              </span>
-            )}
-          </div>
-
-          {p.image && (
-            <div style={{
-              position: 'relative',
-              width: 'clamp(56px, 10vw, 80px)',
-              height: 'clamp(56px, 10vw, 70px)',
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Image
-                src={p.image}
-                alt={`${p.title} logo`}
-                fill
-                sizes="64px"
-                style={{ objectFit: 'contain' }}
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Title */}
-        <h3 style={{
-          fontFamily: 'var(--font-display)',
-          fontWeight: 700,
-          fontSize: 'clamp(17px, 2.5vw, 20px)',
-          letterSpacing: '-0.02em',
-          marginBottom: 10,
-          lineHeight: 1.2,
-          color: 'var(--text-primary)',
-        }}>
-          {p.title}
-        </h3>
-
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-            {tags.map((t, i) => (
-              <span key={`${t}-${i}`} className="tag" style={{ fontSize: 11 }}>
-                {t}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Description */}
-        <p style={{
-          fontSize: 'clamp(13px, 1.5vw, 14px)',
-          lineHeight: 1.75,
-          color: 'var(--text-secondary)',
-          flex: 1,
-          marginBottom: 20,
-        }}>
-          {p.desc || p.description}
-        </p>
-
-        {/* Action buttons */}
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {p.link && (
-            <a
-              href={p.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary btn-sm"
-            >
-              {isGithubLink ? (
-                <><GHIcon /> Source Code</>
-              ) : (
-                <><ExternalLink size={13} /> Live Demo</>
-              )}
-            </a>
-          )}
-          {p.github && p.github !== p.link && (
-            <a
-              href={p.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-ghost btn-sm"
-            >
-              <GHIcon /> Source
-            </a>
-          )}
-        </div>
-      </div>
-    </motion.div>
-  )
-}
+const FEATURED_PROJECTS = [
+  {
+    id: 1,
+    title: 'Apna Backup',
+    desc: 'Online backup platform with real-time synchronization and secure file storage.',
+    tags: ['React.js', 'REST APIs', 'Responsive'],
+    image: '/images/project_apna_backup.webp',
+    featured: true,
+    link: 'https://www.apnabackup.com/',
+    github: 'https://github.com/thelokeshsain/Apna-Backup',
+  },
+  {
+    id: 2,
+    title: 'FoodCourt Mobile App',
+    desc: 'Android app for cafeteria food ordering with real-time tracking.',
+    tags: ['Android', 'Java', 'XML'],
+    image: '/images/project_foodcourt.webp',
+    featured: false,
+    link: 'https://github.com/thelokeshsain/FoodCourt',
+    github: 'https://github.com/thelokeshsain/FoodCourt',
+  },
+  {
+    id: 3,
+    title: 'Sizzling Hair Salon Platform',
+    desc: 'Full-stack salon management platform with appointment booking.',
+    tags: ['HTML5', 'CSS3', 'JavaScript'],
+    image: '/images/project_sizzling.webp',
+    featured: false,
+    link: 'https://github.com/thelokeshsain/Sizzling',
+    github: 'https://github.com/thelokeshsain/Sizzling',
+  },
+]
 
 export default function Projects() {
   const { data } = useData()
-  const projects = (data.projects || []).filter(p => p.visible !== false)
+  const dbProjects = data.projects || []
+  const [showAll, setShowAll] = useState(false)
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      }
-    }
-  }
+  // Use the exact reference featured projects for top 3, plus remaining from DB if showAll
+  const extraProjects = dbProjects.slice(3)
+  const displayedProjects = showAll ? [...FEATURED_PROJECTS, ...extraProjects] : FEATURED_PROJECTS
 
   return (
     <section id="projects" className="section section-border" style={{ position: 'relative' }}>
-      <div className="mesh-bg" />
-
       <div className="inner">
-        <div className="section-label">Projects</div>
-        <motion.h2 
-          className="section-heading" 
-          style={{ marginBottom: 56 }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          Things I've <span className="gradient-text">shipped.</span>
-        </motion.h2>
+        {/* Section Header */}
+        <div style={{ marginBottom: 36 }}>
+          <div className="section-label" style={{ marginBottom: 12 }}>02 / FEATURED PROJECTS</div>
 
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))',
-            gap: 20,
-          }}
-        >
-          {projects.map((p, i) => (
-            <ProjectCard key={p.id || `proj-${i}`} p={p} />
-          ))}
-        </motion.div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            flexWrap: 'wrap',
+            gap: 24,
+          }}>
+            <div>
+              <h2 className="section-heading" style={{ margin: 0 }}>
+                Projects I&apos;ve Built
+              </h2>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 24, flexWrap: 'wrap' }}>
+              <p style={{
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: 'var(--text-secondary)',
+                maxWidth: 440,
+                margin: 0,
+              }}>
+                A few projects that showcase my experience in full-stack development, real-world problem solving and building user-focused products.
+              </p>
+
+              <button
+                onClick={() => setShowAll(p => !p)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  background: '#FFFFFF',
+                  color: '#090D16',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  padding: '10px 20px',
+                  borderRadius: 9999,
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.background = '#F1F5F9'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.background = '#FFFFFF'
+                }}
+              >
+                <span>{showAll ? 'Show Featured' : 'View All Projects'}</span>
+                <ArrowRight size={14} strokeWidth={2.5} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* 3-Column Projects Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+          gap: 24,
+        }}>
+          {displayedProjects.map((p, idx) => {
+            const isFeatured = p.featured
+            const tags = Array.isArray(p.tags)
+              ? p.tags.map(t => typeof t === 'string' ? t : t?.label || '')
+              : []
+
+            return (
+              <motion.div
+                key={p.id || p.title || idx}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                style={{
+                  background: '#0B0F17',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: 18,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  transition: 'border-color 0.25s, transform 0.25s, box-shadow 0.25s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)'
+                  e.currentTarget.style.transform = 'translateY(-3px)'
+                  e.currentTarget.style.boxShadow = '0 12px 36px rgba(0, 0, 0, 0.5)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                {/* Image Container */}
+                <div style={{
+                  position: 'relative',
+                  width: '100%',
+                  aspectRatio: '16 / 10',
+                  background: '#070A0F',
+                  overflow: 'hidden',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+                }}>
+                  {p.image ? (
+                    <Image
+                      src={p.image}
+                      alt={p.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <div style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#475569',
+                      fontSize: 14,
+                    }}>
+                      {p.title}
+                    </div>
+                  )}
+
+                  {/* Featured Badge */}
+                  {isFeatured && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 14,
+                      left: 14,
+                      background: 'rgba(59, 130, 246, 0.9)',
+                      backdropFilter: 'blur(8px)',
+                      color: '#FFFFFF',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      padding: '4px 12px',
+                      borderRadius: 9999,
+                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.4)',
+                    }}>
+                      Featured
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Content */}
+                <div style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <h3 style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 18,
+                    fontWeight: 700,
+                    color: '#F8FAFC',
+                    marginBottom: 8,
+                    letterSpacing: '-0.01em',
+                  }}>
+                    {p.title}
+                  </h3>
+
+                  <p style={{
+                    fontSize: 13.5,
+                    lineHeight: 1.6,
+                    color: '#94A3B8',
+                    marginBottom: 18,
+                    flex: 1,
+                  }}>
+                    {p.desc || p.description}
+                  </p>
+
+                  {/* Tags */}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+                    {tags.map((tag, tIdx) => (
+                      <span
+                        key={tIdx}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 5,
+                          fontSize: 11,
+                          fontWeight: 500,
+                          padding: '3px 10px',
+                          borderRadius: 9999,
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.08)',
+                          color: '#CBD5E1',
+                        }}
+                      >
+                        <BrandIcon name={tag} size={13} />
+                        <span>{tag}</span>
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Card Action Links */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 'auto' }}>
+                    {/* Live Demo or View Details */}
+                    {isFeatured ? (
+                      <a
+                        href={p.link || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          background: '#FFFFFF',
+                          color: '#090D16',
+                          fontSize: 12.5,
+                          fontWeight: 600,
+                          padding: '7px 16px',
+                          borderRadius: 9999,
+                          textDecoration: 'none',
+                          transition: 'all 0.2s',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.background = '#E2E8F0'
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.background = '#FFFFFF'
+                        }}
+                      >
+                        <span>Live Demo</span>
+                        <ArrowRight size={13} strokeWidth={2.5} />
+                      </a>
+                    ) : (
+                      <a
+                        href={p.link || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          color: '#F8FAFC',
+                          fontSize: 13,
+                          fontWeight: 500,
+                          textDecoration: 'none',
+                          transition: 'color 0.2s',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.color = '#38BDF8'
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.color = '#F8FAFC'
+                        }}
+                      >
+                        <span>View Details</span>
+                        <ArrowRight size={13} strokeWidth={2} />
+                      </a>
+                    )}
+
+                    {/* View Code */}
+                    <a
+                      href={p.github || 'https://github.com/thelokeshsain'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        color: '#94A3B8',
+                        fontSize: 13,
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        transition: 'color 0.2s',
+                        marginLeft: isFeatured ? 'auto' : 8,
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.color = '#FFFFFF'
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.color = '#94A3B8'
+                      }}
+                    >
+                      <span>View Code</span>
+                      <BrandIcon name="GitHub" size={14} />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
+        </div>
       </div>
     </section>
   )
 }
-

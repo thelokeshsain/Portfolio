@@ -2,17 +2,15 @@
  * CertificationsModal — Glassmorphic redesign
  * All modal logic preserved: scroll lock, achievement rendering, external links.
  */
-import { X, ExternalLink } from 'lucide-react'
-import { useEffect, useCallback, useState } from 'react'
+import { X, ExternalLink, Award } from 'lucide-react'
+import { useEffect, useCallback, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import GlowCard from './GlowCard'
 
-export default function CertificationsModal({ isOpen, onClose, achievements }) {
-  const [mounted, setMounted] = useState(false)
+const emptySubscribe = () => () => {}
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+export default function CertificationsModal({ isOpen, onClose, achievements }) {
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false)
 
   // Prevent scrolling when modal is open
   useEffect(() => {
@@ -155,16 +153,16 @@ export default function CertificationsModal({ isOpen, onClose, achievements }) {
                     width: 42,
                     height: 42,
                     borderRadius: '50%',
-                    background: 'var(--accent-glow)',
-                    border: '1px solid var(--border-accent)',
+                    background: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid rgba(56, 189, 248, 0.25)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
-                    fontSize: 18,
-                    boxShadow: 'var(--depth-2), inset -1px -1px 2px rgba(0, 0, 0, 0.15), inset 1px 1px 2px rgba(255, 255, 255, 0.1)',
+                    color: '#38BDF8',
+                    boxShadow: 'var(--depth-2)',
                   }}>
-                    {item.icon || '🏆'}
+                    <Award size={20} strokeWidth={2} />
                   </div>
                   <div>
                     <div style={{

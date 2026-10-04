@@ -164,10 +164,12 @@ export async function POST(request) {
 
     const meta = buildRequestMeta(request);
     try {
+      const alertTpl = loginAlertEmail(meta);
       await sendMail({
         to: admin.email || process.env.OWNER_EMAIL || "iamlokeshsain@gmail.com",
-        subject: "⚡ Admin Login Detected — Lokesh Portfolio",
-        html: loginAlertEmail(meta),
+        subject: "Admin Login Detected — Lokesh Sain",
+        html: alertTpl.html,
+        text: alertTpl.text,
       });
     } catch (e) {
       console.error("[Login alert 2FA]", e.message);

@@ -1,63 +1,30 @@
 /**
- * Navbar — Glassmorphic, scroll-reactive navigation
+ * Navbar — Premium Apple-style navigation matching the reference design
  *
- * Features:
- * - Backdrop blur with scroll-reactive opacity
- * - Active section tracking via IntersectionObserver
- * - Smooth scroll navigation
- * - Mobile menu with blur overlay
- * - Theme toggle, PWA install button preserved
+ * Left: Monogram/Avatar + Name + blue dot
+ * Center: Home, About, Projects, Experience, Skills, Contact
+ * Right: White pill "Download Resume" button
+ * Permanently dark (Midnight Blueprint) — No theme toggle
  */
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { Sun, Moon, Menu, X } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { Menu, X, Download } from 'lucide-react'
 import { InstallButton } from '../ui/InstallPWA'
-import { useTheme } from '../../context/ThemeContext'
 import { useData } from '../../context/DataContext'
-import MagneticElement from '../ui/MagneticElement'
-
-const NAV = [
-  { label: 'About',    id: 'about'      },
-  { label: 'Work',     id: 'experience' },
-  { label: 'Projects', id: 'projects'   },
-  { label: 'Skills',   id: 'skills'     },
-  { label: 'Contact',  id: 'contact'    },
-]
-
-const scroll = id => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+import { NAV_SECTIONS } from '../../config/navigation'
+import { useActiveSection } from '../../hooks/useActiveSection'
 
 export default function Navbar({ isInstallable, onInstall }) {
-  const { dark, toggle, mounted } = useTheme()
   const { data } = useData()
+  const { activeSection, scrollToSection } = useActiveSection()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [activeId, setActiveId] = useState('')
-  const observerRef = useRef(null)
 
-  // Scroll-reactive background
+  // Scroll-reactive background blur
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  // Active section tracking
-  useEffect(() => {
-    const sections = NAV.map(n => document.getElementById(n.id)).filter(Boolean)
-    if (!sections.length) return
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter(e => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
-        if (visible.length) setActiveId(visible[0].target.id)
-      },
-      { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
-    )
-
-    sections.forEach(s => observerRef.current.observe(s))
-    return () => observerRef.current?.disconnect()
   }, [])
 
   // Close mobile menu on resize
@@ -73,79 +40,206 @@ export default function Navbar({ isInstallable, onInstall }) {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  const go = useCallback((id) => { scroll(id); setOpen(false) }, [])
+  const go = useCallback((id) => {
+    scrollToSection(id)
+    setOpen(false)
+  }, [scrollToSection])
+
   const h = data.hero || {}
 
   return (
     <>
       <nav className={`nav${scrolled ? ' scrolled' : ''}`} role="navigation" aria-label="Main navigation">
         {/* Logo */}
-        <MagneticElement strength={0.15}>
-          <div className="nav-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} style={{ cursor: 'pointer' }}>
-            Lokesh<span className="logo-accent">Sain</span>
+        <div
+          className="nav-logo"
+          onClick={() => scrollToSection('home')}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={e => e.key === 'Enter' && scrollToSection('home')}
+        >
+          <div style={{
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            background: 'linear-gradient(135deg, #1E293B, #0F172A)',
+            border: '1.5px solid rgba(255,255,255,0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            overflow: 'hidden',
+          }}>
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 12,
+              fontWeight: 700,
+              color: '#F8FAFC',
+              letterSpacing: '0.05em'
+            }}>
+              LS
+            </span>
           </div>
-        </MagneticElement>
+          <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+            Lokesh Sain
+          </span>
+          <span style={{
+            width: 5,
+            height: 5,
+            borderRadius: '50%',
+            background: '#38BDF8',
+            display: 'inline-block',
+            marginLeft: -2
+          }} />
+        </div>
 
         {/* Desktop links */}
-        <div className="hide-mobile" style={{ display: 'flex', gap: 4 }}>
-          {NAV.map(n => (
-            <MagneticElement key={n.id} strength={0.2}>
+        <div className="hide-mobile" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 4,
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          borderRadius: 9999,
+          padding: '4px 6px',
+        }}>
+          {NAV_SECTIONS.map(n => {
+            const isActive = activeSection === n.id
+            return (
               <button
-                className={`nav-link${activeId === n.id ? ' active' : ''}`}
-                onClick={() => scroll(n.id)}
+                key={n.id}
+                onClick={() => scrollToSection(n.id)}
+                style={{
+                  background: isActive ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                  border: 'none',
+                  color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
+                  fontSize: 13,
+                  fontWeight: isActive ? 600 : 500,
+                  padding: '6px 14px',
+                  borderRadius: 9999,
+                  transition: 'all 0.2s',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={e => {
+                  if (!isActive) e.currentTarget.style.color = '#FFFFFF'
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)'
+                }}
               >
                 {n.label}
               </button>
-            </MagneticElement>
-          ))}
+            )
+          })}
         </div>
 
-        {/* Right actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <MagneticElement strength={0.25}>
-            <button
-              className="icon-btn"
-              onClick={toggle}
-              title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-              aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {!mounted ? <div style={{ width: 16, height: 16 }} /> : (dark ? <Sun size={16} /> : <Moon size={16} />)}
-            </button>
-          </MagneticElement>
-          <InstallButton isInstallable={isInstallable} onInstall={onInstall} />
-          <MagneticElement strength={0.2}>
-            <a href={`mailto:${h.email}`} className="nav-cta hide-mobile">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,12 2,6"/>
-              </svg>
-              Hire Me
-            </a>
-          </MagneticElement>
+        {/* Right actions: White pill Download Resume only */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <a
+            href={h.resumeUrl || '/resume.pdf'}
+            download="Lokesh_Sain_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 7,
+              background: '#FFFFFF',
+              color: '#090D16',
+              fontSize: 13,
+              fontWeight: 600,
+              padding: '8px 18px',
+              borderRadius: 9999,
+              textDecoration: 'none',
+              transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-1px)'
+              e.currentTarget.style.background = '#F1F5F9'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.background = '#FFFFFF'
+            }}
+          >
+            <Download size={14} strokeWidth={2.5} />
+            <span className="hide-mobile">Download Resume</span>
+            <span className="show-mobile-inline" style={{ display: 'none' }}>Resume</span>
+          </a>
+
+          {/* PWA Install Button */}
+          {isInstallable && (
+            <InstallButton isInstallable={isInstallable} onInstall={onInstall} />
+          )}
+
+          {/* Mobile hamburger */}
           <button
-            className="icon-btn hamburger"
-            onClick={() => setOpen(o => !o)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            className="hamburger"
+            onClick={() => setOpen(p => !p)}
+            aria-label="Toggle navigation menu"
             aria-expanded={open}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'none',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+            }}
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`mob-menu${open ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Navigation menu">
-        {NAV.map(n => (
-          <button key={n.id} onClick={() => go(n.id)}>{n.label}</button>
-        ))}
-        <a
-          href={`mailto:${h.email}`}
-          className="btn btn-primary"
-          style={{ marginTop: 12, justifyContent: 'center', width: '100%', textAlign: 'center' }}
-          onClick={() => setOpen(false)}
-        >
-          ✉️ Hire Me
-        </a>
+      {/* Mobile drawer */}
+      <div className={`mob-menu${open ? ' open' : ''}`}>
+        {NAV_SECTIONS.map(n => {
+          const isActive = activeSection === n.id
+          return (
+            <button
+              key={n.id}
+              onClick={() => go(n.id)}
+              style={{
+                color: isActive ? '#FFFFFF' : 'var(--text-secondary)',
+                fontWeight: isActive ? 600 : 500,
+              }}
+            >
+              {n.label}
+            </button>
+          )
+        })}
+
+        <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <a
+            href={h.resumeUrl || '/resume.pdf'}
+            download="Lokesh_Sain_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              background: '#FFFFFF',
+              color: '#090D16',
+              fontSize: 14,
+              fontWeight: 600,
+              padding: '12px 20px',
+              borderRadius: 9999,
+              textDecoration: 'none',
+            }}
+          >
+            <Download size={16} />
+            Download Resume
+          </a>
+        </div>
       </div>
     </>
   )

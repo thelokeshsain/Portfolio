@@ -1,0 +1,94 @@
+# Lokesh Sain — Comprehensive Portfolio & Engineering Profile
+> Canonical URL: https://lokeshsain.vercel.app/
+
+## Personal & Contact Information
+- Full Name: Lokesh Sain
+- Title: Software Engineer
+- Location: Jaipur, Rajasthan, India
+- Website: https://lokeshsain.vercel.app/
+- GitHub: https://github.com/thelokeshsain
+- LinkedIn: https://linkedin.com/in/thelokeshsain
+- Email: iamlokeshsain@gmail.com
+- Resume: https://lokeshsain.vercel.app/LokeshSain_Resume.pdf
+
+## Overview
+Lokesh Sain is an India-based Software Engineer focusing on production-grade frontend and full-stack engineering. He specializes in React.js, modern JavaScript/TypeScript, Node.js, and integrating Large Language Model (LLM) APIs into web interfaces. He holds a Master of Computer Applications (MCA) with an 8.29/10 CGPA.
+
+## Work Experience
+
+### 1. Software Engineer — 3Handshake Techsoft Private Limited
+- Location: Jaipur, Rajasthan, India
+- Duration: Jul 2025 — Present
+- Type: Full-time
+- Responsibilities & Accomplishments:
+  - Developed and maintained responsive web applications using React.js, JavaScript, and Node.js.
+  - Integrated RESTful APIs and modern state management to enhance application functionality.
+  - Implemented LLM API integrations for intelligent automation and conversational interfaces.
+  - Collaborated with cross-functional teams to deliver scalable, user-centric software features.
+
+### 2. Web Developer Intern — 3Handshake Techsoft Private Limited
+- Location: Jaipur, Rajasthan, India
+- Duration: Jan 2025 — Jul 2025
+- Type: Internship
+- Responsibilities & Accomplishments:
+  - Built interactive UI components with React.js, CSS3, and JavaScript following UX best practices.
+  - Assisted in designing and consuming RESTful APIs for database synchronization.
+  - Debugged front-end issues, improved cross-browser compatibility, and optimized page load speed.
+  - Participated in code reviews, daily stand-ups, and sprint planning following Agile methodologies.
+
+## Featured Software Projects
+
+### Project 1: Apna Backup
+- Role: Lead Full-Stack Developer
+- Summary: Cloud-based online backup platform providing automated synchronization, secure file uploads, and encrypted storage.
+- Key Technologies: React.js, REST APIs, CSS3, Responsive Design
+- Live URL: https://www.apnabackup.com/
+- Repository: https://github.com/thelokeshsain/Apna-Backup
+- Highlights:
+  - High-performance dashboard displaying storage statistics, sync statuses, and file hierarchies.
+  - Real-time synchronization state feedback and secure file transfer protocols.
+
+### Project 2: FoodCourt Mobile App
+- Role: Android Developer
+- Summary: Native Android application designed for campus/cafeteria food ordering, menu exploration, and live order preparation tracking.
+- Key Technologies: Android SDK, Java, XML, Firebase/REST
+- Repository: https://github.com/thelokeshsain/FoodCourt
+- Highlights:
+  - Responsive multi-screen UI adapted for various Android device screen densities.
+  - Cart management, category filtering, and status notifications.
+
+### Project 3: Sizzling Hair Salon Platform
+- Role: Full-Stack Developer
+- Summary: Commercial salon web platform enabling client booking, stylist schedule management, and service pricing catalog.
+- Key Technologies: HTML5, CSS3, JavaScript, PHP, MySQL
+- Repository: https://github.com/thelokeshsain/Sizzling
+- Highlights:
+  - Interactive appointment booking workflow with client validation.
+  - Administrative management interface for service items and operating hours.
+
+## Technical Skills Matrix
+- Core Programming Languages: JavaScript (ES6+), Python, Java, SQL
+- Frontend Technologies: React.js, Next.js, HTML5, CSS3, Modern CSS Grid & Flexbox, Framer Motion
+- Backend & Server: Node.js, Express.js, RESTful API Design & Integration
+- Databases: MySQL, MongoDB
+- Artificial Intelligence / LLM Integrations: OpenAI APIs, Gemini API, Claude API, OpenRouter
+- Tooling & Workflows: Git, GitHub, VS Code, Postman, Vite, Vercel
+
+## Education
+- Master of Computer Applications (MCA)
+  - Institution: DY Patil Institute of MCA and Management
+  - Performance: CGPA 8.29 / 10
+- Bachelor of Computer Applications (BCA)
+  - Institution: S.S. Jain Subodh PG College
+  - Performance: 81.64%
+
+## Certifications & Hackathons
+- Python Programming Certification — IIT Bombay Spoken Tutorial
+- HTML Web Development Certification — IIT Bombay Spoken Tutorial
+- Codeathon Hackathon Participant — MIT-WPU School of Business
+
+## Engineering Principles
+1. Understand Deeply: Investing effort into fully grasping product constraints and customer pain points before writing code.
+2. Build Iteratively: Delivering small, validated functional components with tight feedback loops.
+3. Keep It Simple: Prioritizing clean, well-tested, maintainable code over accidental complexity.
+4. Focus on Impact: Engineering solutions that directly improve user experience, operational reliability, or performance.

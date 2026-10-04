@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-import { Save, Plus, ChevronUp, ChevronDown } from 'lucide-react'
+import { Save, Plus, ChevronUp, ChevronDown, Folder } from 'lucide-react'
 import { useConfirm } from '../ui/ConfirmDialog'
 import { Card, FL, DelBtn, CharCount } from './AdminHelpers'
 
@@ -9,8 +9,8 @@ const BLANK_PROJECT = {
   title: "",
   file: "",
   category: "Web App",
-  accentBg: "var(--yellow)",
-  accentColor: "#000",
+  accentBg: "rgba(56, 189, 248, 0.1)",
+  accentColor: "#38BDF8",
   tagClass: "tag-y",
   period: "",
   desc: "",
@@ -107,11 +107,11 @@ export default function ProjectsEditor({ data, onSave }) {
   }
 
   const CATS = [
-    { val: "Web App", cls: "tag-y", bg: "var(--yellow)", color: "#000" },
-    { val: "Android", cls: "tag-g", bg: "var(--green)", color: "#000" },
-    { val: "Full Stack", cls: "tag-pk", bg: "var(--pink)", color: "#000" },
-    { val: "Mobile", cls: "tag-bl", bg: "var(--blue)", color: "#fff" },
-    { val: "Other", cls: "tag-pu", bg: "var(--purple)", color: "#fff" },
+    { val: "Web App", cls: "tag-y", bg: "rgba(56, 189, 248, 0.12)", color: "#38BDF8" },
+    { val: "Android", cls: "tag-g", bg: "rgba(16, 185, 129, 0.12)", color: "#10B981" },
+    { val: "Full Stack", cls: "tag-pk", bg: "rgba(129, 140, 248, 0.12)", color: "#818CF8" },
+    { val: "Mobile", cls: "tag-bl", bg: "rgba(56, 189, 248, 0.12)", color: "#38BDF8" },
+    { val: "Other", cls: "tag-pu", bg: "rgba(167, 139, 250, 0.12)", color: "#A78BFA" },
   ]
 
   return (
@@ -166,15 +166,16 @@ export default function ProjectsEditor({ data, onSave }) {
                 </span>
                 <span
                   style={{
-                    fontSize: 11,
-                    padding: "2px 9px",
-                    borderRadius: 99,
-                    fontFamily: "var(--mono)",
+                    fontSize: 10,
+                    padding: "2px 8px",
+                    borderRadius: 4,
+                    fontFamily: "var(--font-mono, monospace)",
                     fontWeight: 700,
                     background:
-                      p.visible !== false ? "var(--green)" : "var(--pink)",
-                    color: "#000",
-                    border: "2px solid var(--ink)",
+                      p.visible !== false ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)",
+                    color: p.visible !== false ? "#10B981" : "#EF4444",
+                    border:
+                      p.visible !== false ? "1px solid rgba(16, 185, 129, 0.25)" : "1px solid rgba(239, 68, 68, 0.25)",
                   }}
                 >
                   {p.visible !== false ? "Visible" : "Hidden"}
@@ -231,14 +232,14 @@ export default function ProjectsEditor({ data, onSave }) {
                     width: 72,
                     height: 72,
                     borderRadius: 12,
-                    border: "2px solid var(--ink)",
-                    background: p.accentBg || "var(--yellow)",
+                    border: "1px solid rgba(255, 255, 255, 0.12)",
+                    background: p.accentBg || "rgba(56, 189, 248, 0.1)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     fontWeight: 900,
                     fontSize: 22,
-                    color: "#000",
+                    color: p.accentColor || "#38BDF8",
                     overflow: "hidden",
                     flexShrink: 0,
                     boxShadow: "var(--sh)",
@@ -259,7 +260,7 @@ export default function ProjectsEditor({ data, onSave }) {
                   ) : p.title ? (
                     p.title.charAt(0).toUpperCase()
                   ) : (
-                    "📁"
+                    <Folder size={18} />
                   )}
                 </div>
                 <div

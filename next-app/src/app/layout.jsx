@@ -1,5 +1,4 @@
 import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
-import { Providers } from "@/components/Providers";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
@@ -63,11 +62,15 @@ export const metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
     ],
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   verification: {
     // Add your Google Search Console verification code here after setup
@@ -82,7 +85,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
       <body>
-        <Providers>{children}</Providers>
+        {children}
       </body>
     </html>
   );

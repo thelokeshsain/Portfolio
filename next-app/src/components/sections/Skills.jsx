@@ -1,159 +1,89 @@
 import { motion } from 'framer-motion'
-import { useData } from '../../context/DataContext'
-import GlowCard from '../ui/GlowCard'
+import { BrandIcon } from '../../config/brandAssets'
 
-const CAT = {
-  Frontend: { icon: '⬡', gradient: 'linear-gradient(135deg, #ff5500, #ff9e00)', color: '#ff6b00' },
-  Backend:  { icon: '◈', gradient: 'linear-gradient(135deg, #ff7d1a, #ffaa00)', color: '#ff8800' },
-  Database: { icon: '◉', gradient: 'linear-gradient(135deg, #ff9900, #ffc800)', color: '#ff9e00' },
-  Tools:    { icon: '⊞', gradient: 'linear-gradient(135deg, #e05500, #ff7d1a)', color: '#e05500' },
-}
-
-const STACK_TAGS = ['tag-y', 'tag-g', 'tag-pk', 'tag-bl', 'tag-pu', 'tag-or', 'tag-cr']
+const TECH_SKILLS = [
+  { name: 'JavaScript' },
+  { name: 'React.js' },
+  { name: 'Python' },
+  { name: 'Node.js' },
+  { name: 'HTML5' },
+  { name: 'CSS3' },
+  { name: 'REST APIs' },
+  { name: 'LLM APIs' },
+  { name: 'MySQL' },
+  { name: 'MongoDB' },
+  { name: 'Git' },
+  { name: 'VS Code' },
+]
 
 export default function Skills() {
-  const { data } = useData()
-
-  const skills    = data.skills    || {}
-  const coreStack = Array.isArray(data.coreStack) ? data.coreStack : []
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.12,
-      }
-    }
-  }
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 35 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 70, damping: 15 }
-    }
-  }
-
   return (
-    <section id="skills" className="section section-border" style={{ position: 'relative' }}>
-      <div className="mesh-bg" />
+    <div id="skills" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="section-label" style={{ marginBottom: 12 }}>04 / SKILLS</div>
+      <h2 className="section-heading" style={{ marginBottom: 36 }}>
+        Technologies I Work With
+      </h2>
 
-      <div className="inner">
-        <div className="section-label">Skills</div>
-        <motion.h2 
-          className="section-heading" 
-          style={{ marginBottom: 56 }}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          My <span className="gradient-text">toolbox.</span>
-        </motion.h2>
-
-        {/* Skills grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            gap: 20,
-            marginBottom: 24,
-          }}
-        >
-          {Object.entries(skills).map(([cat, list]) => {
-            const m = CAT[cat] || { icon: '◎', gradient: 'var(--gradient-accent)', color: 'var(--accent-light)' }
-            const safeList = Array.isArray(list) ? list : []
-            return (
-              <motion.div key={cat} variants={cardVariants}>
-                <GlowCard className="skill-group" style={{ padding: 'clamp(20px, 3vw, 28px)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
-                    <div style={{
-                      width: 34,
-                      height: 34,
-                      borderRadius: 'var(--radius-sm)',
-                      background: m.gradient,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: 16,
-                      color: '#fff',
-                      flexShrink: 0,
-                      fontWeight: 700,
-                      boxShadow: `0 4px 12px ${m.color}33`,
-                    }}>
-                      {m.icon}
-                    </div>
-                    <span style={{
-                      fontWeight: 700,
-                      fontSize: 14,
-                      fontFamily: 'var(--font-mono)',
-                      letterSpacing: '.03em',
-                      color: 'var(--text-primary)',
-                    }}>{cat}</span>
-                    <span style={{
-                      marginLeft: 'auto',
-                      fontSize: 11,
-                      color: 'var(--text-muted)',
-                      fontFamily: 'var(--font-mono)',
-                      background: 'var(--surface)',
-                      padding: '2px 8px',
-                      borderRadius: 'var(--radius-full)',
-                      border: '1px solid var(--border)',
-                    }}>{safeList.length}</span>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                    {safeList.map((s, i) => (
-                      <span key={`${cat}-${i}`} className="pill">{s}</span>
-                    ))}
-                  </div>
-                </GlowCard>
-              </motion.div>
-            )
-          })}
-        </motion.div>
-
-        {/* Core stack bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <GlowCard style={{
-            padding: 'clamp(18px, 2.5vw, 24px) clamp(18px, 3vw, 28px)',
-            display: 'flex',
-            gap: 12,
-            alignItems: 'center',
-            flexWrap: 'wrap',
-          }}>
-            <span style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: '.1em',
-              textTransform: 'uppercase',
-              color: 'var(--text-muted)',
-              flexShrink: 0,
+      {/* 4 × 3 Grid of 12 Technology Cards */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 12,
+      }}>
+        {TECH_SKILLS.map((skill, idx) => (
+          <motion.div
+            key={skill.name}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: idx * 0.03 }}
+            style={{
+              background: '#0B0F17',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: 14,
+              padding: '18px 10px 14px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              minHeight: 100,
+              transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              cursor: 'default',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.35)'
+              e.currentTarget.style.transform = 'translateY(-3px)'
+              e.currentTarget.style.boxShadow = '0 10px 24px -5px rgba(0, 0, 0, 0.5), 0 0 16px rgba(56, 189, 248, 0.1)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
+          >
+            <div style={{
+              width: 36,
+              height: 36,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-              Core Stack →
+              <BrandIcon name={skill.name} size={30} />
+            </div>
+
+            <span style={{
+              fontSize: 12,
+              fontWeight: 600,
+              color: '#CBD5E1',
+              textAlign: 'center',
+              lineHeight: 1.2,
+            }}>
+              {skill.name}
             </span>
-            {coreStack.length > 0
-              ? coreStack.map((t, i) => (
-                  <span key={`cs-${i}`} className={`tag ${STACK_TAGS[i % STACK_TAGS.length]}`}>{t}</span>
-                ))
-              : ['React.js', 'Node.js', 'MongoDB', 'MySQL', 'JavaScript', 'Git', 'REST APIs'].map((t, i) => (
-                  <span key={`cs-${i}`} className={`tag ${STACK_TAGS[i % STACK_TAGS.length]}`}>{t}</span>
-                ))
-            }
-          </GlowCard>
-        </motion.div>
+          </motion.div>
+        ))}
       </div>
-    </section>
+    </div>
   )
 }
-

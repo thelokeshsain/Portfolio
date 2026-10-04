@@ -6,7 +6,7 @@ import { Card, FL, DelBtn, CharCount } from "./AdminHelpers";
 
 const BLANK_ACHIEVEMENT = {
   id: Date.now(),
-  icon: "🏆",
+  icon: "",
   title: "",
   sub: "",
 };
@@ -141,7 +141,7 @@ export default function AchievementsEditor({ data, onSave }) {
                     value={a.icon || ""}
                     onChange={(e) => upd(keyId, "icon", e.target.value)}
                     className="field"
-                    placeholder="🏆"
+                    placeholder="Icon"
                     maxLength={10}
                     style={{ textAlign: 'center' }}
                   />
@@ -191,9 +191,9 @@ export default function AchievementsEditor({ data, onSave }) {
             style={{
               padding: 40,
               textAlign: "center",
-              border: "2px dashed var(--ink)",
+              border: "1px dashed rgba(255, 255, 255, 0.12)",
               borderRadius: 14,
-              color: "var(--muted)",
+              color: "#8B93A7",
             }}
           >
             No achievements added yet.

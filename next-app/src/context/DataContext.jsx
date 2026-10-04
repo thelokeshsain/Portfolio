@@ -44,14 +44,14 @@ function normalize(raw) {
 export function DataProvider({ children, serverData }) {
   const initialData = useMemo(() => normalize(serverData), [serverData]);
   const [data, setData] = useState(initialData);
+  const [prevServerData, setPrevServerData] = useState(serverData);
   const [loading, setLoading] = useState(false);
 
-  // Sync serverData updates
-  useEffect(() => {
-    if (serverData) {
-      setData(normalize(serverData));
-    }
-  }, [serverData]);
+  // Sync serverData prop changes during rendering (official React recommended pattern)
+  if (serverData !== prevServerData) {
+    setPrevServerData(serverData);
+    setData(normalize(serverData));
+  }
 
   // Clean up legacy stale localStorage cache from user browsers once
   useEffect(() => {

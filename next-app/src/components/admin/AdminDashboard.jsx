@@ -1,13 +1,13 @@
 "use client";
-// AdminDashboard — The primary control center for portfolio content management.
-// Securely handles CRUD operations for hero, projects, and contact inquiries by compiling modular panels.
+/**
+ * AdminDashboard — Midnight Blueprint Control Center
+ * Professional dark dashboard UI for portfolio content management.
+ * Strict design consistency with #05070A canvas, #0B0F17 sidebar, and #38BDF8 accent.
+ */
 
 import { useState, useEffect } from "react";
-
 import { useRouter } from "next/navigation";
-
 import { Toaster } from "react-hot-toast";
-
 import {
   LayoutDashboard,
   User,
@@ -16,56 +16,42 @@ import {
   Briefcase,
   Eye,
   LogOut,
-  Sun,
-  Moon,
+  Menu,
+  X,
   KeyRound,
   MessageSquare,
   Trophy,
 } from "lucide-react";
-
 import { useAuth } from "@/context/AuthContext";
-
 import { useData } from "@/context/DataContext";
 
-import { useTheme } from "@/context/ThemeContext";
-
 // Modular Panel Imports
-
 import Overview from "./Overview";
-
 import HeroEditor from "./HeroEditor";
-
 import ProjectsEditor from "./ProjectsEditor";
-
 import AchievementsEditor from "./AchievementsEditor";
-
 import SkillsEditor from "./SkillsEditor";
-
 import ExperienceEditor from "./ExperienceEditor";
-
 import SectionsEditor from "./SectionsEditor";
-
 import SecurityEditor from "./SecurityEditor";
-
 import ContactsViewer from "./ContactsViewer";
 
 /* ── NAV ITEMS CONFIGURATION ── */
 const NAV_ITEMS = [
-  { key: "overview", label: "Overview", Icon: LayoutDashboard },
-  { key: "hero", label: "Hero & Info", Icon: User },
+  { key: "overview", label: "Dashboard", Icon: LayoutDashboard },
+  { key: "hero", label: "Hero & Bio", Icon: User },
   { key: "projects", label: "Projects", Icon: FolderOpen },
-  { key: "achievements", label: "Achievements & Certs", Icon: Trophy },
-  { key: "skills", label: "Skills", Icon: Wrench },
   { key: "experience", label: "Experience", Icon: Briefcase },
-  { key: "sections", label: "Visibility", Icon: Eye },
-  { key: "security", label: "Security", Icon: KeyRound },
-  { key: "messages", label: "Messages", Icon: MessageSquare },
+  { key: "skills", label: "Skills", Icon: Wrench },
+  { key: "achievements", label: "Achievements", Icon: Trophy },
+  { key: "sections", label: "Section Visibility", Icon: Eye },
+  { key: "messages", label: "Inquiries", Icon: MessageSquare },
+  { key: "security", label: "Security & Keys", Icon: KeyRound },
 ];
 
 export default function AdminDashboard() {
   const { admin, loading, logout } = useAuth();
   const { data, updateSection } = useData();
-  const { dark, toggle } = useTheme();
   const nav = useRouter();
   const [active, setActive] = useState("overview");
   const [sidebarOpen, setSidebar] = useState(false);
@@ -81,8 +67,7 @@ export default function AdminDashboard() {
     nav.push("/admin/login");
   };
 
-  if (loading || !admin) return null; // Wait for auth check or redirect
-
+  if (loading || !admin) return null;
 
   const renderPanel = () => {
     const props = { data, onSave: updateSection };
@@ -93,18 +78,18 @@ export default function AdminDashboard() {
         return <HeroEditor {...props} />;
       case "projects":
         return <ProjectsEditor {...props} />;
-      case "achievements":
-        return <AchievementsEditor {...props} />;
-      case "skills":
-        return <SkillsEditor {...props} />;
       case "experience":
         return <ExperienceEditor {...props} />;
+      case "skills":
+        return <SkillsEditor {...props} />;
+      case "achievements":
+        return <AchievementsEditor {...props} />;
       case "sections":
         return <SectionsEditor {...props} />;
-      case "security":
-        return <SecurityEditor />;
       case "messages":
         return <ContactsViewer />;
+      case "security":
+        return <SecurityEditor />;
       default:
         return <Overview {...props} />;
     }
@@ -114,46 +99,91 @@ export default function AdminDashboard() {
     <>
       <div
         style={{
-          padding: "20px 18px 16px",
-          borderBottom: "2px solid var(--ink)",
+          padding: "24px 20px 18px",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
         }}
       >
-        <div
-          style={{
-            fontWeight: 900,
-            fontSize: 17,
-            letterSpacing: "-0.04em",
-            marginBottom: 4,
-          }}
-        >
-          Lokesh
-          <mark
-            style={{
-              padding: "0 5px 1px",
-              border: "2px solid var(--ink)",
-              borderRadius: 4,
-              marginLeft: 2,
-              color: "#000",
-              fontSize: 14,
-              background: "var(--yellow)",
-            }}
-          >
-            Admin
-          </mark>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                background: "#0F141D",
+                border: "1px solid rgba(56, 189, 248, 0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 900,
+                color: "#38BDF8",
+                fontFamily: "var(--font-mono, monospace)",
+                boxShadow: "0 0 12px rgba(56, 189, 248, 0.15)",
+              }}
+            >
+              LS
+            </div>
+            <div>
+              <div
+                style={{
+                  fontWeight: 800,
+                  fontSize: 14,
+                  letterSpacing: "-0.02em",
+                  color: "#F0F2F5",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                Lokesh Sain
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: "0.06em",
+                    color: "#38BDF8",
+                    background: "rgba(56, 189, 248, 0.1)",
+                    border: "1px solid rgba(56, 189, 248, 0.25)",
+                    padding: "1px 5px",
+                    borderRadius: 4,
+                  }}
+                >
+                  CONSOLE
+                </span>
+              </div>
+            </div>
+          </div>
+          {sidebarOpen && (
+            <button
+              onClick={() => setSidebar(false)}
+              className="icon-btn"
+              style={{ border: "none", padding: 4 }}
+              aria-label="Close menu"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
         <div
           style={{
-            fontSize: 12,
-            color: "var(--muted)",
-            fontFamily: "var(--mono)",
+            fontSize: 11,
+            color: "#8B93A7",
+            fontFamily: "var(--font-mono, monospace)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
+          title={admin?.email}
         >
           {admin?.email}
         </div>
       </div>
-      <nav style={{ flex: 1, padding: "12px 10px", overflowY: "auto" }}>
+
+      <nav style={{ flex: 1, padding: "16px 12px", overflowY: "auto" }}>
         {NAV_ITEMS.map(({ key, label, Icon }) => {
           const NavIcon = Icon;
+          const isActive = active === key;
           return (
             <button
               key={key}
@@ -161,28 +191,32 @@ export default function AdminDashboard() {
                 setActive(key);
                 setSidebar(false);
               }}
-              className={`anav-btn${active === key ? " active" : ""}`}
+              className={`anav-btn${isActive ? " active" : ""}`}
             >
-              <NavIcon size={15} />
-              {label}
+              <NavIcon size={16} />
+              <span>{label}</span>
             </button>
           );
         })}
       </nav>
+
       <div
-        style={{ padding: "10px 10px 16px", borderTop: "2px solid var(--ink)" }}
+        style={{
+          padding: "14px 12px 20px",
+          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+        }}
       >
-        <button onClick={toggle} className="anav-btn" suppressHydrationWarning>
-          {dark ? <Sun size={15} suppressHydrationWarning /> : <Moon size={15} suppressHydrationWarning />}
-          {dark ? "Light Mode" : "Dark Mode"}
-        </button>
         <button
           onClick={doLogout}
           className="anav-btn"
-          style={{ color: "#cc0000" }}
+          style={{
+            color: "#EF4444",
+            background: "transparent",
+            borderColor: "transparent",
+          }}
         >
-          <LogOut size={15} />
-          Logout
+          <LogOut size={16} />
+          <span>Sign Out</span>
         </button>
       </div>
     </>
@@ -193,101 +227,137 @@ export default function AdminDashboard() {
       style={{
         display: "flex",
         minHeight: "100vh",
-        background: "var(--paper)",
-        fontFamily: "var(--font)",
+        background: "#05070A",
+        fontFamily: "var(--font-body)",
+        color: "#F0F2F5",
       }}
     >
       <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            background: "var(--surface)",
-            color: "var(--ink)",
-            border: "2px solid var(--ink)",
-            borderRadius: "var(--r)",
-            fontFamily: "var(--font)",
-            fontWeight: 600,
-            boxShadow: "var(--sh)",
+            background: "#0B0F17",
+            color: "#F0F2F5",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: "8px",
+            fontFamily: "var(--font-body)",
+            fontSize: "13px",
+            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.6)",
           },
         }}
       />
 
-      {/* Desktop sidebar */}
+      {/* Desktop fixed sidebar */}
       <aside
         className="hide-mobile"
         style={{
-          width: 224,
-          background: "var(--surface)",
-          borderRight: "2px solid var(--ink)",
+          width: 240,
+          background: "#0B0F17",
+          borderRight: "1px solid rgba(255, 255, 255, 0.08)",
           display: "flex",
           flexDirection: "column",
           flexShrink: 0,
           position: "sticky",
           top: 0,
           height: "100vh",
+          zIndex: 40,
         }}
       >
         {renderSidebarInner()}
       </aside>
 
-      {/* Mobile sidebar overlay */}
+      {/* Mobile drawer overlay */}
       {sidebarOpen && (
         <div
-          style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", background: "rgba(0, 0, 0, 0.5)", backdropFilter: "blur(4px)" }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 100,
+            display: "flex",
+            background: "rgba(0, 0, 0, 0.75)",
+            backdropFilter: "blur(6px)",
+          }}
           onClick={() => setSidebar(false)}
         >
           <aside
             style={{
-              width: 240,
-              background: "var(--paper)",
-              borderRight: "2px solid var(--ink)",
+              width: 260,
+              background: "#0B0F17",
+              borderRight: "1px solid rgba(255, 255, 255, 0.1)",
               display: "flex",
               flexDirection: "column",
               height: "100vh",
+              boxShadow: "4px 0 24px rgba(0,0,0,0.8)",
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {renderSidebarInner()}
           </aside>
-          <div style={{ flex: 1, background: "rgba(0,0,0,.45)" }} />
+          <div style={{ flex: 1 }} />
         </div>
       )}
 
+      {/* Main Content Area */}
       <div
         style={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           minWidth: 0,
+          background: "#05070A",
         }}
       >
         {/* Mobile top bar */}
         <div
           className="show-mobile"
           style={{
-            padding: "12px 16px",
-            borderBottom: "2px solid var(--ink)",
-            background: "var(--surface)",
+            padding: "14px 18px",
+            borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+            background: "#0B0F17",
             display: "flex",
             alignItems: "center",
-            gap: 12,
+            justifyContent: "space-between",
             position: "sticky",
             top: 0,
-            zIndex: 10,
+            zIndex: 30,
           }}
         >
-          <button className="icon-btn" onClick={() => setSidebar(true)}>
-            ☰
-          </button>
-          <div style={{ fontWeight: 800, fontSize: 15 }}>
-            {NAV_ITEMS.find((n) => n.key === active)?.label || "Dashboard"}
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <button
+              className="icon-btn"
+              onClick={() => setSidebar(true)}
+              aria-label="Open navigation drawer"
+            >
+              <Menu size={18} />
+            </button>
+            <div style={{ fontWeight: 800, fontSize: 15, color: "#F0F2F5" }}>
+              {NAV_ITEMS.find((n) => n.key === active)?.label || "Dashboard"}
+            </div>
+          </div>
+          <div
+            style={{
+              fontSize: 10,
+              fontFamily: "var(--font-mono, monospace)",
+              fontWeight: 700,
+              color: "#38BDF8",
+              background: "rgba(56, 189, 248, 0.1)",
+              padding: "2px 8px",
+              borderRadius: 4,
+              border: "1px solid rgba(56, 189, 248, 0.2)",
+            }}
+          >
+            ADMIN
           </div>
         </div>
+
         <main
           style={{
-            padding: "clamp(20px,4vw,40px)",
+            padding: "clamp(20px, 3.5vw, 40px)",
             flex: 1,
             overflowY: "auto",
+            maxWidth: 1200,
+            width: "100%",
+            margin: "0 auto",
           }}
         >
           {renderPanel()}
