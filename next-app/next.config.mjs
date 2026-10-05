@@ -4,11 +4,12 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 const CSP_POLICY = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: https: blob:",
   "font-src 'self' https://fonts.gstatic.com data:",
-  `connect-src 'self' https://*.mongodb.net https://api.resend.com https://va.vercel-scripts.com ${isDev ? 'ws: wss: http://localhost:*' : ''}`.trim(),
+  `connect-src 'self' https://*.mongodb.net https://api.resend.com https://va.vercel-scripts.com https://pagead2.googlesyndication.com https://*.google.com ${isDev ? 'ws: wss: http://localhost:*' : ''}`.trim(),
+  "frame-src 'self' https://googleads.g.doubleclick.net https://*.google.com https://*.googlesyndication.com",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",
