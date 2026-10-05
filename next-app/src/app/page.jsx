@@ -43,7 +43,7 @@ export async function generateMetadata() {
   const desc = data?.hero?.description || "Software Engineer specializing in React.js, Node.js, and MERN stack development based in Jaipur, Rajasthan.";
 
   const title = `${name} — ${role} | React & MERN Stack Developer in Jaipur`;
-  const description = `${desc} Currently working at 3Handshake Techsoft. View projects, skills, and experience.`;
+  const description = `${desc} View featured projects, technical skills, and software engineering experience.`;
   const socialImgUrl = toAbsoluteUrl('/images/social_preview.webp');
 
   return {

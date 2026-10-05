@@ -15,7 +15,7 @@ export const metadata = {
     default: "Lokesh Sain | Software Engineer in Jaipur | React & MERN Stack Developer",
     template: "%s | Lokesh Sain"
   },
-  description: "Lokesh Sain — Software Engineer at 3Handshake Techsoft, Jaipur. Specializing in React.js, Node.js, MongoDB & MERN stack development. MCA from DY Patil Institute (CGPA 8.29). View projects, experience, and contact information.",
+  description: "Lokesh Sain — Software Engineer based in Jaipur, India. Specializing in React.js, Node.js, and modern full-stack web development. View projects, technical skills, and experience.",
   keywords: [
     "Lokesh Sain",
     "thelokeshsain",
@@ -25,7 +25,6 @@ export const metadata = {
     "Lokesh Sain React Developer",
     "Lokesh Sain MERN Stack",
     "Lokesh Sain Portfolio",
-    "Lokesh Sain 3Handshake",
     "Software Engineer Jaipur",
     "React Developer Jaipur",
     "MERN Stack Developer India",
@@ -42,7 +41,7 @@ export const metadata = {
     locale: "en_US",
     url: "/",
     title: "Lokesh Sain | Software Engineer | React & MERN Stack Developer",
-    description: "Portfolio of Lokesh Sain — Software Engineer at 3Handshake Techsoft, Jaipur. React.js, Node.js, MongoDB specialist. View projects and experience.",
+    description: "Portfolio of Lokesh Sain — Software Engineer building responsive web applications, scalable products, and AI-powered experiences. View projects and experience.",
     siteName: "Lokesh Sain — Software Engineer Portfolio",
     images: [
       {
@@ -56,7 +55,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Lokesh Sain | Software Engineer | React & MERN Stack Developer",
-    description: "Software Engineer at 3Handshake Techsoft, Jaipur. React.js, Node.js, MongoDB specialist.",
+    description: "Software Engineer specializing in React.js, Node.js, and modern full-stack web development. Building responsive web applications and scalable products.",
     images: ["/images/social_preview.webp"],
   },
   alternates: {

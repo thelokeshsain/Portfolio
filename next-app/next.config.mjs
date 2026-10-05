@@ -57,11 +57,17 @@ const nextConfig = {
     qualities: [25, 50, 60, 75, 90, 100],
     localPatterns: [
       {
-        pathname: '/api/projects/**',
+        pathname: '/images/**',
+      },
+      {
+        pathname: '/icons/**',
+      },
+      {
+        pathname: '/api/**',
         search: '?v=*',
       },
       {
-        pathname: '/api/projects/**',
+        pathname: '/api/**',
       },
     ],
   },

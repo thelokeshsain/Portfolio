@@ -19,7 +19,14 @@ function toPublicPortfolio(portfolioDoc) {
   if (portfolio.hero) {
     const { phone: _phone, ...heroPublic } = portfolio.hero;
     if (heroPublic.image && typeof heroPublic.image === 'string' && heroPublic.image.startsWith('data:')) {
-      heroPublic.image = '/images/social_preview.webp';
+      const hash = crypto
+        .createHash('md5')
+        .update(heroPublic.image.slice(0, 100) + heroPublic.image.slice(-100))
+        .digest('hex')
+        .slice(0, 8);
+      heroPublic.image = `/api/hero/image?v=${hash}`;
+    } else if (!heroPublic.image) {
+      heroPublic.image = '/images/hero_laptop_mockup.webp';
     }
     portfolio.hero = heroPublic;
   }

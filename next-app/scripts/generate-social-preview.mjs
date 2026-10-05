@@ -49,8 +49,8 @@ const ogSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"
     <text x="0" y="145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="600" fill="#E2E8F0" letter-spacing="-0.5">Software Engineer</text>
     <text x="0" y="185" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="18" font-weight="400" fill="#94A3B8">React.js · Node.js · LLM API Integration · Full-Stack</text>
     
-    <!-- Location & Experience -->
-    <text x="0" y="240" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="500" fill="#64748B">Jaipur, Rajasthan, India  •  3Handshake Techsoft  •  MCA (CGPA 8.29)</text>
+    <!-- Location & Education -->
+    <text x="0" y="240" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="500" fill="#64748B">Jaipur, Rajasthan, India  •  Software Engineer  •  MCA (CGPA 8.29)</text>
 
     <!-- Bottom URL Pill -->
     <g transform="translate(0, 275)">

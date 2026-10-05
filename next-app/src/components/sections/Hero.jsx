@@ -8,6 +8,12 @@ export default function Hero() {
   const { data } = useData()
   const h = data.hero || {}
 
+  const targetImage = (h.image && typeof h.image === 'string' && !h.image.includes('social_preview'))
+    ? h.image
+    : '/images/hero_laptop_mockup.webp';
+  const [imgError, setImgError] = React.useState(false);
+  const heroImgSrc = imgError ? '/images/hero_laptop_mockup.webp' : targetImage;
+
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -318,13 +324,16 @@ export default function Hero() {
               border: '1px solid rgba(255, 255, 255, 0.08)',
             }}>
               <Image
-                src="/images/hero_laptop_mockup.webp"
-                alt="VS Code development environment showing modern web applications"
+                src={heroImgSrc}
+                alt="Lokesh Sain — Software Engineer modern development environment"
                 width={800}
                 height={500}
                 priority
                 fetchPriority="high"
                 sizes="(max-width: 480px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 50vw, 500px"
+                onError={() => {
+                  setImgError(true);
+                }}
                 style={{
                   width: '100%',
                   height: 'auto',
