@@ -25,7 +25,7 @@ export default function Hero() {
       {/* Background ambient glow */}
       <div style={{
         position: 'absolute',
-        top: '-15%',
+        top: '-80px',
         right: '5%',
         width: '600px',
         height: '600px',
