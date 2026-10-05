@@ -8,7 +8,7 @@ const CSP_POLICY = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "img-src 'self' data: https: blob:",
   "font-src 'self' https://fonts.gstatic.com data:",
-  `connect-src 'self' https://*.mongodb.net https://api.resend.com https://va.vercel-scripts.com https://pagead2.googlesyndication.com https://*.google.com ${isDev ? 'ws: wss: http://localhost:*' : ''}`.trim(),
+  `connect-src 'self' https://*.mongodb.net https://api.resend.com https://va.vercel-scripts.com https://pagead2.googlesyndication.com https://*.google.com https://*.google https://*.googlesyndication.com ${isDev ? 'ws: wss: http://localhost:*' : ''}`.trim(),
   "frame-src 'self' https://googleads.g.doubleclick.net https://*.google.com https://*.googlesyndication.com",
   "frame-ancestors 'none'",
   "form-action 'self'",
