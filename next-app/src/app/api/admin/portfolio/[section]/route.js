@@ -148,13 +148,38 @@ export const PUT = withAuth(async (request, context) => {
     }
     
     if (section === "projects" && Array.isArray(cleanPayload)) {
-      for (const p of cleanPayload) {
+      // Find existing projects in MongoDB to preserve raw image data if client sent the API URL
+      const currentDoc = await Portfolio.findOne({}).lean();
+      const existingProjects = currentDoc?.projects || [];
+
+      for (let i = 0; i < cleanPayload.length; i++) {
+        const p = cleanPayload[i];
+        const existing = existingProjects.find(
+          (x) => String(x.id) === String(p.id)
+        );
+
+        // If client submitted back our own API URL (/api/projects/[id]/image...),
+        // preserve the existing raw image stored in MongoDB!
+        if (
+          typeof p.image === "string" &&
+          p.image.startsWith("/api/projects/")
+        ) {
+          p.image = existing?.image || null;
+        }
+
         if (p.image) {
           const imgCheck = validateBase64Image(p.image);
           if (!imgCheck.ok) {
-            return NextResponse.json({ message: imgCheck.msg }, { status: 422 });
+            // If it's a valid remote or relative URL, that is acceptable too
+            const isUrl = typeof p.image === "string" && (p.image.startsWith("http://") || p.image.startsWith("https://") || p.image.startsWith("/"));
+            if (!isUrl) {
+              return NextResponse.json({ message: imgCheck.msg }, { status: 422 });
+            }
           }
         }
+
+        // Purge individual project image memory cache
+        cache.delete(`project-image-${p.id}`);
       }
     }
 
@@ -177,7 +202,7 @@ export const PUT = withAuth(async (request, context) => {
 
     return NextResponse.json({
       message: "Updated successfully",
-      [section]: updatedPortfolio[section],
+      [section]: publicData[section],
       portfolio: publicData,
     });
   } catch (err) {

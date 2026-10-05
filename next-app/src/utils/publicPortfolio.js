@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 function toPublicPortfolio(portfolioDoc) {
   if (!portfolioDoc) return null;
 
@@ -22,22 +24,23 @@ function toPublicPortfolio(portfolioDoc) {
     portfolio.hero = heroPublic;
   }
 
-  // Normalize project visuals: if project has an oversized data URI matching known assets, map to static WebP
+  // Authoritative project visuals:
+  // If a project has a custom image stored in MongoDB as a data URI, resolve it to
+  // the dedicated versioned endpoint: /api/projects/${p.id}/image?v=${contentHash}
+  // This guarantees:
+  // 1. Authoritative current visual from the backend (never overridden by stale local fallbacks).
+  // 2. Ultra-lean RSC HTML payload (preserves fast TTFB/FCP/LCP and mobile performance).
+  // 3. Immutable browser/CDN caching keyed by content hash (automatic cache-busting when updated).
   if (Array.isArray(portfolio.projects)) {
     portfolio.projects = portfolio.projects.map((p) => {
       let image = p.image;
       if (image && typeof image === 'string' && image.startsWith('data:')) {
-        const title = (p.title || '').toLowerCase();
-        if (title.includes('apna') || title.includes('backup')) {
-          image = '/images/project_apna_backup.webp';
-        } else if (title.includes('food') || title.includes('court')) {
-          image = '/images/project_foodcourt.webp';
-        } else if (title.includes('sizzling')) {
-          image = '/images/project_sizzling.webp';
-        } else if (image.length > 4000) {
-          // Cap excessive base64 blobs that destroy mobile bandwidth & CPU parsing
-          image = '/images/social_preview.webp';
-        }
+        const hash = crypto
+          .createHash('md5')
+          .update(image.slice(0, 100) + image.slice(-100) + (p.updatedAt || ''))
+          .digest('hex')
+          .slice(0, 8);
+        image = `/api/projects/${p.id}/image?v=${hash}`;
       }
       return { ...p, image };
     });
