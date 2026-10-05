@@ -5,7 +5,7 @@ const VIEWPORTS = [
   768, 820, 912, 1024, 1280, 1366, 1440, 1536, 1920
 ];
 
-const TARGET_URL = process.env.AUDIT_URL || 'http://localhost:3000';
+const TARGET_URL = process.argv[2] || process.env.AUDIT_URL || 'http://localhost:3000';
 
 async function runAudit() {
   console.log(`Starting Responsive Forensic Audit on ${TARGET_URL}...`);
