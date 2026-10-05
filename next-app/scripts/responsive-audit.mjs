@@ -17,9 +17,12 @@ async function runAudit() {
   const page = await browser.newPage();
   const results = [];
 
+  await page.goto(TARGET_URL, { waitUntil: 'networkidle2' });
+
   for (const width of VIEWPORTS) {
     await page.setViewport({ width, height: 900 });
-    await page.goto(TARGET_URL, { waitUntil: 'networkidle2' });
+    // Brief settle for CSS media queries and flex reflow
+    await new Promise(r => setTimeout(r, 100));
 
     const audit = await page.evaluate((w) => {
       const docW = document.documentElement.clientWidth;

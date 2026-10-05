@@ -1,4 +1,6 @@
 import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
+import { ADS_CONFIG } from "@/config/ads";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
@@ -82,8 +84,20 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const adClientId = ADS_CONFIG.getClientId();
+
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        {adClientId && (
+          <Script
+            id="adsbygoogle-init"
+            strategy="afterInteractive"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClientId}`}
+            crossOrigin="anonymous"
+          />
+        )}
+      </head>
       <body>
         {children}
       </body>

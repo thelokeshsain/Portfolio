@@ -27,6 +27,7 @@ import Skills from '../components/sections/Skills'
 import Contact from '../components/sections/Contact'
 import usePWA from '../hooks/usePWA'
 import { useData } from '../context/DataContext'
+import GoogleAd, { openConsentManager } from './ads/GoogleAd'
 
 import { BrandIcon } from '../config/brandAssets'
 
@@ -129,15 +130,33 @@ function Footer() {
           Built with React.js & Next.js
         </div>
 
-        <div style={{ fontSize: 12.5, color: '#94A3B8', display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{ fontSize: 12.5, color: '#94A3B8', display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
           <span>© {new Date().getFullYear()} Lokesh Sain</span>
           <span>•</span>
           <Link
             href="/privacy-policy"
             style={{ color: '#94A3B8', textDecoration: 'none' }}
           >
-            Privacy
+            Privacy Policy
           </Link>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={openConsentManager}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              color: '#94A3B8',
+              fontSize: '12.5px',
+              cursor: 'pointer',
+              textDecoration: 'none',
+              fontFamily: 'inherit',
+            }}
+            aria-label="Manage Privacy and Cookie Choices"
+          >
+            Privacy Settings
+          </button>
         </div>
       </div>
     </footer>
@@ -189,6 +208,9 @@ export default function Portfolio() {
 
         {/* 6. Contact (#contact) */}
         {s.contact !== false && <Contact />}
+
+        {/* Non-intrusive AdSense Slot before Footer */}
+        <GoogleAd slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CONTENT_BOTTOM} style={{ maxWidth: '1200px', padding: '0 20px' }} />
       </main>
 
       {/* 7. Footer */}
