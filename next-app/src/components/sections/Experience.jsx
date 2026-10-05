@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { Briefcase } from 'lucide-react'
 
 const EXPERIENCE_ITEMS = [
@@ -44,12 +43,8 @@ export default function Experience() {
       {/* Timeline List */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 32, position: 'relative' }}>
         {EXPERIENCE_ITEMS.map((exp, idx) => (
-          <motion.div
+          <div
             key={exp.id || idx}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
             style={{
               display: 'grid',
               gridTemplateColumns: '130px 24px 1fr',
@@ -62,7 +57,7 @@ export default function Experience() {
               <div style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0', lineHeight: 1.3 }}>
                 {exp.period}
               </div>
-              <div style={{ fontSize: 12, color: '#64748B', marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>
                 {exp.location}
               </div>
             </div>
@@ -153,7 +148,7 @@ export default function Experience() {
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
       </div>

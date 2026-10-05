@@ -63,7 +63,7 @@ function TechStrip() {
           fontWeight: 600,
           letterSpacing: '0.14em',
           textTransform: 'uppercase',
-          color: '#64748B',
+          color: '#94A3B8',
           whiteSpace: 'nowrap',
         }}>
           TECH I WORK WITH
@@ -125,16 +125,16 @@ function Footer() {
           <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#38BDF8' }} />
         </div>
 
-        <div style={{ fontSize: 13, color: '#64748B' }}>
+        <div style={{ fontSize: 13, color: '#94A3B8' }}>
           Built with React.js & Next.js
         </div>
 
-        <div style={{ fontSize: 12.5, color: '#64748B', display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{ fontSize: 12.5, color: '#94A3B8', display: 'flex', gap: 12, alignItems: 'center' }}>
           <span>© {new Date().getFullYear()} Lokesh Sain</span>
           <span>•</span>
           <Link
             href="/privacy-policy"
-            style={{ color: '#64748B', textDecoration: 'none' }}
+            style={{ color: '#94A3B8', textDecoration: 'none' }}
           >
             Privacy
           </Link>

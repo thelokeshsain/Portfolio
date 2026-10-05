@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion'
 import { BrandIcon } from '../../config/brandAssets'
 
 const TECH_SKILLS = [
@@ -31,13 +30,9 @@ export default function Skills() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 130px), 1fr))',
           gap: 14,
         }}>
-          {TECH_SKILLS.map((skill, idx) => (
-            <motion.div
+          {TECH_SKILLS.map((skill) => (
+            <div
               key={skill.name}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.35, delay: idx * 0.03 }}
               style={{
                 background: '#0B0F17',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -82,7 +77,7 @@ export default function Skills() {
               }}>
                 {skill.name}
               </span>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

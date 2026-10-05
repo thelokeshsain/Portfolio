@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
 import CertificationsModal from '../ui/CertificationsModal'
 
@@ -29,12 +28,7 @@ export default function About() {
           alignItems: 'flex-start',
         }}>
           {/* Left Column: More About Me */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div>
             <h2 className="section-heading" style={{ marginBottom: 20 }}>
               More About Me
             </h2>
@@ -80,15 +74,10 @@ export default function About() {
               <span>Know More About Me</span>
               <ArrowRight size={14} strokeWidth={2.5} />
             </button>
-          </motion.div>
+          </div>
 
           {/* Right Column: My Approach */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
+          <div>
             <h2 className="section-heading" style={{ marginBottom: 20 }}>
               My Approach
             </h2>
@@ -99,13 +88,9 @@ export default function About() {
               gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))',
               gap: 16,
             }}>
-              {APPROACH.map((item, idx) => (
-                <motion.div
+              {APPROACH.map((item) => (
+                <div
                   key={item.num}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: idx * 0.08 }}
                   style={{
                     background: '#0B0F17',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -152,10 +137,10 @@ export default function About() {
                   }}>
                     {item.desc}
                   </p>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 

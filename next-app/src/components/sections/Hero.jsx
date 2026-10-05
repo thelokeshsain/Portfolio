@@ -1,13 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import { MapPin, ArrowRight, Download, Zap, Mail } from 'lucide-react'
-import { motion, useReducedMotion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
 import { BrandIcon } from '../../config/brandAssets'
 
 export default function Hero() {
   const { data } = useData()
-  const shouldReduceMotion = useReducedMotion()
   const h = data.hero || {}
 
   const scrollTo = (id) => {
@@ -45,11 +43,7 @@ export default function Hero() {
           alignItems: 'center',
         }}>
           {/* Left Column: Text & CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div>
             {/* Availability Badge */}
             <div style={{
               display: 'inline-flex',
@@ -112,7 +106,7 @@ export default function Hero() {
               alignItems: 'center',
               gap: 7,
               fontSize: 14,
-              color: '#64748B',
+              color: '#94A3B8',
               marginBottom: 32,
             }}>
               <MapPin size={15} color="#94A3B8" />
@@ -283,15 +277,10 @@ export default function Hero() {
                 <Mail size={18} strokeWidth={2} />
               </a>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Column: 3D Laptop Display with floating annotations */}
-          <motion.div
-            style={{ position: 'relative' }}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
+          <div style={{ position: 'relative' }}>
             {/* Top-Right Handwritten Annotation */}
             <div style={{
               position: 'absolute',
@@ -339,7 +328,7 @@ export default function Hero() {
                 width={800}
                 height={500}
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
                 style={{
                   width: '100%',
                   height: 'auto',
@@ -379,7 +368,7 @@ export default function Hero() {
                 <span style={{ fontSize: 12, fontWeight: 500, color: '#E2E8F0' }}>Better Experiences</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

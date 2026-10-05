@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { Mail, ArrowRight, Send } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
 import { BrandIcon } from '../../config/brandAssets'
 
@@ -208,10 +207,7 @@ export default function Contact() {
 
         {/* Expandable Contact Form (Preserves all API & validation) */}
         {showForm && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
+          <div
             style={{
               marginTop: 24,
               padding: '32px',
@@ -325,7 +321,7 @@ export default function Contact() {
                 <span>{loading ? 'Sending...' : 'Send Message'}</span>
               </button>
             </form>
-          </motion.div>
+          </div>
         )}
       </div>
     </section>

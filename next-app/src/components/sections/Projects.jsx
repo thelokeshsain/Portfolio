@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
-import { motion } from 'framer-motion'
 import { useData } from '../../context/DataContext'
 import { BrandIcon } from '../../config/brandAssets'
 
@@ -125,12 +124,8 @@ export default function Projects() {
               : []
 
             return (
-              <motion.div
+              <div
                 key={p.id || p.title || idx}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
                 style={{
                   background: '#0B0F17',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -314,7 +309,7 @@ export default function Projects() {
                       href={p.github || 'https://github.com/thelokeshsain'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`View source code for ${p.title} on GitHub`}
+                      aria-label={`View Code for ${p.title} on GitHub`}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -338,7 +333,7 @@ export default function Projects() {
                     </a>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )
           })}
         </div>

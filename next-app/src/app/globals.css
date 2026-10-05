@@ -25,7 +25,7 @@
   /* Text — High Contrast */
   --text-primary: #F0F2F5;
   --text-secondary: #8B93A7;
-  --text-muted: #505872;
+  --text-muted: #94A3B8;
   --text-dim: #303850;
 
   /* Accent — Electric Blue / Indigo */
@@ -209,10 +209,10 @@ section,
 .section-label {
   font-family: var(--font-mono);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: #94A3B8;
   margin-bottom: 20px;
 }
 

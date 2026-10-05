@@ -72,21 +72,24 @@ export default function Navbar({ isInstallable, onInstall }) {
             href="#home"
             className="nav-logo"
             onClick={(e) => handleNavClick(e, 'home')}
-            aria-label="Lokesh Sain — Return to top"
+            aria-label="Lokesh Sain"
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
           >
-            <div style={{
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #1E293B, #0F172A)',
-              border: '1.5px solid rgba(255,255,255,0.15)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0,
-              overflow: 'hidden',
-            }}>
+            <div
+              aria-hidden="true"
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #1E293B, #0F172A)',
+                border: '1.5px solid rgba(255,255,255,0.15)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                overflow: 'hidden',
+              }}
+            >
               <span style={{
                 fontFamily: 'var(--font-display)',
                 fontSize: 12,
@@ -160,7 +163,7 @@ export default function Navbar({ isInstallable, onInstall }) {
               download="Lokesh_Sain_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Download Lokesh Sain Resume (PDF)"
+              aria-label="Download Resume"
               className="resume-btn"
               style={{
                 display: 'inline-flex',
@@ -267,7 +270,7 @@ export default function Navbar({ isInstallable, onInstall }) {
             download="Lokesh_Sain_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Download Resume (PDF)"
+            aria-label="Download Resume"
             style={{
               display: 'flex',
               alignItems: 'center',
