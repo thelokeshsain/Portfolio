@@ -15,8 +15,8 @@ import GoogleAd from "@/components/ads/GoogleAd";
 import ConsentRevokeButton from "@/components/ads/ConsentRevokeButton";
 
 export const metadata = {
-  title: "Privacy Policy | Lokesh Sain",
-  description: "Privacy Policy for the personal portfolio website of Lokesh Sain. Details regarding contact form submissions, security practices, and Google AdSense advertising disclosures.",
+  title: "Privacy Policy",
+  description: "Privacy Policy for the personal portfolio of Lokesh Sain. Explains how this website handles contact inquiries, technical request logs, security cookies, and Google AdSense advertising choices.",
   alternates: {
     canonical: "/privacy-policy",
   },
