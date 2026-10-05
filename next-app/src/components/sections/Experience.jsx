@@ -45,15 +45,10 @@ export default function Experience() {
         {EXPERIENCE_ITEMS.map((exp, idx) => (
           <div
             key={exp.id || idx}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '130px 24px 1fr',
-              gap: 16,
-              alignItems: 'flex-start',
-            }}
+            className="exp-timeline-item"
           >
-            {/* Left Date & Location */}
-            <div style={{ paddingTop: 4 }}>
+            {/* Left Date & Location (Desktop) */}
+            <div className="exp-date-desktop" style={{ paddingTop: 4 }}>
               <div style={{ fontSize: 13, fontWeight: 600, color: '#E2E8F0', lineHeight: 1.3 }}>
                 {exp.period}
               </div>
@@ -95,10 +90,18 @@ export default function Experience() {
               background: '#0B0F17',
               border: '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: 16,
-              padding: '20px 22px',
+              padding: 'clamp(16px, 3vw, 22px)',
               transition: 'border-color 0.2s',
+              minWidth: 0,
+              width: '100%',
             }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 12 }}>
+              {/* Date & Location for Mobile */}
+              <div className="exp-date-mobile">
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#38BDF8' }}>{exp.period}</span>
+                <span style={{ fontSize: 12, color: '#94A3B8' }}> · {exp.location}</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 12, flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{
                     width: 36,

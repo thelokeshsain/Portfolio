@@ -24,6 +24,7 @@ export function useActiveSection() {
   const clickLockRef = useRef(false);
   const clickLockTimerRef = useRef(null);
   const rafIdRef = useRef(null);
+  const elementsCacheRef = useRef({});
 
   // Keep ref in sync with state for callbacks
   useEffect(() => {
@@ -56,7 +57,11 @@ export function useActiveSection() {
 
     for (let i = 0; i < NAV_SECTIONS.length; i++) {
       const { id } = NAV_SECTIONS[i];
-      const el = document.getElementById(id);
+      let el = elementsCacheRef.current[id];
+      if (!el || !el.isConnected) {
+        el = document.getElementById(id);
+        if (el) elementsCacheRef.current[id] = el;
+      }
       if (!el) continue;
 
       const rect = el.getBoundingClientRect();

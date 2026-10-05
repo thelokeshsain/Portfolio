@@ -25,7 +25,8 @@
   "devDependencies": {
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9"
+    "eslint-config-next": "16.2.9",
+    "puppeteer": "^25.12.0"
   },
   "browserslist": [
     "last 2 Chrome versions",

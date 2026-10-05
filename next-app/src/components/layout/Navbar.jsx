@@ -31,7 +31,7 @@ export default function Navbar({ isInstallable, onInstall }) {
 
   // Close mobile menu on resize to desktop
   useEffect(() => {
-    const fn = () => { if (window.innerWidth >= 769) setOpen(false) }
+    const fn = () => { if (window.innerWidth >= 881) setOpen(false) }
     window.addEventListener('resize', fn)
     return () => window.removeEventListener('resize', fn)
   }, [])

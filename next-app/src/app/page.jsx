@@ -23,7 +23,7 @@ const getPortfolioData = cache(async () => {
 
 // Helper to guarantee 100% valid absolute URLs for Google Search Console & Social Crawlers
 function toAbsoluteUrl(urlStr) {
-  if (!urlStr || typeof urlStr !== 'string') {
+  if (!urlStr || typeof urlStr !== 'string' || urlStr.startsWith('data:')) {
     return `${BASE_URL}/images/social_preview.webp`;
   }
   if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) {

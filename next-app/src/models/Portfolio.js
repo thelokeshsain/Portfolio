@@ -70,8 +70,12 @@ const s = new mongoose.Schema(
         tags: [{ type: String, maxlength: 50 }],
         link: { type: String, maxlength: 300 },
         github: { type: String, maxlength: 300 },
-        visible: { type: Boolean, default: true },
-        image: { type: String, default: null, maxlength: 2_000_000 }, // base64 project logo (max ~1.5MB file)
+        image: { type: String, default: null, maxlength: 2_000_000 }, // base64 or URL
+        logo: { type: String, default: null, maxlength: 2_000_000 },
+        thumbnail: { type: String, default: null, maxlength: 2_000_000 },
+        livePreviewImageUrl: { type: String, default: null, maxlength: 2_000_000 },
+        visualSource: { type: String, default: null, maxlength: 50 }, // 'backend-image' | 'backend-logo' | 'live-capture' | 'local-fallback'
+        visualCapturedAt: { type: Date, default: null },
       },
     ],
 

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { useData } from '../../context/DataContext'
 import { BrandIcon } from '../../config/brandAssets'
+import { resolveProjectVisual } from '../../utils/projectVisual'
 
 const FEATURED_PROJECTS = [
   {
@@ -42,9 +43,9 @@ export default function Projects() {
   const dbProjects = data.projects || []
   const [showAll, setShowAll] = useState(false)
 
-  // Use the exact reference featured projects for top 3, plus remaining from DB if showAll
-  const extraProjects = dbProjects.slice(3)
-  const displayedProjects = showAll ? [...FEATURED_PROJECTS, ...extraProjects] : FEATURED_PROJECTS
+  // Authoritative data resolution: prefer backend database projects
+  const sourceProjects = (dbProjects && dbProjects.length > 0) ? dbProjects : FEATURED_PROJECTS
+  const displayedProjects = showAll ? sourceProjects : sourceProjects.slice(0, 3)
 
   return (
     <section id="projects" className="section section-border" style={{ position: 'relative' }}>
@@ -114,7 +115,7 @@ export default function Projects() {
         {/* 3-Column Projects Grid */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
           gap: 24,
         }}>
           {displayedProjects.map((p, idx) => {
@@ -122,6 +123,7 @@ export default function Projects() {
             const tags = Array.isArray(p.tags)
               ? p.tags.map(t => typeof t === 'string' ? t : t?.label || '')
               : []
+            const visual = resolveProjectVisual(p)
 
             return (
               <div
@@ -134,6 +136,7 @@ export default function Projects() {
                   display: 'flex',
                   flexDirection: 'column',
                   transition: 'border-color 0.25s, transform 0.25s, box-shadow 0.25s',
+                  minWidth: 0,
                 }}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)'
@@ -146,35 +149,28 @@ export default function Projects() {
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
-                {/* Image Container */}
-                <div style={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: '16 / 10',
-                  background: '#070A0F',
-                  overflow: 'hidden',
-                  borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
-                }}>
-                  {p.image ? (
-                    <Image
-                      src={p.image}
-                      alt={p.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 400px"
-                      style={{ objectFit: 'cover' }}
-                    />
-                  ) : (
-                    <div style={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#475569',
-                      fontSize: 14,
-                    }}>
-                      {p.title}
+                {/* Visual Container — Full visibility, zero crop, contain */}
+                <div className="project-visual-frame">
+                  {visual.isLogo ? (
+                    <div className="project-logo-frame">
+                      <Image
+                        src={visual.src}
+                        alt={visual.alt}
+                        width={140}
+                        height={140}
+                        className="project-logo-img"
+                        sizes="140px"
+                      />
                     </div>
+                  ) : (
+                    <Image
+                      src={visual.src}
+                      alt={visual.alt}
+                      fill
+                      className="project-visual-img"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                      style={{ objectFit: 'contain' }}
+                    />
                   )}
 
                   {/* Featured Badge */}
@@ -191,6 +187,7 @@ export default function Projects() {
                       padding: '4px 12px',
                       borderRadius: 9999,
                       boxShadow: '0 2px 8px rgba(59, 130, 246, 0.4)',
+                      zIndex: 2,
                     }}>
                       Featured
                     </div>

@@ -36,12 +36,7 @@ export default function Hero() {
       }} />
 
       <div className="inner" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)',
-          gap: 'clamp(32px, 5vw, 64px)',
-          alignItems: 'center',
-        }}>
+        <div className="hero-grid">
           {/* Left Column: Text & CTAs */}
           <div>
             {/* Availability Badge */}
@@ -282,7 +277,7 @@ export default function Hero() {
           {/* Right Column: 3D Laptop Display with floating annotations */}
           <div style={{ position: 'relative' }}>
             {/* Top-Right Handwritten Annotation */}
-            <div style={{
+            <div className="hero-annotation" style={{
               position: 'absolute',
               top: '-32px',
               right: '24px',
@@ -328,7 +323,8 @@ export default function Hero() {
                 width={800}
                 height={500}
                 priority
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
+                fetchPriority="high"
+                sizes="(max-width: 480px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 50vw, 500px"
                 style={{
                   width: '100%',
                   height: 'auto',
