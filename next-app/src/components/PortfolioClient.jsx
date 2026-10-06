@@ -27,7 +27,7 @@ import Skills from '../components/sections/Skills'
 import Contact from '../components/sections/Contact'
 import usePWA from '../hooks/usePWA'
 import { useData } from '../context/DataContext'
-import GoogleAd, { openConsentManager } from './ads/GoogleAd'
+import { openConsentManager } from './ads/GoogleAd'
 
 import { BrandIcon } from '../config/brandAssets'
 
@@ -208,9 +208,6 @@ export default function Portfolio() {
 
         {/* 6. Contact (#contact) */}
         {s.contact !== false && <Contact />}
-
-        {/* Non-intrusive AdSense Slot before Footer */}
-        <GoogleAd slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CONTENT_BOTTOM} style={{ maxWidth: '1200px', padding: '0 20px' }} />
       </main>
 
       {/* 7. Footer */}

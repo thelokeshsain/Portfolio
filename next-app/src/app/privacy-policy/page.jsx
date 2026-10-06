@@ -11,7 +11,6 @@ import {
   Cookie,
   UserCheck
 } from "lucide-react";
-import GoogleAd from "@/components/ads/GoogleAd";
 import ConsentRevokeButton from "@/components/ads/ConsentRevokeButton";
 
 export const metadata = {
@@ -427,9 +426,6 @@ export default function PrivacyPolicyPage() {
           </section>
 
         </div>
-
-        {/* Compliant, non-intrusive AdSense Slot before footer */}
-        <GoogleAd slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_CONTENT_BOTTOM} style={{ marginTop: "40px" }} />
 
         {/* Footer note */}
         <div style={{ marginTop: "40px", textAlign: "center", fontSize: "13px", color: "#64748B", fontFamily: "var(--font-mono, monospace)" }}>

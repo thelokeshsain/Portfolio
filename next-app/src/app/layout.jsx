@@ -1,5 +1,4 @@
 import { Inter, Outfit, JetBrains_Mono } from "next/font/google";
-import Script from "next/script";
 import { ADS_CONFIG } from "@/config/ads";
 import "./globals.css";
 
@@ -89,9 +88,8 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
       <head>
         {adClientId && (
-          <Script
-            id="adsbygoogle-init"
-            strategy="afterInteractive"
+          <script
+            async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adClientId}`}
             crossOrigin="anonymous"
           />

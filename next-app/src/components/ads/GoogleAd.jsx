@@ -4,12 +4,12 @@ import { useEffect, useRef } from 'react';
 import { ADS_CONFIG } from '@/config/ads';
 
 /**
- * Reusable, responsive Google AdSense Slot Component.
+ * Optional Manual Google AdSense Unit Component.
  * 
- * - Stable dimensions / zero CLS container.
- * - Responsive width with min-width: 0 and overflow: hidden (zero horizontal scroll).
- * - Compliant with Google AdSense Publisher Policies (distinct 'Advertisement' label).
- * - Safely no-ops in production if publisher ID is not configured.
+ * Note: Under Google Auto Ads, ad units are automatically placed by Google.
+ * This component is only for explicit, manual ad slot placements and will
+ * render NOTHING (returns null) unless an explicit slot ID is provided and
+ * AdSense is enabled.
  */
 export default function GoogleAd({
   slot,
@@ -23,8 +23,8 @@ export default function GoogleAd({
   const clientId = ADS_CONFIG.getClientId();
 
   useEffect(() => {
-    // If ads are disabled or no client ID is configured, do nothing
-    if (!ADS_CONFIG.enabled || !clientId) return;
+    // If ads are disabled, no client ID is configured, or no explicit slot is provided, do nothing
+    if (!ADS_CONFIG.enabled || !clientId || !slot) return;
 
     // Avoid pushing multiple times to the same slot
     if (pushedRef.current) return;
@@ -39,31 +39,8 @@ export default function GoogleAd({
     }
   }, [clientId, slot]);
 
-  // If publisher ID is not configured
-  if (!ADS_CONFIG.enabled || !clientId) {
-    if (process.env.NODE_ENV === 'development') {
-      return (
-        <aside
-          aria-label="Advertisement Placement Note"
-          style={{
-            maxWidth: '100%',
-            margin: '32px auto',
-            padding: '16px',
-            borderRadius: '12px',
-            border: '1px dashed #1E2638',
-            backgroundColor: '#0B0F17',
-            textAlign: 'center',
-            fontSize: '12px',
-            color: '#94A3B8',
-            fontFamily: 'var(--font-mono, monospace)',
-            ...style,
-          }}
-          className={className}
-        >
-          <span>[Google AdSense Slot — Pending NEXT_PUBLIC_ADSENSE_PUBLISHER_ID]</span>
-        </aside>
-      );
-    }
+  // Under Auto ads or when no explicit ad slot is configured, render nothing
+  if (!ADS_CONFIG.enabled || !clientId || !slot) {
     return null;
   }
 
