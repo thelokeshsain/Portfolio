@@ -27,7 +27,7 @@ import Skills from '../components/sections/Skills'
 import Contact from '../components/sections/Contact'
 import usePWA from '../hooks/usePWA'
 import { useData } from '../context/DataContext'
-import { openConsentManager } from './ads/GoogleAd'
+import { openConsentManager } from './ads/consent'
 
 import { BrandIcon } from '../config/brandAssets'
 

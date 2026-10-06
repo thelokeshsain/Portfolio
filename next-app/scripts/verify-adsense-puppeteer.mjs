@@ -85,6 +85,11 @@ async function verify() {
   console.log(`Total errors: ${errors.length}`);
   errors.forEach(e => console.log('   Error:', e));
 
+  // 6. AdSense head processing marker
+  const headMarker = adScripts.some(s => s.outerHTML && s.outerHTML.includes('data-checked-head="true"'));
+  console.log(`\n6. AdSense head processing marker (data-checked-head="true") observed: ${headMarker}`);
+  console.log('   (Note: Marker indicates AdSense script executed head tag validation; this is NOT Google account or site approval)');
+
   await browser.close();
 }
 

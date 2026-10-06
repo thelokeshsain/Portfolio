@@ -1,7 +1,7 @@
 'use client';
 
 import { Settings2 } from 'lucide-react';
-import { openConsentManager } from '@/components/ads/GoogleAd';
+import { openConsentManager } from '@/components/ads/consent';
 
 export default function ConsentRevokeButton({ label = 'Manage Privacy & Cookie Preferences' }) {
   return (
