@@ -78,7 +78,17 @@ function recursivelyValidateUrls(obj, path = "") {
   if (!obj) return { ok: true };
 
   if (typeof obj === "string") {
-    const looksLikeUrl = obj.includes("://") || obj.startsWith("/");
+    // Skip base64 data URIs for images (validated separately by validateBase64Image)
+    if (obj.startsWith("data:image/")) {
+      return { ok: true };
+    }
+
+    // Safe root-relative paths (e.g. /images/..., /api/projects/..., /resume.pdf)
+    if (obj.startsWith("/") && !obj.startsWith("//")) {
+      return { ok: true };
+    }
+
+    const looksLikeUrl = obj.includes("://") || obj.startsWith("//") || obj.includes(":");
     if (looksLikeUrl && !isSafeUrl(obj)) {
       return {
         ok: false,

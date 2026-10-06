@@ -146,7 +146,12 @@ export default function About() {
 
       {/* Certifications & Education Modal */}
       {isModalOpen && (
-        <CertificationsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+        <CertificationsModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          achievements={data.achievements || []}
+          education={data.education || []}
+        />
       )}
     </section>
   )
