@@ -195,6 +195,7 @@ export function BrandIcon({ name, size = 24, className = '', style = {} }) {
 
   if (entry?.type === 'brand') {
     return (
+      /* eslint-disable-next-line @next/next/no-img-element -- Scalable SVG vector icons are exempt from raster optimization to preserve sharpness */
       <img
         src={entry.asset}
         alt={entry.ariaLabel}

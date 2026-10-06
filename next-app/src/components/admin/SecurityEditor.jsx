@@ -426,6 +426,7 @@ export default function SecurityEditor() {
                 marginBottom: 20,
               }}
             >
+              {/* eslint-disable-next-line @next/next/no-img-element -- Ephemeral 2FA TOTP QR code is a dynamic base64 data: URI */}
               <img
                 src={qr}
                 alt="TOTP QR Code — scan with your authenticator app"

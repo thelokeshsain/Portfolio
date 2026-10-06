@@ -111,6 +111,7 @@ export default function HeroEditor({ data, onSave }) {
               }}
             >
               {imgPreview ? (
+                /* eslint-disable-next-line @next/next/no-img-element -- User-uploaded local FileReader data: URI preview requires native img */
                 <img
                   src={imgPreview}
                   alt="Profile"

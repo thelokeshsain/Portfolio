@@ -246,6 +246,7 @@ export default function ProjectsEditor({ data, onSave }) {
                   }}
                 >
                   {p.image ? (
+                    /* eslint-disable-next-line @next/next/no-img-element -- User-uploaded FileReader data: URI or external URL preview requires native img */
                     <img
                       src={p.image}
                       alt={`${p.title} logo`}
