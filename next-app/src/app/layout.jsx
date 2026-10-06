@@ -45,8 +45,8 @@ export const metadata = {
     images: [
       {
         url: "/images/social_preview.webp",
-        width: 1200,
-        height: 630,
+        width: 1734,
+        height: 907,
         alt: "Lokesh Sain — Software Engineer Portfolio",
       },
     ],

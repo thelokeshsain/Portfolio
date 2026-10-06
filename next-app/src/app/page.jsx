@@ -58,8 +58,8 @@ export async function generateMetadata() {
       images: [
         {
           url: socialImgUrl,
-          width: 1200,
-          height: 630,
+          width: 1734,
+          height: 907,
           alt: `${name} — ${role}`,
         },
       ],
