@@ -113,6 +113,42 @@ export default async function BlogPage({ searchParams }) {
       />
 
       <div className="p-container">
+        {/* Page Section Title (H1) for Search & Accessibility */}
+        <header style={{ marginBottom: 32 }}>
+          <h1
+            style={{
+              fontSize: "clamp(24px, 4vw, 32px)",
+              fontWeight: 800,
+              color: "var(--p-text-primary)",
+              letterSpacing: "-0.02em",
+              margin: "0 0 8px",
+              lineHeight: 1.25,
+              fontFamily: "var(--font-display, inherit)",
+            }}
+          >
+            {isFiltered
+              ? category && category !== "all"
+                ? `${category} Perspectives`
+                : query
+                ? `Search: "${query}"`
+                : "Perspectives Index"
+              : "Perspectives — Independent Editorial Commentary"}
+          </h1>
+          <p
+            style={{
+              fontSize: 15,
+              color: "var(--p-text-secondary)",
+              margin: 0,
+              maxWidth: 680,
+              lineHeight: 1.5,
+            }}
+          >
+            {isFiltered
+              ? `Displaying verified perspectives and long-form commentary matching your selection (${articles.length} ${articles.length === 1 ? "article" : "articles"}).`
+              : "Rigorous essays, policy analysis, and software engineering commentary published by software engineer Lokesh Sain."}
+          </p>
+        </header>
+
         {/* Active Filter Notice */}
         {isFiltered && (
           <div

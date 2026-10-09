@@ -471,9 +471,9 @@ export default function PrivacyPolicyPage() {
         </div>
 
         {/* Footer note */}
-        <div style={{ marginTop: "40px", textAlign: "center", fontSize: "13px", color: "#64748B", fontFamily: "var(--font-mono, monospace)" }}>
+        <footer role="contentinfo" style={{ marginTop: "40px", textAlign: "center", fontSize: "13px", color: "#64748B", fontFamily: "var(--font-mono, monospace)" }}>
           © {new Date().getFullYear()} Lokesh Sain • Software Engineer Portfolio & Perspectives • All Rights Reserved.
-        </div>
+        </footer>
       </main>
     </div>
   );
