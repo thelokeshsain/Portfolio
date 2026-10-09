@@ -298,7 +298,7 @@ export default async function BlogPage({ searchParams }) {
 
                       <p className="p-lead-dek">{leadArticle.dek}</p>
 
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginTop: "auto" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--p-text-secondary)" }}>
                           <span style={{ fontWeight: 600, color: "var(--p-text-primary)" }}>
                             By {leadArticle.author?.name || "Lokesh Sain"}
@@ -437,17 +437,7 @@ export default async function BlogPage({ searchParams }) {
 
         {/* About the Author Vignette */}
         <section
-          style={{
-            marginTop: 48,
-            padding: "32px 28px",
-            background: "var(--p-surface)",
-            border: "1px solid var(--p-border)",
-            borderRadius: 12,
-            display: "grid",
-            gridTemplateColumns: "auto 1fr",
-            gap: 20,
-            alignItems: "center",
-          }}
+          className="p-about-author-card"
           aria-label="About the Author"
         >
           <div

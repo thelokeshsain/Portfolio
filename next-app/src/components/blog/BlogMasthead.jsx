@@ -19,30 +19,25 @@ export default function BlogMasthead() {
       {/* Top Utility Bar */}
       <div className="p-masthead-top">
         <div className="p-masthead-top-inner">
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div className="p-masthead-top-left">
             <Link
               href="/"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                fontWeight: 600,
-                color: "var(--p-text-secondary)",
-              }}
+              className="p-masthead-return-link"
+              aria-label="Return to portfolio homepage"
             >
               <ArrowLeft size={13} /> Return to Portfolio
             </Link>
-            <span style={{ color: "var(--p-border)" }}>|</span>
-            <span style={{ color: "var(--p-text-muted)" }}>
+            <span className="p-masthead-divider" aria-hidden="true">|</span>
+            <span className="p-masthead-edition">
               Editorial Edition &middot; Updated Daily
             </span>
           </div>
 
-          <div style={{ display: "flex", gap: 16 }}>
-            <Link href="/#about" style={{ color: "var(--p-text-secondary)" }}>
+          <div className="p-masthead-top-right">
+            <Link href="/#about">
               About Author
             </Link>
-            <Link href="/#contact" style={{ color: "var(--p-text-secondary)" }}>
+            <Link href="/#contact">
               Contact
             </Link>
           </div>
