@@ -277,14 +277,14 @@ export default async function ArticlePage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <article className="p-article-container" itemScope itemType="https://schema.org/BlogPosting">
+      <article className="p-article-container p-article-wrapper" itemScope itemType="https://schema.org/BlogPosting">
         {/* Breadcrumb Navigation */}
         <nav className="p-breadcrumbs" aria-label="Breadcrumb">
-          <Link href="/">Home</Link>
+          <Link href="/" prefetch={false}>Home</Link>
           <ChevronRight size={12} />
-          <Link href="/blog">Perspectives</Link>
+          <Link href="/blog" prefetch={false}>Perspectives</Link>
           <ChevronRight size={12} />
-          <Link href={`/blog?category=${encodeURIComponent(article.category)}`}>
+          <Link href={`/blog?category=${encodeURIComponent(article.category)}`} prefetch={false}>
             {article.category}
           </Link>
           <ChevronRight size={12} />
@@ -294,12 +294,13 @@ export default async function ArticlePage({ params }) {
         </nav>
 
         {/* Article Header */}
-        <header className="p-header">
+        <header className="p-header p-article-header">
           {/* Category & Type Badges */}
-          <div className="p-meta-badges">
+          <div className="p-meta-badges p-article-header-meta">
             <Link
               href={`/blog?category=${encodeURIComponent(article.category)}`}
               className="p-badge p-badge-category"
+              prefetch={false}
             >
               {article.category}
             </Link>
@@ -319,18 +320,18 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {/* Headline (H1) */}
-          <h1 className="p-headline" itemProp="headline">
+          <h1 className="p-headline p-article-h1" itemProp="headline">
             {article.title}
           </h1>
 
           {/* Dek / Sub-headline */}
-          <p className="p-dek" itemProp="description">
+          <p className="p-dek p-article-dek" itemProp="description">
             {article.dek}
           </p>
 
           {/* Author Byline & Date */}
-          <div className="p-byline-bar">
-            <div className="p-byline-left">
+          <div className="p-byline-bar p-author-row">
+            <div className="p-byline-left p-author-info">
               <div className="p-author-avatar">
                 {article.author?.avatar ? (
                   <Image
@@ -373,23 +374,13 @@ export default async function ArticlePage({ params }) {
         {/* Cover Image — Rendered using Next.js Image with priority and explicit aspect ratio */}
         {article.coverImage?.url && (
           <div className="p-cover-container">
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "16 / 9",
-                borderRadius: 10,
-                overflow: "hidden",
-                border: "1px solid var(--p-border)",
-                background: "var(--p-muted-surface)",
-              }}
-            >
+            <div className="p-cover-image-box">
               <Image
                 src={article.coverImage.url}
                 alt={article.coverImage.alt || article.title}
                 fill
                 priority
-                sizes="(max-width: 800px) 100vw, 800px"
+                sizes="(max-width: 768px) 100vw, 760px"
                 style={{ objectFit: "cover" }}
               />
             </div>
@@ -443,29 +434,9 @@ export default async function ArticlePage({ params }) {
         )}
 
         {/* Editorial Standards, Corrections & Legal Disclaimers */}
-        <div
-          style={{
-            margin: "32px 0",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}
-        >
+        <div className="p-editorial-notices">
           {/* Editorial Standards & Fact Distinction Notice */}
-          <div
-            style={{
-              padding: "16px 20px",
-              background: "var(--p-muted-surface)",
-              border: "1px solid var(--p-border)",
-              borderRadius: 8,
-              fontSize: 12.5,
-              color: "var(--p-text-secondary)",
-              lineHeight: 1.5,
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 12,
-            }}
-          >
+          <div className="p-notice-card p-notice-standards">
             <ShieldCheck size={18} style={{ color: "var(--p-accent)", flexShrink: 0, marginTop: 2 }} />
             <div>
               <strong style={{ color: "var(--p-text-primary)" }}>Editorial Standards:</strong> This analysis synthesizes confirmed government administrative announcements, reputable international reporting, and statutory immigration frameworks. Statements regarding government allegations reflect active administrative claims, not adjudicated findings. Personal commentary is clearly identified as opinion.
@@ -473,20 +444,7 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {/* Legal / Immigration Disclaimer */}
-          <div
-            style={{
-              padding: "14px 18px",
-              background: "rgba(245, 158, 11, 0.06)",
-              border: "1px solid rgba(245, 158, 11, 0.25)",
-              borderRadius: 8,
-              fontSize: 12,
-              color: "#92400E",
-              lineHeight: 1.5,
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 10,
-            }}
-          >
+          <div className="p-notice-card p-notice-legal">
             <AlertTriangle size={16} style={{ color: "#D97706", flexShrink: 0, marginTop: 2 }} />
             <div>
               <strong>Legal Disclaimer:</strong> This publication is produced strictly for journalistic, educational, and analytical purposes. It does not constitute formal legal, corporate, or immigration counsel. Immigration statutes and administrative procedures are subject to rapid evolution and judicial review. Readers should consult licensed legal counsel regarding their specific petitions.
@@ -494,22 +452,7 @@ export default async function ArticlePage({ params }) {
           </div>
 
           {/* Factual Correction Process */}
-          <div
-            style={{
-              padding: "12px 18px",
-              background: "var(--p-surface)",
-              border: "1px solid var(--p-border)",
-              borderRadius: 8,
-              fontSize: 12,
-              color: "var(--p-text-muted)",
-              lineHeight: 1.5,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: 10,
-            }}
-          >
+          <div className="p-notice-card p-notice-correction">
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <Mail size={14} style={{ color: "var(--p-accent)" }} />
               <span>Have a factual correction, update, or primary source document?</span>
@@ -544,6 +487,7 @@ export default async function ArticlePage({ params }) {
             <div style={{ marginTop: 8 }}>
               <Link
                 href="/#about"
+                prefetch={false}
                 style={{
                   fontSize: 12.5,
                   fontWeight: 600,
@@ -558,36 +502,20 @@ export default async function ArticlePage({ params }) {
 
         {/* Related Articles */}
         {related.length > 0 && (
-          <section style={{ marginTop: 56 }} aria-label="Related Perspectives">
-            <h3
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: 18,
-                fontWeight: 700,
-                color: "var(--p-text-primary)",
-                marginBottom: 20,
-              }}
-            >
+          <section className="p-related-section" aria-label="Related Perspectives">
+            <h3 className="p-related-title">
               Related Perspectives
             </h3>
-            <div style={{ display: "grid", gap: 16 }}>
+            <div className="p-related-grid">
               {related.map((rel) => (
-                <div
-                  key={rel.id}
-                  style={{
-                    background: "var(--p-surface)",
-                    border: "1px solid var(--p-border)",
-                    borderRadius: 8,
-                    padding: "16px 20px",
-                  }}
-                >
-                  <div style={{ fontSize: 11.5, color: "var(--p-accent)", fontWeight: 600, marginBottom: 4 }}>
+                <div key={rel.id} className="p-related-card">
+                  <div className="p-related-meta">
                     {rel.category} &middot; {formatDate(rel.publishedAt, { month: "short" })}
                   </div>
-                  <h4 style={{ fontSize: 15, fontWeight: 700, color: "var(--p-text-primary)", marginBottom: 4 }}>
-                    <Link href={`/blog/${rel.slug}`}>{rel.title}</Link>
+                  <h4 className="p-related-heading">
+                    <Link href={`/blog/${rel.slug}`} prefetch={false}>{rel.title}</Link>
                   </h4>
-                  <p style={{ fontSize: 13, color: "var(--p-text-secondary)", margin: 0 }}>
+                  <p className="p-related-dek">
                     {rel.dek}
                   </p>
                 </div>
@@ -597,17 +525,11 @@ export default async function ArticlePage({ params }) {
         )}
 
         {/* Return to Blog */}
-        <div style={{ marginTop: 40, textAlign: "center" }}>
+        <div className="p-back-wrapper">
           <Link
             href="/blog"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 13.5,
-              fontWeight: 600,
-              color: "var(--p-accent)",
-            }}
+            prefetch={false}
+            className="p-back-link"
           >
             <ArrowLeft size={14} /> Back to All Perspectives
           </Link>

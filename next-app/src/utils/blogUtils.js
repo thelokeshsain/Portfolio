@@ -92,6 +92,8 @@ export function parseMarkdownToHtml(markdown = "") {
   let currentList = null; // { type: 'ul'|'ol', items: [] }
   let currentTable = null; // { headers: [], rows: [] }
   let currentParagraph = [];
+  let inCodeBlock = false;
+  let codeBlockLines = [];
 
   function flushParagraph() {
     if (currentParagraph.length > 0) {
@@ -131,9 +133,39 @@ export function parseMarkdownToHtml(markdown = "") {
     }
   }
 
+  function flushCodeBlock() {
+    if (inCodeBlock) {
+      const escapedCode = escapeHtml(codeBlockLines.join("\n"));
+      blocks.push(
+        `<div class="editorial-code-wrapper"><pre class="editorial-pre"><code class="editorial-code-block">${escapedCode}</code></pre></div>`
+      );
+      inCodeBlock = false;
+      codeBlockLines = [];
+    }
+  }
+
   for (let i = 0; i < rawLines.length; i++) {
     const rawLine = rawLines[i];
     const trimmed = rawLine.trim();
+
+    // Fenced Code Block delimiter
+    if (trimmed.startsWith("```")) {
+      if (inCodeBlock) {
+        flushCodeBlock();
+      } else {
+        flushParagraph();
+        flushList();
+        flushTable();
+        inCodeBlock = true;
+        codeBlockLines = [];
+      }
+      continue;
+    }
+
+    if (inCodeBlock) {
+      codeBlockLines.push(rawLine);
+      continue;
+    }
 
     // Blank line
     if (!trimmed) {
@@ -236,6 +268,7 @@ export function parseMarkdownToHtml(markdown = "") {
   flushParagraph();
   flushList();
   flushTable();
+  flushCodeBlock();
 
   return blocks.join("\n\n");
 }
@@ -246,10 +279,17 @@ export function parseMarkdownToHtml(markdown = "") {
  * - Italic: *text* or _text_
  * - Code: `code`
  * - Links: [text](url)
+ * - Images: ![alt](url)
  */
 function formatInline(text = "") {
   // First escape raw HTML
   let escaped = escapeHtml(text);
+
+  // Inline images ![alt](url) - must be before links
+  escaped = escaped.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, url) => {
+    const safeUrl = sanitizeUrl(url);
+    return `<img src="${safeUrl}" alt="${alt}" class="editorial-inline-img" loading="lazy" />`;
+  });
 
   // Inline code `code`
   escaped = escaped.replace(/`([^`]+)`/g, '<code class="editorial-code">$1</code>');

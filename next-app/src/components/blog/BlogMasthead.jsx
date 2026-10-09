@@ -88,6 +88,7 @@ export default function BlogMasthead() {
                 key={cat.id}
                 href={cat.id === "all" ? "/blog" : `/blog?category=${encodeURIComponent(cat.id)}`}
                 className="p-category-tab"
+                prefetch={false}
               >
                 {cat.label}
               </Link>
