@@ -45,9 +45,7 @@ export const metadata = {
 export default function BlogLayout({ children }) {
   return (
     <div className="perspectives-theme">
-      <Suspense fallback={<div style={{ height: 120 }} />}>
-        <BlogMasthead />
-      </Suspense>
+      <BlogMasthead />
       <main id="main-content">{children}</main>
       <footer className="p-footer">
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>

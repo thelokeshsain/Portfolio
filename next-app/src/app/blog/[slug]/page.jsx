@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import connectDB from "@/lib/db";
@@ -14,13 +15,35 @@ import {
   CheckCircle2,
   ArrowLeft,
   User,
+  ShieldCheck,
+  Mail,
+  AlertTriangle,
 } from "lucide-react";
 
-export const revalidate = 60; // Incremental Static Regeneration
+export const revalidate = 60; // Incremental Static Regeneration (1 minute)
+export const dynamicParams = true; // Allow new articles published after build to be generated on demand
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lokeshsain.vercel.app";
 
-async function getArticleBySlug(slug) {
+/**
+ * Pre-render all published articles at build time for instant Edge CDN delivery
+ */
+export async function generateStaticParams() {
+  try {
+    await connectDB();
+    const articles = await Article.find({ status: "published" }).select("slug").lean();
+    return articles.map((a) => ({ slug: a.slug }));
+  } catch (err) {
+    console.error("Error in generateStaticParams:", err.message);
+    return [];
+  }
+}
+
+/**
+ * Deduplicated article query using React cache to prevent redundant DB calls
+ * across generateMetadata and the main page component within the same request.
+ */
+const getArticleBySlug = cache(async (slug) => {
   try {
     await connectDB();
     const article = await Article.findOne({ slug, status: "published" }).lean();
@@ -57,7 +80,7 @@ async function getArticleBySlug(slug) {
     console.error("Error fetching article by slug:", err.message);
     return null;
   }
-}
+});
 
 async function getRelatedArticles(category, currentSlug) {
   try {
@@ -67,6 +90,7 @@ async function getRelatedArticles(category, currentSlug) {
       slug: { $ne: currentSlug },
       category: category,
     })
+      .select("title slug dek category readingTime publishedAt createdAt")
       .sort({ publishedAt: -1 })
       .limit(3)
       .lean();
@@ -168,27 +192,46 @@ export default async function ArticlePage({ params }) {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "@id": `${canonicalUrl}#article`,
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}/#website`,
+      name: "Lokesh Sain Portfolio & Perspectives",
+      url: BASE_URL,
+    },
     headline: article.title,
     description: article.dek,
-    image: [imageUrl],
+    inLanguage: "en-US",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+    },
+    url: canonicalUrl,
     datePublished: article.publishedAt,
     dateModified: article.updatedAt,
+    articleSection: article.category,
+    keywords: (article.tags || []).join(", "),
+    wordCount: article.content ? article.content.split(/\s+/).length : undefined,
     author: {
       "@type": "Person",
       name: article.author?.name || "Lokesh Sain",
-      url: BASE_URL,
+      jobTitle: article.author?.role || "Software Engineer",
+      url: `${BASE_URL}/#about`,
     },
     publisher: {
       "@type": "Person",
       name: "Lokesh Sain",
       url: BASE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${BASE_URL}/favicon.svg`,
+      },
     },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": canonicalUrl,
+    image: {
+      "@type": "ImageObject",
+      url: imageUrl,
+      width: 1200,
+      height: 630,
     },
-    articleSection: article.category,
-    keywords: (article.tags || []).join(", "),
   };
 
   // Structured Data 2: BreadcrumbList schema
@@ -227,14 +270,16 @@ export default async function ArticlePage({ params }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([articleSchema, breadcrumbSchema]),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <article className="p-article-wrapper">
+      <article className="p-article-container" itemScope itemType="https://schema.org/BlogPosting">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="p-breadcrumbs">
+        <nav className="p-breadcrumbs" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <ChevronRight size={12} />
           <Link href="/blog">Perspectives</Link>
@@ -242,61 +287,82 @@ export default async function ArticlePage({ params }) {
           <Link href={`/blog?category=${encodeURIComponent(article.category)}`}>
             {article.category}
           </Link>
+          <ChevronRight size={12} />
+          <span className="p-breadcrumb-current" aria-current="page">
+            {article.title}
+          </span>
         </nav>
 
-        {/* Article Header (Above the fold) */}
-        <header className="p-article-header">
-          <div className="p-article-header-meta">
-            <span className="p-badge p-badge-category">{article.category}</span>
-            {article.isAnalysisOrOpinion && (
-              <span
-                className={`p-badge ${
-                  article.isAnalysisOrOpinion === "Opinion"
-                    ? "p-badge-opinion"
-                    : "p-badge-analysis"
-                }`}
-              >
-                {article.isAnalysisOrOpinion}
+        {/* Article Header */}
+        <header className="p-header">
+          {/* Category & Type Badges */}
+          <div className="p-meta-badges">
+            <Link
+              href={`/blog?category=${encodeURIComponent(article.category)}`}
+              className="p-badge p-badge-category"
+            >
+              {article.category}
+            </Link>
+
+            {article.isAnalysisOrOpinion === "Analysis" && (
+              <span className="p-badge p-badge-analysis">
+                <CheckCircle2 size={11} /> Deep Analysis
               </span>
             )}
-            <span style={{ fontSize: 13, color: "var(--p-text-muted)" }}>
-              {formatDate(article.publishedAt)}
-            </span>
-            <span style={{ color: "var(--p-border)" }}>&middot;</span>
-            <span
-              style={{
-                fontSize: 13,
-                color: "var(--p-text-muted)",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-              }}
-            >
-              <Clock size={13} /> {article.readingTime}
+            {article.isAnalysisOrOpinion === "Opinion" && (
+              <span className="p-badge p-badge-opinion">Opinion &amp; Commentary</span>
+            )}
+
+            <span className="p-reading-time">
+              <Clock size={12} /> {article.readingTime}
             </span>
           </div>
 
-          <h1 className="p-article-h1">{article.title}</h1>
+          {/* Headline (H1) */}
+          <h1 className="p-headline" itemProp="headline">
+            {article.title}
+          </h1>
 
-          <p className="p-article-dek">{article.dek}</p>
+          {/* Dek / Sub-headline */}
+          <p className="p-dek" itemProp="description">
+            {article.dek}
+          </p>
 
-          {/* Author Byline & Social Metadata */}
-          <div className="p-author-row">
-            <div className="p-author-info">
-              <div className="p-author-avatar">LS</div>
-              <div>
-                <Link href="/#about" className="p-author-name">
+          {/* Author Byline & Date */}
+          <div className="p-byline-bar">
+            <div className="p-byline-left">
+              <div className="p-author-avatar">
+                {article.author?.avatar ? (
+                  <Image
+                    src={article.author.avatar}
+                    alt={article.author.name}
+                    width={40}
+                    height={40}
+                    style={{ borderRadius: "50%", objectFit: "cover" }}
+                  />
+                ) : (
+                  <User size={18} style={{ color: "var(--p-text-muted)" }} />
+                )}
+              </div>
+              <div className="p-author-details">
+                <span className="p-author-name" itemProp="author">
                   {article.author?.name || "Lokesh Sain"}
-                </Link>
-                <div style={{ fontSize: 11.5, color: "var(--p-text-muted)" }}>
+                </span>
+                <span className="p-author-role">
                   {article.author?.role || "Software Engineer & Independent Commentator"}
-                </div>
+                </span>
               </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <div className="p-byline-right">
+              <div className="p-date-item">
+                <Calendar size={13} />
+                <time dateTime={article.publishedAt} itemProp="datePublished">
+                  {formatDate(article.publishedAt, { month: "long" })}
+                </time>
+              </div>
               {article.updatedAt && article.updatedAt !== article.publishedAt && (
-                <div style={{ fontSize: 11.5, color: "var(--p-text-muted)" }}>
+                <div className="p-date-updated" itemProp="dateModified">
                   Updated: {formatDate(article.updatedAt, { month: "short" })}
                 </div>
               )}
@@ -304,7 +370,7 @@ export default async function ArticlePage({ params }) {
           </div>
         </header>
 
-        {/* Cover Image */}
+        {/* Cover Image — Rendered using Next.js Image with priority and explicit aspect ratio */}
         {article.coverImage?.url && (
           <div className="p-cover-container">
             <div
@@ -318,15 +384,13 @@ export default async function ArticlePage({ params }) {
                 background: "var(--p-muted-surface)",
               }}
             >
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  backgroundImage: `url(${article.coverImage.url})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
-                aria-label={article.coverImage.alt || article.title}
+              <Image
+                src={article.coverImage.url}
+                alt={article.coverImage.alt || article.title}
+                fill
+                priority
+                sizes="(max-width: 800px) 100vw, 800px"
+                style={{ objectFit: "cover" }}
               />
             </div>
             {(article.coverImage.caption || article.coverImage.credit) && (
@@ -358,7 +422,7 @@ export default async function ArticlePage({ params }) {
             <p style={{ fontSize: 13, color: "var(--p-text-muted)", marginBottom: 16 }}>
               Perspectives adheres to evidence-based editorial practices. The primary sources and authoritative documents cited in this analysis include:
             </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               {article.sources.map((src, i) => (
                 <div key={i} className="p-source-item">
                   <a
@@ -378,20 +442,92 @@ export default async function ArticlePage({ params }) {
           </section>
         )}
 
-        {/* Editorial Standards & Fact Distinction Notice */}
+        {/* Editorial Standards, Corrections & Legal Disclaimers */}
         <div
           style={{
             margin: "32px 0",
-            padding: "16px 20px",
-            background: "var(--p-muted-surface)",
-            border: "1px solid var(--p-border)",
-            borderRadius: 8,
-            fontSize: 12.5,
-            color: "var(--p-text-secondary)",
-            lineHeight: 1.5,
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
           }}
         >
-          <strong style={{ color: "var(--p-text-primary)" }}>Editorial Standards:</strong> This analysis synthesizes confirmed government administrative announcements, reputable international reporting, and statutory immigration frameworks. Statements regarding government allegations reflect active administrative claims, not adjudicated findings. Personal commentary is clearly identified as opinion.
+          {/* Editorial Standards & Fact Distinction Notice */}
+          <div
+            style={{
+              padding: "16px 20px",
+              background: "var(--p-muted-surface)",
+              border: "1px solid var(--p-border)",
+              borderRadius: 8,
+              fontSize: 12.5,
+              color: "var(--p-text-secondary)",
+              lineHeight: 1.5,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 12,
+            }}
+          >
+            <ShieldCheck size={18} style={{ color: "var(--p-accent)", flexShrink: 0, marginTop: 2 }} />
+            <div>
+              <strong style={{ color: "var(--p-text-primary)" }}>Editorial Standards:</strong> This analysis synthesizes confirmed government administrative announcements, reputable international reporting, and statutory immigration frameworks. Statements regarding government allegations reflect active administrative claims, not adjudicated findings. Personal commentary is clearly identified as opinion.
+            </div>
+          </div>
+
+          {/* Legal / Immigration Disclaimer */}
+          <div
+            style={{
+              padding: "14px 18px",
+              background: "rgba(245, 158, 11, 0.06)",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              borderRadius: 8,
+              fontSize: 12,
+              color: "#92400E",
+              lineHeight: 1.5,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 10,
+            }}
+          >
+            <AlertTriangle size={16} style={{ color: "#D97706", flexShrink: 0, marginTop: 2 }} />
+            <div>
+              <strong>Legal Disclaimer:</strong> This publication is produced strictly for journalistic, educational, and analytical purposes. It does not constitute formal legal, corporate, or immigration counsel. Immigration statutes and administrative procedures are subject to rapid evolution and judicial review. Readers should consult licensed legal counsel regarding their specific petitions.
+            </div>
+          </div>
+
+          {/* Factual Correction Process */}
+          <div
+            style={{
+              padding: "12px 18px",
+              background: "var(--p-surface)",
+              border: "1px solid var(--p-border)",
+              borderRadius: 8,
+              fontSize: 12,
+              color: "var(--p-text-muted)",
+              lineHeight: 1.5,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 10,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <Mail size={14} style={{ color: "var(--p-accent)" }} />
+              <span>Have a factual correction, update, or primary source document?</span>
+            </div>
+            <a
+              href="mailto:iamlokeshsain@gmail.com?subject=Editorial%20Correction%20—%20Perspectives"
+              style={{
+                color: "var(--p-accent)",
+                fontWeight: 600,
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              Submit Editorial Correction &rarr;
+            </a>
+          </div>
         </div>
 
         {/* Author Bio Vignette */}

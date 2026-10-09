@@ -1,9 +1,7 @@
-"use client";
-
-import React, { useState } from "react";
+import React, { Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Search, X, ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, Search } from "lucide-react";
+import BlogSearchBar from "./BlogSearchBar";
 
 const CATEGORIES = [
   { id: "all", label: "All" },
@@ -16,43 +14,6 @@ const CATEGORIES = [
 ];
 
 export default function BlogMasthead() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category") || "all";
-  const initialSearch = searchParams.get("q") || "";
-
-  const [searchVal, setSearchVal] = useState(initialSearch);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    const params = new URLSearchParams(searchParams.toString());
-    if (searchVal.trim()) {
-      params.set("q", searchVal.trim());
-    } else {
-      params.delete("q");
-    }
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const handleClearSearch = () => {
-    setSearchVal("");
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("q");
-    router.push(`/blog?${params.toString()}`);
-  };
-
-  const handleCategorySelect = (catId) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (catId === "all") {
-      params.delete("category");
-    } else {
-      params.set("category", catId);
-    }
-    router.push(`/blog?${params.toString()}`);
-    setMobileMenuOpen(false);
-  };
-
   return (
     <header className="p-masthead" role="banner">
       {/* Top Utility Bar */}
@@ -100,42 +61,36 @@ export default function BlogMasthead() {
             </p>
           </div>
 
-          {/* Search Bar on Desktop */}
-          <form onSubmit={handleSearchSubmit} className="p-search-wrapper">
-            <Search size={14} className="p-search-icon" />
-            <input
-              type="text"
-              placeholder="Search perspectives..."
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              className="p-search-input"
-              aria-label="Search articles"
-            />
-            {searchVal && (
-              <button
-                type="button"
-                onClick={handleClearSearch}
-                className="p-search-clear"
-                aria-label="Clear search"
-              >
-                <X size={13} />
-              </button>
-            )}
-          </form>
+          {/* Search Bar with Isolated Suspense */}
+          <Suspense
+            fallback={
+              <div className="p-search-wrapper" style={{ opacity: 0.6 }}>
+                <Search size={14} className="p-search-icon" />
+                <input
+                  type="search"
+                  placeholder="Search perspectives..."
+                  className="p-search-input"
+                  disabled
+                  aria-label="Loading search"
+                />
+              </div>
+            }
+          >
+            <BlogSearchBar />
+          </Suspense>
         </div>
 
-        {/* Categories Bar */}
+        {/* Crawlable Categories Navigation Bar */}
         <nav className="p-nav-bar" aria-label="Blog categories">
           <div className="p-categories">
             {CATEGORIES.map((cat) => (
-              <button
+              <Link
                 key={cat.id}
-                type="button"
-                onClick={() => handleCategorySelect(cat.id)}
-                className={`p-category-tab${activeCategory === cat.id ? " active" : ""}`}
+                href={cat.id === "all" ? "/blog" : `/blog?category=${encodeURIComponent(cat.id)}`}
+                className="p-category-tab"
               >
                 {cat.label}
-              </button>
+              </Link>
             ))}
           </div>
         </nav>

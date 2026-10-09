@@ -246,6 +246,7 @@ export const PUT = withAuth(async (request, { params }) => {
         revalidatePath(`/blog/${oldSlug}`);
       }
       revalidatePath("/sitemap.xml");
+      revalidatePath("/");
     } catch (e) {
       console.warn("Revalidation warning:", e.message);
     }
@@ -303,6 +304,7 @@ export const DELETE = withAuth(async (request, { params }) => {
       revalidatePath("/blog");
       revalidatePath(`/blog/${slug}`);
       revalidatePath("/sitemap.xml");
+      revalidatePath("/");
     } catch (e) {
       console.warn("Revalidation warning:", e.message);
     }

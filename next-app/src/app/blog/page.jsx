@@ -28,6 +28,7 @@ async function getPublishedArticles({ category, query }) {
     }
 
     const articles = await Article.find(filter)
+      .select("title slug dek category tags coverImage author readingTime isAnalysisOrOpinion featured publishedAt createdAt")
       .sort({ featured: -1, publishedAt: -1, createdAt: -1 })
       .lean();
 
@@ -292,12 +293,17 @@ export default async function BlogPage({ searchParams }) {
                             width: "100%",
                             height: "100%",
                             minHeight: 280,
-                            backgroundImage: `url(${leadArticle.coverImage.url})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
                           }}
-                          aria-label={leadArticle.coverImage.alt || leadArticle.title}
-                        />
+                        >
+                          <Image
+                            src={leadArticle.coverImage.url}
+                            alt={leadArticle.coverImage.alt || leadArticle.title}
+                            fill
+                            priority
+                            sizes="(max-width: 900px) 100vw, 550px"
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
                       ) : (
                         <div
                           style={{
@@ -339,16 +345,13 @@ export default async function BlogPage({ searchParams }) {
                     <article key={art.id} className="p-card">
                       {art.coverImage?.url && (
                         <div className="p-card-media">
-                          <Link href={`/blog/${art.slug}`}>
-                            <div
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                backgroundImage: `url(${art.coverImage.url})`,
-                                backgroundSize: "cover",
-                                backgroundPosition: "center",
-                              }}
-                              aria-label={art.coverImage.alt || art.title}
+                          <Link href={`/blog/${art.slug}`} style={{ display: "block", position: "relative", width: "100%", height: "100%" }}>
+                            <Image
+                              src={art.coverImage.url}
+                              alt={art.coverImage.alt || art.title}
+                              fill
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 380px"
+                              style={{ objectFit: "cover" }}
                             />
                           </Link>
                         </div>

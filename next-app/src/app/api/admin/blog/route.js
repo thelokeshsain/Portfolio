@@ -240,6 +240,7 @@ export const POST = withAuth(async (request) => {
       revalidatePath("/blog");
       revalidatePath(`/blog/${uniqueSlug}`);
       revalidatePath("/sitemap.xml");
+      revalidatePath("/");
     } catch (e) {
       console.warn("Revalidation notice:", e.message);
     }

@@ -133,6 +133,11 @@ const articleSchema = new mongoose.Schema(
   }
 );
 
+// Compound indexes for optimal query execution and zero-latency lookups
+articleSchema.index({ slug: 1, status: 1 });
+articleSchema.index({ status: 1, publishedAt: -1 });
+articleSchema.index({ status: 1, category: 1, publishedAt: -1 });
+
 // Helper method to compute public representation
 articleSchema.methods.toPublicJSON = function () {
   return {

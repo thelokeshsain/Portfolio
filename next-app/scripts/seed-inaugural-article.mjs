@@ -86,7 +86,7 @@ const INAUGURAL_ARTICLE = {
     {
       title: "Official Media Briefing on US PERM Announcement and Indian IT Workers",
       organization: "Ministry of External Affairs, Government of India",
-      url: "https://www.mea.gov.in/",
+      url: "https://www.mea.gov.in/media-briefings.htm",
       publishDate: "October 9, 2026",
       accessDate: "October 9, 2026"
     },
@@ -95,6 +95,13 @@ const INAUGURAL_ARTICLE = {
       organization: "U.S. Citizenship and Immigration Services (USCIS)",
       url: "https://www.uscis.gov/working-in-the-united-states/permanent-workers",
       publishDate: "September 2026",
+      accessDate: "October 9, 2026"
+    },
+    {
+      title: "H-1B Specialty Occupations and AC21 § 106(a) Post-Sixth-Year Extensions",
+      organization: "U.S. Citizenship and Immigration Services (USCIS)",
+      url: "https://www.uscis.gov/working-in-the-united-states/temporary-workers/h-1b-specialty-occupations",
+      publishDate: "October 2026",
       accessDate: "October 9, 2026"
     },
     {
