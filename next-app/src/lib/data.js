@@ -12,7 +12,9 @@ export const PORTFOLIO = {
     // phone: intentionally omitted from frontend bundle — stored in DB only
     location: 'Jaipur, Rajasthan',
     github: 'https://github.com/thelokeshsain',
-    linkedin: 'https://linkedin.com/in/thelokeshsain',
+    linkedin: 'https://www.linkedin.com/in/thelokeshsain/',
+    instagram: 'https://www.instagram.com/thelokeshsain/',
+    x: 'https://x.com/thelokeshsain',
     available: true,
     image: null,
   },
@@ -67,8 +69,8 @@ export const PORTFOLIO = {
     Frontend: ['React.js', 'HTML5', 'CSS3', 'JavaScript', 'Tailwind CSS', 'React Hooks', 'Context API', 'Responsive Design'],
     Backend:  ['Node.js', 'Express.js', 'REST APIs', 'PHP', 'Python', 'API Integration'],
     Database: ['MongoDB', 'MySQL', 'SQL'],
-    Tools:    ['Git', 'GitHub', 'VS Code', 'Postman', 'Figma', 'Android Studio', 'Chrome DevTools'],
+    Tools:    ['Git', 'GitHub', 'VS Code', 'OpenAI', 'Postman', 'Figma', 'Android Studio', 'Chrome DevTools'],
   },
-  coreStack: ['React.js', 'Node.js', 'MongoDB', 'MySQL', 'JavaScript', 'Git', 'REST APIs'],
+  coreStack: ['React.js', 'Node.js', 'MongoDB', 'MySQL', 'JavaScript', 'Git', 'REST APIs', 'OpenAI'],
   sections: { hero: true, about: true, experience: true, projects: true, skills: true, contact: true },
 }

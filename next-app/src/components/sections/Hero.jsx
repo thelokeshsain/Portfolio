@@ -186,12 +186,12 @@ export default function Hero() {
             </div>
 
             {/* Social Icons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
               <a
-                href={h.github || 'https://github.com/thelokeshsain'}
+                href="https://github.com/thelokeshsain"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub Profile"
+                aria-label="GitHub profile"
                 style={{
                   width: 42,
                   height: 42,
@@ -219,10 +219,10 @@ export default function Hero() {
               </a>
 
               <a
-                href={h.linkedin || 'https://linkedin.com/in/thelokeshsain'}
+                href="https://www.linkedin.com/in/thelokeshsain/"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn Profile"
+                aria-label="LinkedIn profile"
                 style={{
                   width: 42,
                   height: 42,
@@ -247,6 +247,68 @@ export default function Hero() {
                 }}
               >
                 <BrandIcon name="LinkedIn" size={18} />
+              </a>
+
+              <a
+                href="https://x.com/thelokeshsain"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X profile"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#FFFFFF'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                }}
+              >
+                <BrandIcon name="X" size={18} />
+              </a>
+
+              <a
+                href="https://www.instagram.com/thelokeshsain/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram profile"
+                style={{
+                  width: 42,
+                  height: 42,
+                  borderRadius: 12,
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#94A3B8',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.color = '#FFFFFF'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+                }}
+              >
+                <BrandIcon name="Instagram" size={18} />
               </a>
 
               <a

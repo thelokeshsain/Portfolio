@@ -5,6 +5,8 @@ const TECH_SKILLS = [
   { name: 'React.js' },
   { name: 'Python' },
   { name: 'Node.js' },
+  { name: 'OpenAI' },
+  { name: 'Gemini' },
   { name: 'HTML5' },
   { name: 'CSS3' },
   { name: 'REST APIs' },

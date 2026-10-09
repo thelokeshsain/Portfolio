@@ -138,6 +138,27 @@ export const BRAND_ASSETS = {
     ariaLabel: 'Official LinkedIn Logo',
     type: 'brand',
   },
+  'instagram': {
+    name: 'Instagram',
+    asset: '/icons/brands/instagram.svg',
+    source: 'Meta / Instagram Official Brand Glyph Asset',
+    ariaLabel: 'Official Instagram Logo',
+    type: 'brand',
+  },
+  'x': {
+    name: 'X',
+    asset: '/icons/brands/x.svg',
+    source: 'X Corp. Official Brand Asset',
+    ariaLabel: 'Official X Logo',
+    type: 'brand',
+  },
+  'twitter': {
+    name: 'X',
+    asset: '/icons/brands/x.svg',
+    source: 'X Corp. Official Brand Asset',
+    ariaLabel: 'Official X Logo',
+    type: 'brand',
+  },
   'java': {
     name: 'Java',
     asset: '/icons/brands/java.svg',

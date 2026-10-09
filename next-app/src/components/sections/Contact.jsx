@@ -110,9 +110,10 @@ export default function Contact() {
 
             {/* LinkedIn Button */}
             <a
-              href={h.linkedin || 'https://linkedin.com/in/thelokeshsain'}
+              href="https://www.linkedin.com/in/thelokeshsain/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn profile"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -142,9 +143,10 @@ export default function Contact() {
 
             {/* GitHub Button */}
             <a
-              href={h.github || 'https://github.com/thelokeshsain'}
+              href="https://github.com/thelokeshsain"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub profile"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -170,6 +172,72 @@ export default function Contact() {
             >
               <BrandIcon name="GitHub" size={15} />
               <span>GitHub</span>
+            </a>
+
+            {/* X Button */}
+            <a
+              href="https://x.com/thelokeshsain"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X profile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#F8FAFC',
+                fontSize: 13,
+                fontWeight: 500,
+                padding: '10px 18px',
+                borderRadius: 9999,
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              <BrandIcon name="X" size={15} />
+              <span>X</span>
+            </a>
+
+            {/* Instagram Button */}
+            <a
+              href="https://www.instagram.com/thelokeshsain/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram profile"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#F8FAFC',
+                fontSize: 13,
+                fontWeight: 500,
+                padding: '10px 18px',
+                borderRadius: 9999,
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                textDecoration: 'none',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+              }}
+            >
+              <BrandIcon name="Instagram" size={15} />
+              <span>Instagram</span>
             </a>
 
             {/* Circular Arrow Button (Opens direct contact message form) */}

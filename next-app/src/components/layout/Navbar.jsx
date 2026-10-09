@@ -67,14 +67,14 @@ export default function Navbar({ isInstallable, onInstall }) {
   return (
     <>
       <header className={`nav${scrolled ? ' scrolled' : ''}`} role="banner">
-        <nav aria-label="Main navigation" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+        <nav aria-label="Main navigation" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', maxWidth: 1200, margin: '0 auto', padding: '0 clamp(8px, 2vw, 24px)' }}>
           {/* Logo */}
           <a
             href="#home"
             className="nav-logo"
             onClick={(e) => handleNavClick(e, 'home')}
             aria-label="Lokesh Sain"
-            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', flexShrink: 0 }}
           >
             <div
               aria-hidden="true"
@@ -101,7 +101,7 @@ export default function Navbar({ isInstallable, onInstall }) {
                 LS
               </span>
             </div>
-            <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+            <span className="nav-name-text" style={{ fontSize: 'clamp(13px, 3.5vw, 15px)', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em', whiteSpace: 'nowrap' }}>
               Lokesh Sain
             </span>
             <span style={{
@@ -110,7 +110,8 @@ export default function Navbar({ isInstallable, onInstall }) {
               borderRadius: '50%',
               background: '#38BDF8',
               display: 'inline-block',
-              marginLeft: -2
+              marginLeft: -2,
+              flexShrink: 0,
             }} />
           </a>
 
@@ -181,7 +182,7 @@ export default function Navbar({ isInstallable, onInstall }) {
           </div>
 
           {/* Right actions: White pill Download Resume + Mobile Hamburger */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(6px, 1.5vw, 10px)', flexShrink: 0 }}>
             <a
               href={h.resumeUrl || '/resume.pdf'}
               download="Lokesh_Sain_Resume.pdf"
@@ -192,16 +193,17 @@ export default function Navbar({ isInstallable, onInstall }) {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: 7,
+                gap: 6,
                 background: '#FFFFFF',
                 color: '#090D16',
                 fontSize: 13,
                 fontWeight: 600,
-                padding: '8px 18px',
+                padding: '7px clamp(10px, 2vw, 16px)',
                 borderRadius: 9999,
                 textDecoration: 'none',
                 transition: 'transform 0.2s, box-shadow 0.2s, background 0.2s',
                 boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                flexShrink: 0,
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-1px)'

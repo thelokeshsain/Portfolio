@@ -263,7 +263,7 @@ section,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 clamp(20px, 4vw, 48px);
+  padding: 0 clamp(10px, 2.5vw, 48px);
   height: 64px;
   background: transparent;
   transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
@@ -386,6 +386,10 @@ section,
   .nav-desktop-links { display: none !important; }
   .hide-mobile { display: none !important; }
   .hamburger { display: flex !important; }
+}
+
+@media (max-width: 360px) {
+  .nav-name-text { display: none !important; }
 }
 
 @media (min-width: 881px) {
@@ -1511,6 +1515,13 @@ body.light .parallax-banner-overlay {
   .btn-lg {
     font-size: 14px;
     padding: 10px 20px;
+  }
+}
+
+@media (max-width: 340px) {
+  .inner,
+  .inner-sm {
+    padding: 0 10px;
   }
 }
 
