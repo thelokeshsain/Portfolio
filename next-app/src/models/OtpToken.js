@@ -27,4 +27,4 @@ const otpTokenSchema = new mongoose.Schema({
   },
 }, { timestamps: true })
 
-module.exports = mongoose.model('OtpToken', otpTokenSchema)
+module.exports = mongoose.models.OtpToken || mongoose.model('OtpToken', otpTokenSchema)

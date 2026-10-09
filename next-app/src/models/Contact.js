@@ -21,4 +21,4 @@ contactSchema.index({ read: 1, createdAt: -1 })
 // Auto-delete messages after 90 days (GDPR data retention)
 contactSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * 24 * 3600 })
 
-module.exports = mongoose.model('Contact', contactSchema)
+module.exports = mongoose.models.Contact || mongoose.model('Contact', contactSchema)

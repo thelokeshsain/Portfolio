@@ -9,6 +9,7 @@
  * Mobile: Fully accessible drawer with responsive hamburger toggle
  */
 import { useState, useEffect, useCallback } from 'react'
+import Link from 'next/link'
 import { Menu, X, Download } from 'lucide-react'
 import { InstallButton } from '../ui/InstallPWA'
 import { useData } from '../../context/DataContext'
@@ -154,6 +155,29 @@ export default function Navbar({ isInstallable, onInstall }) {
                 </a>
               )
             })}
+            <Link
+              href="/blog"
+              style={{
+                color: 'var(--text-secondary)',
+                fontSize: 13,
+                fontWeight: 500,
+                padding: '6px 14px',
+                borderRadius: 9999,
+                transition: 'all 0.2s',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = '#38BDF8'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'var(--text-secondary)'
+              }}
+            >
+              Perspectives
+            </Link>
           </div>
 
           {/* Right actions: White pill Download Resume + Mobile Hamburger */}
@@ -262,6 +286,24 @@ export default function Navbar({ isInstallable, onInstall }) {
               </a>
             )
           })}
+          <Link
+            href="/blog"
+            onClick={() => setOpen(false)}
+            style={{
+              display: 'block',
+              padding: '12px 18px',
+              borderRadius: 12,
+              background: 'transparent',
+              color: '#CBD5E1',
+              fontWeight: 500,
+              fontSize: 16,
+              textDecoration: 'none',
+              border: '1px solid transparent',
+              transition: 'background 0.2s, color 0.2s',
+            }}
+          >
+            Perspectives (Blog)
+          </Link>
         </div>
 
         <div style={{ marginTop: 'auto', paddingTop: 24, borderTop: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}>

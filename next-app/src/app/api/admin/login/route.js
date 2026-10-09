@@ -198,6 +198,13 @@ export async function POST(request) {
       path: "/api/admin",
       maxAge: REFRESH_TOKEN_MS / 1000,
     });
+    response.cookies.set("adminSession", sessionId, {
+      httpOnly: true,
+      secure: isSecure,
+      sameSite: "strict",
+      path: "/",
+      maxAge: REFRESH_TOKEN_MS / 1000,
+    });
     response.cookies.set("csrfToken", csrfToken, {
       httpOnly: false,
       secure: isSecure,

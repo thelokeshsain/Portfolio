@@ -53,6 +53,7 @@ function validateCsrf(request, session) {
 export const POST = withAuth(async (request) => {
   const response = NextResponse.json({ message: "Logged out successfully" });
   response.cookies.delete("refreshToken");
+  response.cookies.delete("adminSession");
   response.cookies.delete("csrfToken");
 
   if (!request.authSession || !validateCsrf(request, request.authSession)) {

@@ -60,4 +60,4 @@ const refreshSessionSchema = new mongoose.Schema({
 refreshSessionSchema.index({ admin: 1, revokedAt: 1 })
 refreshSessionSchema.index({ admin: 1, sessionId: 1, revokedAt: 1, expiresAt: 1 })
 
-module.exports = mongoose.model('RefreshSession', refreshSessionSchema)
+module.exports = mongoose.models.RefreshSession || mongoose.model('RefreshSession', refreshSessionSchema)

@@ -14,4 +14,4 @@ const revokedTokenSchema = new mongoose.Schema({
   },
 }, { timestamps: true })
 
-module.exports = mongoose.model('RevokedToken', revokedTokenSchema)
+module.exports = mongoose.models.RevokedToken || mongoose.model('RevokedToken', revokedTokenSchema)

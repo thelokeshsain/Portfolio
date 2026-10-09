@@ -21,12 +21,14 @@ import {
   KeyRound,
   MessageSquare,
   Trophy,
+  BookOpen,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useData } from "@/context/DataContext";
 
 // Modular Panel Imports
 import Overview from "./Overview";
+import BlogEditor from "./BlogEditor";
 import HeroEditor from "./HeroEditor";
 import ProjectsEditor from "./ProjectsEditor";
 import AchievementsEditor from "./AchievementsEditor";
@@ -39,6 +41,7 @@ import ContactsViewer from "./ContactsViewer";
 /* ── NAV ITEMS CONFIGURATION ── */
 const NAV_ITEMS = [
   { key: "overview", label: "Dashboard", Icon: LayoutDashboard },
+  { key: "blog", label: "Perspectives Blog", Icon: BookOpen },
   { key: "hero", label: "Hero & Bio", Icon: User },
   { key: "projects", label: "Projects", Icon: FolderOpen },
   { key: "experience", label: "Experience", Icon: Briefcase },
@@ -74,6 +77,8 @@ export default function AdminDashboard() {
     switch (active) {
       case "overview":
         return <Overview {...props} />;
+      case "blog":
+        return <BlogEditor />;
       case "hero":
         return <HeroEditor {...props} />;
       case "projects":
