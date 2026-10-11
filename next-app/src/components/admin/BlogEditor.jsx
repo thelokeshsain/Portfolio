@@ -308,7 +308,7 @@ export default function BlogEditor() {
   if (view === "list") {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-        <Dialog />
+        {Dialog}
 
         {/* Header & Quick Stats */}
         <div
@@ -675,7 +675,7 @@ export default function BlogEditor() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 24, maxWidth: 1100 }}>
-      <Dialog />
+      {Dialog}
 
       {/* Editor Top Navigation Bar */}
       <div

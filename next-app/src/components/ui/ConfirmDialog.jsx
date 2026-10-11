@@ -50,5 +50,5 @@ export function useConfirm() {
     </div>
   ) : null
 
-  return { confirm, Dialog }
+  return { confirm, Dialog, ConfirmDialog: () => Dialog }
 }
