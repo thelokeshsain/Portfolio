@@ -3,6 +3,7 @@
 
 import Groq from "groq-sdk";
 import { AI_CONFIG, getGroqApiKey, isGroqConfigured } from "./config.js";
+import { resolveVerifiedModel } from "./modelDiscovery.js";
 
 if (typeof window !== "undefined") {
   throw new Error("Server-only module src/lib/ai/groqClient.js cannot be executed in the browser");
@@ -52,7 +53,18 @@ export async function executeGroqCompletion({
     };
   }
 
-  const targetModel = model || AI_CONFIG.DEFAULT_CHAT_MODEL;
+  // Dynamically resolve and verify model against active catalog
+  const resolution = await resolveVerifiedModel(model || AI_CONFIG.DEFAULT_CHAT_MODEL);
+  if (resolution.error) {
+    return {
+      success: false,
+      error: "AI_MODEL_UNAVAILABLE",
+      message: "No compatible chat model is currently active on this Groq account.",
+      statusCode: 503,
+    };
+  }
+
+  const targetModel = resolution.model;
   const startTime = Date.now();
 
   try {

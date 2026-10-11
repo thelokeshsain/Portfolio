@@ -94,7 +94,8 @@ await runAsyncTest("Article illustration intrinsic dimensions and aspect ratio",
 
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
-  await page.goto("file://" + imgPath);
+  const fileUrl = "file:///" + imgPath.replace(/\\/g, "/");
+  await page.goto(fileUrl, { waitUntil: "domcontentloaded" });
 
   const dims = await page.evaluate(() => {
     const img = document.querySelector("img");

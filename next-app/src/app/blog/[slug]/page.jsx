@@ -399,8 +399,8 @@ export default async function ArticlePage({ params }) {
           </div>
         )}
 
-        {/* AI Synthesis Box */}
-        {article.aiSummary && <ArticleAiSummary aiSummary={article.aiSummary} />}
+        {/* AI Synthesis Box / Summarize Button */}
+        <ArticleAiSummary initialSummary={article.aiSummary} slug={article.slug} />
 
         {/* Longform Editorial Body */}
         <div

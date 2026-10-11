@@ -123,10 +123,74 @@
   --term-number: #FBBF24;
   --term-boolean: #F87171;
   --term-muted: #505872;
-  --term-prompt: #34D399;
+  /* Scrollbar Tokens — Dark Midnight Portfolio Default */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18);
+  --scrollbar-thumb-hover: rgba(79, 124, 255, 0.55);
+  --scrollbar-size: 6px;
 }
 
+/* ─── SITE-WIDE THIN SCROLLBAR DESIGN SYSTEM ────────────────── */
+/* Standard Firefox (scrollbar-width, scrollbar-color) */
+html, body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Chromium / WebKit / Safari */
+::-webkit-scrollbar {
+  width: var(--scrollbar-size, 6px);
+  height: var(--scrollbar-size, 6px);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* AI Chat Messages internal thin scrollbar */
+[data-ai-chat-messages] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+[data-ai-chat-messages]::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-ai-chat-messages]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-ai-chat-messages]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+[data-ai-chat-messages]::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.6);
+}
 
 /* ─── RESET ──────────────────────────────── */
 *, *::before, *::after {
