@@ -56,12 +56,27 @@ export async function executeGroqCompletion({
   const startTime = Date.now();
 
   try {
-    const response = await client.chat.completions.create({
-      model: targetModel,
-      messages,
-      max_completion_tokens: maxCompletionTokens,
-      temperature,
-    });
+    let response;
+    try {
+      response = await client.chat.completions.create({
+        model: targetModel,
+        messages,
+        max_completion_tokens: maxCompletionTokens,
+        temperature,
+      });
+    } catch (createErr) {
+      // If model does not support max_completion_tokens, retry with max_tokens
+      if (createErr.status === 400 && createErr.message?.includes("max_completion_tokens")) {
+        response = await client.chat.completions.create({
+          model: targetModel,
+          messages,
+          max_tokens: maxCompletionTokens,
+          temperature,
+        });
+      } else {
+        throw createErr;
+      }
+    }
 
     const latency = Date.now() - startTime;
     const choice = response.choices?.[0];
@@ -85,13 +100,19 @@ export async function executeGroqCompletion({
   } catch (err) {
     const latency = Date.now() - startTime;
     const status = err.status || err.statusCode || 500;
-    const errorType = err.type || err.code || "UPSTREAM_ERROR";
+    console.error("Groq upstream error:", status, err.message);
 
     // Safe sanitized error mapping — never leak raw internal trace or secrets
     let safeMessage = "An unexpected error occurred while communicating with the AI service.";
     let safeCode = "AI_UPSTREAM_ERROR";
 
-    if (status === 429) {
+    if (status === 401) {
+      safeCode = "AI_AUTH_FAILED";
+      safeMessage = "The configured Groq API key is invalid or unauthorized. Please verify the GROQ_API_KEY in your Vercel project settings.";
+    } else if (status === 404) {
+      safeCode = "AI_MODEL_NOT_FOUND";
+      safeMessage = `The model '${targetModel}' was not found or is currently unsupported on this Groq account.`;
+    } else if (status === 429) {
       safeCode = "AI_UPSTREAM_RATE_LIMIT";
       safeMessage = "Upstream AI provider rate limit reached. Please retry in a few moments.";
     } else if (err.name === "AbortError" || err.message?.includes("timeout") || latency >= AI_CONFIG.REQUEST_TIMEOUT_MS) {
@@ -100,13 +121,16 @@ export async function executeGroqCompletion({
     } else if (status >= 500) {
       safeCode = "AI_UPSTREAM_UNAVAILABLE";
       safeMessage = "The AI provider is temporarily unavailable. Please try again later.";
+    } else if (status === 400) {
+      safeCode = "AI_BAD_REQUEST";
+      safeMessage = err.message || "Invalid request to AI provider.";
     }
 
     return {
       success: false,
       error: safeCode,
       message: safeMessage,
-      statusCode: status === 429 ? 429 : 503,
+      statusCode: status === 429 ? 429 : status === 401 ? 503 : 503,
       latencyMs: latency,
     };
   }
