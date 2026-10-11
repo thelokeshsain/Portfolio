@@ -127,6 +127,15 @@ const articleSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    aiSummary: {
+      summary: { type: String, maxlength: 2000, default: "" },
+      keyPoints: [{ type: String, maxlength: 500 }],
+      contentHash: { type: String, maxlength: 64, default: "" },
+      model: { type: String, maxlength: 100, default: "" },
+      generatedAt: { type: Date, default: null },
+      inputTokens: { type: Number, default: 0 },
+      outputTokens: { type: Number, default: 0 },
+    },
   },
   {
     timestamps: true,
@@ -158,6 +167,7 @@ articleSchema.methods.toPublicJSON = function () {
     seoDescription: this.seoDescription || this.dek,
     canonicalUrl: this.canonicalUrl || "",
     sources: this.sources || [],
+    aiSummary: this.aiSummary || null,
     publishedAt: this.publishedAt ? this.publishedAt.toISOString() : null,
     updatedAt: this.updatedAt ? this.updatedAt.toISOString() : null,
     createdAt: this.createdAt ? this.createdAt.toISOString() : null,

@@ -328,7 +328,7 @@ export default async function BlogPage({ searchParams }) {
                             position: "relative",
                             width: "100%",
                             height: "100%",
-                            minHeight: 280,
+                            aspectRatio: "1376 / 768",
                           }}
                         >
                           <Image
@@ -337,7 +337,7 @@ export default async function BlogPage({ searchParams }) {
                             fill
                             priority
                             sizes="(max-width: 900px) 100vw, 550px"
-                            style={{ objectFit: "cover" }}
+                            style={{ objectFit: "contain", objectPosition: "center" }}
                           />
                         </div>
                       ) : (

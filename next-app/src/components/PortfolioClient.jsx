@@ -20,6 +20,7 @@ import ScrollProgress from '../components/ui/ScrollProgress'
 import Hero from '../components/sections/Hero'
 import Loader from '../components/ui/Loader'
 import { InstallBanner } from '../components/ui/InstallPWA'
+import AskLokeshAI from '../components/ui/AskLokeshAI'
 import About from '../components/sections/About'
 import Experience from '../components/sections/Experience'
 import Projects from '../components/sections/Projects'
@@ -402,6 +403,9 @@ export default function Portfolio() {
 
       {/* PWA Install Banner */}
       <InstallBanner />
+
+      {/* Interactive AI Guide — Ask Lokesh AI */}
+      <AskLokeshAI />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import connectDB from "@/lib/db";
 import Article from "@/models/Article";
 import { parseMarkdownToHtml, formatDate } from "@/utils/blogUtils";
+import ArticleAiSummary from "@/components/blog/ArticleAiSummary";
 import {
   Clock,
   Calendar,
@@ -69,6 +70,7 @@ const getArticleBySlug = cache(async (slug) => {
       seoDescription: article.seoDescription || article.dek,
       canonicalUrl: article.canonicalUrl || `${BASE_URL}/blog/${article.slug}`,
       sources: article.sources || [],
+      aiSummary: article.aiSummary || null,
       publishedAt: article.publishedAt
         ? article.publishedAt.toISOString()
         : article.createdAt.toISOString(),
@@ -381,7 +383,7 @@ export default async function ArticlePage({ params }) {
                 fill
                 priority
                 sizes="(max-width: 768px) 100vw, 760px"
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "contain", objectPosition: "center" }}
               />
             </div>
             {(article.coverImage.caption || article.coverImage.credit) && (
@@ -396,6 +398,9 @@ export default async function ArticlePage({ params }) {
             )}
           </div>
         )}
+
+        {/* AI Synthesis Box */}
+        {article.aiSummary && <ArticleAiSummary aiSummary={article.aiSummary} />}
 
         {/* Longform Editorial Body */}
         <div

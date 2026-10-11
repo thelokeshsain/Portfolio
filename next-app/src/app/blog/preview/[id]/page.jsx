@@ -209,11 +209,11 @@ export default async function PreviewPage({ params, searchParams }) {
               style={{
                 position: "relative",
                 width: "100%",
-                aspectRatio: "16 / 9",
+                aspectRatio: "1376 / 768",
                 borderRadius: 10,
                 overflow: "hidden",
                 border: "1px solid var(--p-border)",
-                background: "var(--p-muted-surface)",
+                background: "#F5EFE6",
               }}
             >
               <div
@@ -221,7 +221,8 @@ export default async function PreviewPage({ params, searchParams }) {
                   width: "100%",
                   height: "100%",
                   backgroundImage: `url(${article.coverImage.url})`,
-                  backgroundSize: "cover",
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",
                 }}
                 aria-label={article.coverImage.alt || article.title}

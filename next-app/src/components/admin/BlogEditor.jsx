@@ -77,6 +77,7 @@ export default function BlogEditor() {
   // Form State
   const [form, setForm] = useState(INITIAL_FORM);
   const [saving, setSaving] = useState(false);
+  const [summarizing, setSummarizing] = useState(false);
   const [editorTab, setEditorTab] = useState("write"); // 'write' | 'preview'
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
@@ -230,6 +231,27 @@ export default function BlogEditor() {
       toast.error(err.response?.data?.message || "Failed to save article");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGenerateAiSummary = async () => {
+    if (!form.id || form.status !== "published") {
+      toast.error("AI summary can only be generated for published articles.");
+      return;
+    }
+    setSummarizing(true);
+    try {
+      const res = await apiClient.post(`/admin/blog/${form.id}/summarize`, { force: true });
+      if (res.data.success) {
+        toast.success(res.data.cached ? "Cached summary loaded" : "AI summary generated successfully!");
+        fetchArticles();
+      } else {
+        toast.error(res.data.message || "Failed to generate summary");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to generate summary");
+    } finally {
+      setSummarizing(false);
     }
   };
 
@@ -721,6 +743,28 @@ export default function BlogEditor() {
             >
               <Eye size={14} /> Preview
             </a>
+          )}
+
+          {form.id && form.status === "published" && (
+            <button
+              type="button"
+              disabled={summarizing || saving}
+              onClick={handleGenerateAiSummary}
+              className="btn btn-secondary btn-sm"
+              style={{
+                padding: "8px 14px",
+                borderRadius: 8,
+                border: "1px solid rgba(56, 189, 248, 0.3)",
+                color: "#38BDF8",
+                background: "rgba(56, 189, 248, 0.08)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                fontWeight: 600,
+              }}
+            >
+              <Sparkles size={14} /> {summarizing ? "Summarizing..." : "AI Summary"}
+            </button>
           )}
 
           <button
