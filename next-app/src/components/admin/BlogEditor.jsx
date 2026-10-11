@@ -19,6 +19,11 @@ import {
   Sparkles,
   Link as LinkIcon,
   Share2,
+  UploadCloud,
+  ImageIcon,
+  RefreshCw,
+  X,
+  Loader2,
 } from "lucide-react";
 import { useConfirm } from "../ui/ConfirmDialog";
 import { Card, FL, DelBtn, CharCount } from "./AdminHelpers";
@@ -89,6 +94,104 @@ export default function BlogEditor() {
     publishDate: "",
     accessDate: "October 9, 2026",
   });
+
+  // Cover Image Upload State
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = React.useRef(null);
+
+  const handleImageFileSelect = async (file) => {
+    if (!file) return;
+
+    // Client-side quick check
+    const allowedClientTypes = ["image/jpeg", "image/png", "image/webp", "image/avif"];
+    if (file.type && !allowedClientTypes.includes(file.type.toLowerCase())) {
+      toast.error("Unsupported file type. Please select JPEG, PNG, WebP, or AVIF.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File exceeds 5MB size limit.");
+      return;
+    }
+
+    setUploadingImage(true);
+    setUploadProgress("Uploading...");
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await apiClient.post("/admin/blog/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(`${percent}%`);
+          }
+        },
+      });
+
+      if (res.data.success && res.data.url) {
+        setForm((prev) => ({
+          ...prev,
+          coverImage: {
+            ...prev.coverImage,
+            url: res.data.url,
+            alt: prev.coverImage.alt || prev.title || "Article cover illustration",
+          },
+        }));
+        toast.success("Cover image uploaded successfully!");
+      } else {
+        toast.error(res.data.message || "Failed to upload image");
+      }
+    } catch (err) {
+      const msg =
+        err.response?.data?.message ||
+        err.message ||
+        "Image upload failed";
+      toast.error(msg);
+    } finally {
+      setUploadingImage(false);
+      setUploadProgress(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    if (e.dataTransfer?.files && e.dataTransfer.files[0]) {
+      handleImageFileSelect(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleRemoveCoverImage = () => {
+    setForm((prev) => ({
+      ...prev,
+      coverImage: {
+        ...prev.coverImage,
+        url: "",
+      },
+    }));
+    toast.success("Cover image removed");
+  };
 
   const fetchArticles = useCallback(async () => {
     try {
@@ -1229,18 +1332,232 @@ export default function BlogEditor() {
             </div>
           </Card>
 
-          {/* Cover Image Settings */}
+          {/* Cover Image Settings & Direct Upload */}
           <Card>
-            <h3 style={{ fontSize: 14, fontWeight: 700, color: "#F8FAFC", marginBottom: 14 }}>
-              Cover Image
-            </h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#F8FAFC", margin: 0 }}>
+                Cover Image
+              </h3>
+              <span style={{ fontSize: 11, color: "#94A3B8", background: "rgba(255,255,255,0.06)", padding: "2px 8px", borderRadius: 4 }}>
+                16:9 Recommended
+              </span>
+            </div>
 
+            {/* Hidden File Input */}
+            <input
+              ref={fileInputRef}
+              id="cover-image-file-input"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              style={{ display: "none" }}
+              aria-label="Upload cover image file"
+              onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                  handleImageFileSelect(e.target.files[0]);
+                }
+              }}
+            />
+
+            {/* Image Preview or Dropzone */}
+            {form.coverImage.url ? (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    aspectRatio: "16 / 9",
+                    maxHeight: 220,
+                    background: "#0F172A",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    border: "1px solid rgba(255,255,255,0.12)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img
+                    src={form.coverImage.url}
+                    alt={form.coverImage.alt || "Cover image preview"}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      display: "block",
+                    }}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling?.removeAttribute("style");
+                    }}
+                  />
+                  <div
+                    style={{
+                      display: "none",
+                      position: "absolute",
+                      inset: 0,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#EF4444",
+                      fontSize: 12,
+                      background: "rgba(15,23,42,0.8)",
+                    }}
+                  >
+                    Image could not be rendered from URL
+                  </div>
+
+                  {uploadingImage && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        background: "rgba(15,23,42,0.75)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                        zIndex: 2,
+                      }}
+                    >
+                      <Loader2 size={24} color="#60A5FA" style={{ animation: "spin 1s linear infinite" }} />
+                      <span style={{ fontSize: 12, color: "#F8FAFC", fontWeight: 600 }}>
+                        {uploadProgress || "Uploading..."}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions Bar under preview */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 8,
+                    marginTop: 8,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingImage}
+                    style={{
+                      flex: 1,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                      background: "rgba(59,130,246,0.12)",
+                      border: "1px solid rgba(59,130,246,0.3)",
+                      borderRadius: 6,
+                      color: "#60A5FA",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      padding: "6px 12px",
+                      cursor: uploadingImage ? "not-allowed" : "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <RefreshCw size={13} />
+                    Replace Image
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleRemoveCoverImage}
+                    disabled={uploadingImage}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 6,
+                      background: "rgba(239,68,68,0.12)",
+                      border: "1px solid rgba(239,68,68,0.3)",
+                      borderRadius: 6,
+                      color: "#F87171",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      padding: "6px 12px",
+                      cursor: uploadingImage ? "not-allowed" : "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    <X size={13} />
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Dropzone for Uploading */
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => !uploadingImage && fileInputRef.current?.click()}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    fileInputRef.current?.click();
+                  }
+                }}
+                style={{
+                  border: isDragging ? "2px dashed #3B82F6" : "1px dashed rgba(255,255,255,0.18)",
+                  background: isDragging ? "rgba(59,130,246,0.08)" : "rgba(255,255,255,0.02)",
+                  borderRadius: 8,
+                  padding: "20px 14px",
+                  textAlign: "center",
+                  cursor: uploadingImage ? "wait" : "pointer",
+                  marginBottom: 14,
+                  transition: "all 0.2s ease",
+                  outline: "none",
+                }}
+              >
+                {uploadingImage ? (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                    <Loader2 size={28} color="#60A5FA" style={{ animation: "spin 1s linear infinite" }} />
+                    <span style={{ fontSize: 13, color: "#F8FAFC", fontWeight: 600 }}>
+                      {uploadProgress || "Uploading to persistent storage..."}
+                    </span>
+                    <span style={{ fontSize: 11, color: "#94A3B8" }}>Please wait while the image is verified</span>
+                  </div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                    <div
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: "50%",
+                        background: "rgba(59,130,246,0.1)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginBottom: 4,
+                      }}
+                    >
+                      <UploadCloud size={20} color="#60A5FA" />
+                    </div>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#F8FAFC" }}>
+                      Upload Cover Image
+                    </span>
+                    <span style={{ fontSize: 11, color: "#94A3B8", maxWidth: 280, lineHeight: 1.4 }}>
+                      Drag & drop your WebP, PNG, JPEG, or AVIF here, or click to browse
+                    </span>
+                    <span style={{ fontSize: 10, color: "#64748B", marginTop: 2 }}>
+                      Recommended: 16:9 aspect ratio (e.g. 1600 × 900 px) · Max 5MB
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Manual Image URL Input (Maintained for full backwards compatibility) */}
             <div style={{ marginBottom: 12 }}>
-              <FL htmlFor="art-img-url">Image URL</FL>
+              <FL htmlFor="art-img-url">Image URL (Auto-filled on upload or manual)</FL>
               <input
                 id="art-img-url"
                 type="text"
-                placeholder="/images/blog/perm-suspension-editorial.webp"
+                placeholder="https://...public.blob.vercel-storage.com/... or /images/blog/..."
                 value={form.coverImage.url}
                 onChange={(e) =>
                   setForm((prev) => ({
