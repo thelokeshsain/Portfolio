@@ -15,7 +15,7 @@ import {
   ChevronRight,
   ShieldCheck,
 } from "lucide-react";
-import SafeMarkdown from "./SafeMarkdown.jsx";
+import SafeMarkdown from "./SafeMarkdown";
 
 const SUGGESTED_PROMPTS = [
   "What is Lokesh's core technical stack?",

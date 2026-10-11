@@ -1,26 +1,26 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { parseMarkdown } from "@/lib/ai/markdownParser.js";
+import { parseMarkdown } from "@/lib/ai/markdownParser";
 
 function renderInlineNode(node, index) {
   if (!node) return null;
 
   switch (node.type) {
     case "text":
-      return <React.Fragment key={index}>{node.value}</React.Fragment>;
+      return <React.Fragment key={index}>{node.value || ""}</React.Fragment>;
 
     case "bold":
       return (
         <strong key={index} style={{ fontWeight: 650, color: "#FFFFFF" }}>
-          {node.children?.map(renderInlineNode)}
+          {Array.isArray(node.children) ? node.children.map(renderInlineNode) : null}
         </strong>
       );
 
     case "italic":
       return (
         <em key={index} style={{ fontStyle: "italic", color: "#E2E8F0" }}>
-          {node.children?.map(renderInlineNode)}
+          {Array.isArray(node.children) ? node.children.map(renderInlineNode) : null}
         </em>
       );
 
@@ -37,19 +37,21 @@ function renderInlineNode(node, index) {
             color: "#93C5FD",
           }}
         >
-          {node.value}
+          {node.value || ""}
         </code>
       );
 
     case "link": {
-      const isInternal = node.href.startsWith("/") || node.href.startsWith("#");
+      const href = typeof node.href === "string" && node.href ? node.href : "#";
+      const isInternal = href.startsWith("/") || href.startsWith("#");
+      const labelText = typeof node.children?.[0]?.value === "string" ? node.children[0].value : "Link";
       return (
         <a
           key={index}
-          href={node.href}
+          href={href}
           target={isInternal ? "_self" : "_blank"}
           rel={isInternal ? undefined : "noopener noreferrer"}
-          aria-label={typeof node.children?.[0]?.value === "string" ? `${node.children[0].value} (opens in a new tab)` : "Link"}
+          aria-label={isInternal ? labelText : `${labelText} (opens in a new tab)`}
           style={{
             color: "#38BDF8",
             textDecoration: "underline",
@@ -62,7 +64,7 @@ function renderInlineNode(node, index) {
           onMouseEnter={(e) => (e.currentTarget.style.color = "#7DD3FC")}
           onMouseLeave={(e) => (e.currentTarget.style.color = "#38BDF8")}
         >
-          {node.children?.map(renderInlineNode)}
+          {Array.isArray(node.children) ? node.children.map(renderInlineNode) : labelText}
         </a>
       );
     }
