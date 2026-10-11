@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ShieldCheck,
 } from "lucide-react";
+import SafeMarkdown from "./SafeMarkdown.jsx";
 
 const SUGGESTED_PROMPTS = [
   "What is Lokesh's core technical stack?",
@@ -422,10 +423,14 @@ export default function AskLokeshAI() {
                         ? "1px solid rgba(96, 165, 250, 0.3)"
                         : "1px solid rgba(255, 255, 255, 0.08)",
                     wordBreak: "break-word",
-                    whiteSpace: "pre-wrap",
+                    whiteSpace: msg.role === "user" ? "pre-wrap" : "normal",
                   }}
                 >
-                  {msg.content}
+                  {msg.role === "user" ? (
+                    msg.content
+                  ) : (
+                    <SafeMarkdown content={msg.content} />
+                  )}
                 </div>
 
                 {/* Public Source Citations */}

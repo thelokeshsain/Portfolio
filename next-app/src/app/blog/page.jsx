@@ -328,7 +328,7 @@ export default async function BlogPage({ searchParams }) {
                             position: "relative",
                             width: "100%",
                             height: "100%",
-                            aspectRatio: "1376 / 768",
+                            aspectRatio: "16 / 9",
                           }}
                         >
                           <Image

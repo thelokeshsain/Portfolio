@@ -127,7 +127,7 @@ await runAsyncTest("Visual test: Render illustration at mobile (360px) and deskt
           .p-cover-image-box {
             position: relative;
             width: 100%;
-            aspect-ratio: 1376 / 768;
+            aspect-ratio: 16 / 9;
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #E5E1D8;

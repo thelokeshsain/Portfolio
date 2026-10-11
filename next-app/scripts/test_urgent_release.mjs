@@ -14,6 +14,8 @@ import crypto from "crypto";
 // Import AI configuration & discovery
 import { AI_CONFIG, isGroqConfigured } from "../src/lib/ai/config.js";
 import { resolveVerifiedModel, clearModelCache } from "../src/lib/ai/modelDiscovery.js";
+import { sanitizeModelOutput } from "../src/lib/ai/safety.js";
+import { parseMarkdown, parseInline, isSafeUrl } from "../src/lib/ai/markdownParser.js";
 
 const PASS = "  [PASS]";
 const FAIL = "  [FAIL]";
@@ -237,6 +239,69 @@ runTest("Public status endpoint never leaks secrets or raw keys", () => {
 runTest("social_preview.webp is preserved byte-for-byte (221270 bytes)", () => {
   const stat = fs.statSync("public/images/social_preview.webp");
   assert.strictEqual(stat.size, 221270, "social_preview.webp must remain exactly 221270 bytes");
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 8. Safe Markdown Rendering & Security Audit
+// ─────────────────────────────────────────────────────────────────────────────
+console.log("\n--- 8. Safe Markdown Rendering & Security Audit ---");
+
+runTest("AskLokeshAI imports and utilizes SafeMarkdown component", () => {
+  const compPath = path.resolve("src/components/ui/AskLokeshAI.jsx");
+  const content = fs.readFileSync(compPath, "utf8");
+  assert(content.includes("import SafeMarkdown from"), "AskLokeshAI must import SafeMarkdown");
+  assert(content.includes("<SafeMarkdown content={msg.content}"), "AskLokeshAI must render SafeMarkdown for messages");
+  assert(!content.includes("dangerouslySetInnerHTML={{ __html: msg.content }}"), "Never use dangerouslySetInnerHTML for messages");
+});
+
+runTest("Server-side prompt in safety.js requests clean Markdown and forbids angle-bracket URLs", () => {
+  const safetyPath = path.resolve("src/lib/ai/safety.js");
+  const content = fs.readFileSync(safetyPath, "utf8");
+  assert(content.includes("clean, standard Markdown"), "Prompt must instruct model to use clean Markdown");
+  assert(content.includes("Never wrap URLs in angle brackets"), "Prompt must forbid angle brackets around URLs");
+  assert(content.includes("Never output reasoning traces"), "Prompt must prohibit internal reasoning traces");
+});
+
+runTest("sanitizeModelOutput un-boxes angle-bracket URLs and strips malicious HTML", () => {
+  const rawWithAngle = "Visit <https://lokeshsain.vercel.app/> for more info.";
+  const cleaned = sanitizeModelOutput(rawWithAngle);
+  assert(!cleaned.includes("<https://"), "Must strip angle brackets around URL");
+  assert(cleaned.includes("https://lokeshsain.vercel.app/"), "Must preserve URL");
+
+  const dangerous = "Hi <script>alert(1)</script><iframe src='evil.com'></iframe>";
+  const sanitized = sanitizeModelOutput(dangerous);
+  assert(!sanitized.includes("<script>"), "Must strip script tags");
+  assert(!sanitized.includes("<iframe"), "Must strip iframe tags");
+});
+
+runTest("SafeMarkdown AST parser correctly handles bold, lists, links, HTML, and malformed syntax", () => {
+  // Bold
+  const boldTokens = parseInline("The **MERN** architecture");
+  assert.strictEqual(boldTokens[1].type, "bold");
+  assert.strictEqual(boldTokens[1].children[0].value, "MERN");
+
+  // Lists
+  const listAst = parseMarkdown("- **Frontend** - React.js\n- **Backend** - Node.js");
+  assert.strictEqual(listAst[0].type, "ul");
+  assert.strictEqual(listAst[0].items.length, 2);
+
+  // Links & Angle brackets
+  const angleTokens = parseInline("Portfolio at <https://lokeshsain.vercel.app/>.");
+  assert.strictEqual(angleTokens[1].type, "link");
+  assert.strictEqual(angleTokens[1].href, "https://lokeshsain.vercel.app/");
+  assert.strictEqual(angleTokens[1].children[0].value, "https://lokeshsain.vercel.app/");
+
+  // Malicious protocols
+  assert.strictEqual(isSafeUrl("javascript:alert(1)"), false);
+  assert.strictEqual(isSafeUrl("data:text/html,evil"), false);
+  const unsafeTokens = parseInline("[evil](javascript:alert(1))");
+  assert.strictEqual(unsafeTokens[0].href, "#");
+  assert.strictEqual(unsafeTokens[0].isSafe, false);
+
+  // Malformed markdown
+  const malformedAst = parseMarkdown("**Unclosed bold and [broken link");
+  assert(malformedAst.length > 0);
+  assert.strictEqual(malformedAst[0].type, "paragraph");
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
