@@ -41,11 +41,12 @@ export async function POST(request, { params }) {
     const currentHash = computeArticleContentHash(article.title, article.dek, article.content);
 
     // 2. Cache-first check: Return immediately if content-hash matches without touching Groq
-    if (
+    const hasValidCache =
       article.aiSummary?.contentHash === currentHash &&
       article.aiSummary?.summary &&
-      article.aiSummary.summary.length > 20
-    ) {
+      article.aiSummary.summary.length > 50;
+
+    if (hasValidCache) {
       return NextResponse.json(
         {
           success: true,
@@ -108,8 +109,10 @@ export async function POST(request, { params }) {
       return NextResponse.json(sharedResult, { status: sharedResult.statusCode || 200 });
     }
 
-    // Launch generation and store promise in concurrency map
-    const generationPromise = getOrGenerateArticleSummary(articleId, { forceRegenerate: false });
+    // Launch generation and store promise in concurrency map (forceRegenerate if stored cache is invalid/truncated)
+    const generationPromise = getOrGenerateArticleSummary(articleId, {
+      forceRegenerate: !hasValidCache,
+    });
     inFlightRequests.set(articleId, generationPromise);
 
     let result;

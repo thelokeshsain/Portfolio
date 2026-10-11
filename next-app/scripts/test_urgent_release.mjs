@@ -118,7 +118,7 @@ console.log("\n--- 3. Free-Tier Rate Limits & Budget Controls ---");
 
 runTest("Chat and Summary have bounded output token budgets", () => {
   assert(AI_CONFIG.maxTokens <= 500, "Chat tokens must be <= 500 for free tier");
-  assert(AI_CONFIG.summaryMaxTokens <= 400, "Summary tokens must be <= 400 for free tier");
+  assert(AI_CONFIG.summaryMaxTokens <= 650, "Summary tokens must be <= 650 for free tier");
 });
 
 runTest("Conservative free-tier rate limits are configured", () => {

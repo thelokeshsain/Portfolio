@@ -69,7 +69,7 @@ export async function getOrGenerateArticleSummary(articleId, options = {}) {
     !forceRegenerate &&
     article.aiSummary?.contentHash === currentHash &&
     article.aiSummary?.summary &&
-    article.aiSummary.summary.length > 20
+    article.aiSummary.summary.length > 50
   ) {
     return {
       success: true,
@@ -147,18 +147,20 @@ ${cleanBody}`,
   const summaryText = paragraphLines.join(" ") || sanitized;
   const keyPoints = bulletLines.map((b) => b.replace(/^[-*]\s*/, ""));
 
-  // Persist into MongoDB
-  article.aiSummary = {
-    summary: summaryText,
-    keyPoints: keyPoints.slice(0, 4),
-    contentHash: currentHash,
-    model: result.model || targetModel,
-    generatedAt: new Date(),
-    inputTokens: result.usage?.promptTokens || 0,
-    outputTokens: result.usage?.completionTokens || 0,
-  };
+  // Persist into MongoDB only if summary is valid and substantial (> 50 chars)
+  if (summaryText && summaryText.length > 50) {
+    article.aiSummary = {
+      summary: summaryText,
+      keyPoints: keyPoints.slice(0, 4),
+      contentHash: currentHash,
+      model: result.model || targetModel,
+      generatedAt: new Date(),
+      inputTokens: result.usage?.promptTokens || 0,
+      outputTokens: result.usage?.completionTokens || 0,
+    };
 
-  await article.save();
+    await article.save();
+  }
 
   return {
     success: true,
