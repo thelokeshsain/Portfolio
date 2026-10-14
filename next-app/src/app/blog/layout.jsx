@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Lokesh Sain — Perspectives",
     description:
-      "Independent perspectives on technology, world affairs, business and modern software engineering.",
+      "Independent perspectives on software engineering, technology architecture, web performance, and industry policy.",
     images: ["/images/social_preview.webp"],
   },
   alternates: {
@@ -60,7 +60,7 @@ export default function BlogLayout({ children }) {
             Lokesh Sain — Perspectives
           </p>
           <p style={{ marginBottom: 12, maxWidth: 600, margin: "0 auto 16px" }}>
-            Independent perspectives on technology, world affairs, business and sport. Written by software engineer Lokesh Sain.
+            Independent perspectives on software engineering, technology architecture, web performance, and industry policy. Written by software engineer Lokesh Sain.
           </p>
           <div
             style={{
