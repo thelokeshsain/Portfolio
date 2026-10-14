@@ -477,7 +477,7 @@ export default async function BlogPage({ searchParams }) {
                 margin: 0,
               }}
             >
-              Independent commentary by software engineer Lokesh Sain. Covering the intersection of engineering architecture, technology policy, geopolitical dynamics, and employment markets.
+              Technical postmortems, Next.js architecture breakdowns, cloud security, and web performance analyses published by software engineer Lokesh Sain.
             </p>
             <div style={{ marginTop: 10 }}>
               <Link

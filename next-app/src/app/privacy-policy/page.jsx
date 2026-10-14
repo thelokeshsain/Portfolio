@@ -350,12 +350,12 @@ export default function PrivacyPolicyPage() {
               <h2 style={{ fontSize: "18px", fontWeight: 700, margin: 0, color: "#F0F2F5" }}>7. Consent Architecture & Regulatory Choices</h2>
             </div>
             <p style={{ color: "#94A3B8", fontSize: "14px", lineHeight: 1.7, marginBottom: "12px" }}>
-              To ensure compliance for global readers, this site implements Google&apos;s Privacy &amp; Messaging Consent Management Platform (CMP):
+              To ensure compliance for global readers, this website interfaces with Google&apos;s Privacy &amp; Messaging consent architecture:
             </p>
             <ul style={{ paddingLeft: "20px", color: "#94A3B8", fontSize: "14px", lineHeight: 1.7, display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
-              <li><strong>EEA, UK, and Switzerland:</strong> Certified with the IAB Transparency and Consent Framework (TCF v2.2) as mandated by Google. Personalized advertising and advertising cookies are withheld until positive consent is obtained.</li>
-              <li><strong>US State Privacy Regulations:</strong> Supports statutory opt-out choices regarding targeted advertising under California CCPA/CPRA, Virginia VCDPA, and related state frameworks.</li>
-              <li><strong>Revoke or Revisit Consent:</strong> You can revisit or revoke your consent preferences at any time using the button below:</li>
+              <li><strong>EEA, UK, and Switzerland:</strong> Supports integration with the IAB Transparency and Consent Framework (TCF v2.2) via Google AdSense Privacy &amp; Messaging. Where affirmative consent is required by regional laws, personalized advertising cookies remain inactive until affirmative consent is confirmed.</li>
+              <li><strong>US State Privacy Regulations:</strong> Supports statutory opt-out choices regarding targeted advertising under California CCPA/CPRA, Virginia VCDPA, and applicable state privacy frameworks.</li>
+              <li><strong>Revoke or Revisit Consent:</strong> You can revisit or update your consent preferences at any time using the control below or via your browser&apos;s cookie management settings:</li>
             </ul>
             <div style={{ marginTop: "16px" }}>
               <ConsentRevokeButton />

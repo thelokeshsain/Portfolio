@@ -95,7 +95,7 @@ export default function ArticleAiSummary({ initialSummary, slug }) {
                 margin: 0,
               }}
             >
-              Editorial AI Synthesis &middot; Key Takeaways
+              AI-Generated Key Takeaways
             </h2>
           </div>
 
@@ -178,7 +178,7 @@ export default function ArticleAiSummary({ initialSummary, slug }) {
         >
           <ShieldCheck size={13} style={{ flexShrink: 0 }} />
           <span>
-            Synthesized from the published article using Groq AI. Always refer to the full analysis and primary sources below.
+            Synthesized from the published article using Groq LLM inference. Always refer to the complete technical analysis, code implementations, and primary references in the full article below.
           </span>
         </div>
       </section>
@@ -227,7 +227,7 @@ export default function ArticleAiSummary({ initialSummary, slug }) {
                 letterSpacing: "0.01em",
               }}
             >
-              Executive AI Synthesis
+              AI-Assisted Summary
             </span>
             <span
               style={{
@@ -250,7 +250,7 @@ export default function ArticleAiSummary({ initialSummary, slug }) {
               margin: 0,
             }}
           >
-            Generate a fast, verified summary of this analysis and its primary distinctions using Groq AI.
+            Generate an automated summary of this technical analysis and its core architectural principles using Groq AI.
           </p>
         </div>
 

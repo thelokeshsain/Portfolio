@@ -100,6 +100,34 @@ async function runTests() {
     "BlogMasthead.jsx descriptor accurately describes software engineering and postmortems"
   );
 
+  // 1.7 Verify Blog Index About Section has zero geopolitical / employment market copy
+  assert(
+    !/geopolitical/i.test(blogPageSource),
+    "blog/page.jsx About section contains zero references to 'geopolitical'"
+  );
+  assert(
+    !/employment markets/i.test(blogPageSource),
+    "blog/page.jsx About section contains zero references to 'employment markets'"
+  );
+
+  // 1.8 Verify ArticleAiSummary.jsx qualifies AI claims
+  const aiSummarySource = fs.readFileSync(
+    path.resolve("src/components/blog/ArticleAiSummary.jsx"),
+    "utf8"
+  );
+  assert(
+    !/verified summary/i.test(aiSummarySource),
+    "ArticleAiSummary.jsx contains zero unsupported 'verified summary' claims"
+  );
+  assert(
+    !/Executive AI Synthesis/i.test(aiSummarySource),
+    "ArticleAiSummary.jsx replaced 'Executive AI Synthesis' with accurate 'AI-Assisted Summary'"
+  );
+  assert(
+    aiSummarySource.includes("AI-Generated Key Takeaways"),
+    "ArticleAiSummary.jsx displays truthful 'AI-Generated Key Takeaways' heading"
+  );
+
   // ----------------------------------------------------
   // TEST SUITE 2: MongoDB Editorial Inventory & Integrity
   // ----------------------------------------------------
@@ -166,6 +194,18 @@ async function runTests() {
     assert(
       draft.status !== "published",
       `Draft article '${draft.slug}' is not published`
+    );
+  }
+
+  // 2.5 Verify author bio across all published articles in DB is clean
+  for (const article of publishedArticles) {
+    assert(
+      article.author?.bio?.includes("Software Engineer based in Jaipur, India"),
+      `Article '${article.slug}' author.bio is updated to software engineering bio in MongoDB`
+    );
+    assert(
+      !/global affairs|geopolitical/i.test(article.author?.bio || ""),
+      `Article '${article.slug}' author.bio contains zero references to 'global affairs' or 'geopolitical'`
     );
   }
 
