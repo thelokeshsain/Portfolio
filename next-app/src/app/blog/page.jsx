@@ -96,7 +96,7 @@ export default async function BlogPage({ searchParams }) {
     "@type": "Blog",
     "@id": `${BASE_URL}/blog#blog`,
     name: "Lokesh Sain — Perspectives",
-    description: "Independent perspectives on technology, world affairs, business and sport.",
+    description: "Independent perspectives on software engineering, technology architecture, web performance, and industry policy.",
     url: `${BASE_URL}/blog`,
     publisher: {
       "@type": "Person",
