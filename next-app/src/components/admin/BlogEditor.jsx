@@ -85,6 +85,7 @@ export default function BlogEditor() {
   const [summarizing, setSummarizing] = useState(false);
   const [editorTab, setEditorTab] = useState("write"); // 'write' | 'preview'
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   // New source input state
   const [newSource, setNewSource] = useState({
@@ -359,6 +360,7 @@ export default function BlogEditor() {
   };
 
   const handleDelete = async (id, title) => {
+    if (deletingId) return;
     const ok = await confirm({
       title: "Archive Article",
       message: `Are you sure you want to archive "${title}"? It will be unpublished immediately.`,
@@ -367,15 +369,21 @@ export default function BlogEditor() {
     });
     if (!ok) return;
 
+    setDeletingId(id);
     try {
       const res = await apiClient.delete(`/admin/blog/${id}`);
-      if (res.data.success) {
-        toast.success("Article archived");
+      if (res.data?.success) {
+        toast.success(res.data.message || "Article archived");
         fetchArticles();
         if (form.id === id) setView("list");
+      } else {
+        toast.error(res.data?.message || "Failed to archive article");
       }
-    } catch {
-      toast.error("Failed to delete article");
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || "Failed to delete article";
+      toast.error(msg);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -756,7 +764,8 @@ export default function BlogEditor() {
 
                           <DelBtn
                             onClick={() => handleDelete(art.id, art.title)}
-                            title="Archive Article"
+                            disabled={deletingId === art.id}
+                            title={deletingId === art.id ? "Archiving..." : "Archive Article"}
                           />
                         </div>
                       </td>

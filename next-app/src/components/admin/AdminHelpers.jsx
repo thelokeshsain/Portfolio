@@ -47,10 +47,11 @@ export const AddBtn = ({ onClick, label }) => (
   </button>
 )
 
-export const DelBtn = ({ onClick, title = "Delete" }) => (
+export const DelBtn = ({ onClick, title = "Delete", disabled = false }) => (
   <button
     type="button"
     onClick={onClick}
+    disabled={disabled}
     title={title}
     aria-label={title}
     style={{
@@ -58,7 +59,8 @@ export const DelBtn = ({ onClick, title = "Delete" }) => (
       border: '1px solid rgba(239, 68, 68, 0.25)',
       borderRadius: 8,
       padding: '6px 10px',
-      cursor: 'pointer',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      opacity: disabled ? 0.5 : 1,
       color: '#EF4444',
       display: 'flex',
       alignItems: 'center',
