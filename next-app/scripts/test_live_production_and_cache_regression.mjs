@@ -1,5 +1,3 @@
-import fs from "fs";
-
 console.log("=============================================================");
 console.log("TESTING LIVE PRODUCTION, ARCHIVAL INTEGRITY & CACHE REGRESSION");
 console.log("=============================================================");
@@ -29,22 +27,31 @@ async function run() {
   assert(blogHtml.includes("All Perspectives"), "/blog navigation contains 'All Perspectives'");
   assert(!blogHtml.includes("category=Geopolitics"), "/blog has NO empty 'Geopolitics' category tab");
   assert(!blogHtml.includes("category=Sports"), "/blog has NO empty 'Sports' category tab");
-  assert(blogHtml.includes("Perspectives in Editorial Review"), "/blog displays honest editorial review empty state");
+  assert(blogHtml.includes("React Error #130"), "/blog renders published React Error #130 article card");
+  assert(blogHtml.includes("Image Upload Pipeline"), "/blog renders published Image Upload Pipeline article card");
+  assert(blogHtml.includes("Sub-350px Viewport"), "/blog renders published Viewport Optimization article card");
 
-  // 2. Direct Route 404 Check for Archived Article
+  // 2. Archived Article Direct Route Behavior
   console.log("\n--- 2. Archived Article Direct Route Behavior ---");
   const permUrl = `${BASE_URL}/blog/infosys-tcs-wipro-green-card-perm-suspension`;
   const permRes = await fetch(permUrl, { cache: "no-store" });
-  assert(permRes.status === 404, `Direct URL returns genuine HTTP 404 (actual: ${permRes.status})`);
+  assert(permRes.status === 404, `Direct URL for archived PERM article returns genuine HTTP 404 (actual: ${permRes.status})`);
   const permHtml = await permRes.text();
   assert(!permHtml.includes("Infosys, TCS and Wipro Green Card Suspension: What the US PERM Action Means"), "Direct 404 response does NOT contain article content");
   assert(permHtml.includes("Article Not Found") || permHtml.includes("404"), "Direct 404 response renders intended not-found UI");
 
-  // 3. Draft Seclusion (No Draft Leakage)
-  console.log("\n--- 3. Draft Seclusion (No Unauthenticated Access) ---");
-  const draftUrl = `${BASE_URL}/blog/react-error-130-turbopack-postmortem`;
-  const draftRes = await fetch(draftUrl, { cache: "no-store" });
-  assert(draftRes.status === 404, `Unpublished draft returns HTTP 404 to public crawlers (actual: ${draftRes.status})`);
+  // 3. Published Article Direct Route Behavior
+  console.log("\n--- 3. Published Article Direct Route Behavior ---");
+  const pubUrl = `${BASE_URL}/blog/react-error-130-turbopack-postmortem`;
+  const pubRes = await fetch(pubUrl, { cache: "no-store" });
+  assert(pubRes.status === 200, `Published article returns HTTP 200 to public crawlers (actual: ${pubRes.status})`);
+  const pubHtml = await pubRes.text();
+  assert(pubHtml.includes("Postmortem: Diagnosing and Resolving React Error #130"), "Published article renders full H1 title");
+  assert(pubHtml.includes("useConfirm"), "Published article contains technical code explanation");
+
+  // 3b. Nonexistent Article Direct Route Check
+  const nonExistentRes = await fetch(`${BASE_URL}/blog/nonexistent-article-slug-xyz`, { cache: "no-store" });
+  assert(nonExistentRes.status === 404, `Nonexistent route returns HTTP 404 (actual: ${nonExistentRes.status})`);
 
   // 4. XML Sitemap Verification
   console.log("\n--- 4. Live XML Sitemap Verification ---");
@@ -52,7 +59,6 @@ async function run() {
   assert(sitemapRes.status === 200, `/sitemap.xml returns HTTP 200 (actual: ${sitemapRes.status})`);
   const sitemapXml = await sitemapRes.text();
   assert(!sitemapXml.includes("infosys-tcs-wipro-green-card-perm-suspension"), "Sitemap excludes archived PERM article");
-  assert(!sitemapXml.includes("react-error-130-turbopack-postmortem"), "Sitemap excludes unpublished drafts");
   assert(sitemapXml.includes("<loc>https://lokeshsain.vercel.app</loc>"), "Sitemap includes portfolio homepage");
   assert(sitemapXml.includes("<loc>https://lokeshsain.vercel.app/blog</loc>"), "Sitemap includes blog index");
 
