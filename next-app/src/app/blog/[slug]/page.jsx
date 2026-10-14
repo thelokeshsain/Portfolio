@@ -18,7 +18,6 @@ import {
   User,
   ShieldCheck,
   Mail,
-  AlertTriangle,
 } from "lucide-react";
 
 export const revalidate = 60; // Incremental Static Regeneration (1 minute)
@@ -61,8 +60,8 @@ const getArticleBySlug = cache(async (slug) => {
       coverImage: article.coverImage || {},
       author: article.author || {
         name: "Lokesh Sain",
-        role: "Software Engineer & Independent Commentator",
-        bio: "Software Engineer based in Jaipur. Writing independent analyses on technology, global affairs, industry policy, and modern engineering.",
+        role: "Software Engineer",
+        bio: "Software Engineer based in Jaipur, India. Writing technical deep-dives on software architecture, Next.js performance, cloud security, and web engineering.",
       },
       readingTime: article.readingTime,
       isAnalysisOrOpinion: article.isAnalysisOrOpinion,
@@ -438,42 +437,27 @@ export default async function ArticlePage({ params }) {
           </section>
         )}
 
-        {/* Editorial Standards, Corrections & Legal Disclaimers */}
+        {/* Technical Standards & Editorial Integrity */}
         <div className="p-editorial-notices">
-          {/* Editorial Standards & Fact Distinction Notice */}
+          {/* Technical Standards & Methodology Notice */}
           <div className="p-notice-card p-notice-standards">
             <ShieldCheck size={18} style={{ color: "var(--p-accent)", flexShrink: 0, marginTop: 2 }} />
             <div>
-              <strong style={{ color: "var(--p-text-primary)" }}>Editorial Standards:</strong> This analysis synthesizes confirmed government administrative announcements, reputable international reporting, and statutory immigration frameworks. Statements regarding government allegations reflect active administrative claims, not adjudicated findings. Personal commentary is clearly identified as opinion.
+              <strong style={{ color: "var(--p-text-primary)" }}>Technical Standards &amp; Integrity:</strong> Architectural diagrams, benchmark methodologies, code implementations, and reproduction steps reflect independently verified engineering work. All technical analyses are conducted without commercial sponsorship bias. Code samples and configuration patterns should be evaluated against your specific production security, architectural constraints, and environment requirements.
             </div>
           </div>
 
-          {/* Legal / Immigration Disclaimer */}
-          <div className="p-notice-card p-notice-legal">
-            <AlertTriangle size={16} style={{ color: "#D97706", flexShrink: 0, marginTop: 2 }} />
-            <div>
-              <strong>Legal Disclaimer:</strong> This publication is produced strictly for journalistic, educational, and analytical purposes. It does not constitute formal legal, corporate, or immigration counsel. Immigration statutes and administrative procedures are subject to rapid evolution and judicial review. Readers should consult licensed legal counsel regarding their specific petitions.
-            </div>
-          </div>
-
-          {/* Factual Correction Process */}
+          {/* Technical Correction & Feedback Process */}
           <div className="p-notice-card p-notice-correction">
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div className="p-notice-correction-text">
               <Mail size={14} style={{ color: "var(--p-accent)" }} />
-              <span>Have a factual correction, update, or primary source document?</span>
+              <span>Have a technical correction, reproducible benchmark, or architectural suggestion?</span>
             </div>
             <a
-              href="mailto:iamlokeshsain@gmail.com?subject=Editorial%20Correction%20—%20Perspectives"
-              style={{
-                color: "var(--p-accent)",
-                fontWeight: 600,
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 4,
-              }}
+              href="mailto:iamlokeshsain@gmail.com?subject=Technical%20Correction%20—%20Perspectives"
+              className="p-notice-correction-link"
             >
-              Submit Editorial Correction &rarr;
+              Submit Technical Correction &rarr;
             </a>
           </div>
         </div>
@@ -487,7 +471,7 @@ export default async function ArticlePage({ params }) {
             <h4>About {article.author?.name || "Lokesh Sain"}</h4>
             <p>
               {article.author?.bio ||
-                "Software Engineer based in Jaipur, India. Writing independent perspectives on global technology policy, software engineering systems, and industry developments."}
+                "Software Engineer based in Jaipur, India. Writing technical deep-dives on software architecture, Next.js performance, cloud security, and web engineering."}
             </p>
             <div style={{ marginTop: 8 }}>
               <Link

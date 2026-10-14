@@ -57,8 +57,8 @@ const INITIAL_FORM = {
   },
   author: {
     name: "Lokesh Sain",
-    role: "Software Engineer & Independent Commentator",
-    bio: "Software Engineer based in Jaipur. Writing independent analyses on technology, global affairs, industry policy, and modern engineering.",
+    role: "Software Engineer",
+    bio: "Software Engineer based in Jaipur, India. Writing technical deep-dives on software architecture, Next.js performance, cloud security, and web engineering.",
     avatar: "",
   },
   status: "draft",
@@ -446,7 +446,7 @@ export default function BlogEditor() {
               Perspectives Editorial Blog
             </h2>
             <p style={{ fontSize: 13, color: "#8B93A7", marginTop: 4 }}>
-              Daily editorial publishing system for technical commentary, global affairs, and industry insights.
+              Daily editorial publishing system for software engineering postmortems, architecture breakdowns, and technical case studies.
             </p>
           </div>
 

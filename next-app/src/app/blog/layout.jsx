@@ -8,19 +8,19 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lokeshsain.vercel.
 export const metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "Perspectives — Lokesh Sain | Independent Analysis on Tech, Business & Policy",
+    default: "Perspectives — Lokesh Sain | Software Engineering & System Architecture",
     template: "%s | Lokesh Sain — Perspectives",
   },
   description:
-    "Independent perspectives, technical essays, and long-form commentary on software engineering, technology policy, global affairs, and business by Lokesh Sain.",
+    "Technical perspectives, architectural postmortems, and engineering analyses on software architecture, Next.js performance, and modern web systems by Lokesh Sain.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "/blog",
     siteName: "Lokesh Sain — Perspectives",
-    title: "Lokesh Sain — Perspectives | Independent Technical & Industry Analysis",
+    title: "Lokesh Sain — Perspectives | Software Engineering & System Architecture",
     description:
-      "Independent perspectives, technical essays, and long-form commentary on software engineering, technology policy, global affairs, and business.",
+      "Technical perspectives, architectural postmortems, and engineering analyses on software architecture, Next.js performance, and web systems.",
     images: [
       {
         url: "/images/social_preview.webp",
@@ -34,7 +34,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Lokesh Sain — Perspectives",
     description:
-      "Independent perspectives on software engineering, technology architecture, web performance, and industry policy.",
+      "Technical perspectives on software engineering, Next.js architecture, web performance, and systems design.",
     images: ["/images/social_preview.webp"],
   },
   alternates: {
@@ -60,7 +60,7 @@ export default function BlogLayout({ children }) {
             Lokesh Sain — Perspectives
           </p>
           <p style={{ marginBottom: 12, maxWidth: 600, margin: "0 auto 16px" }}>
-            Independent perspectives on software engineering, technology architecture, web performance, and industry policy. Written by software engineer Lokesh Sain.
+            Software engineering analyses, Next.js architecture postmortems, and web performance insights by Lokesh Sain.
           </p>
           <div
             style={{

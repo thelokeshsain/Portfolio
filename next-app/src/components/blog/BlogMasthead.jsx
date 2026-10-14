@@ -53,7 +53,7 @@ export default async function BlogMasthead() {
               Lokesh Sain <span>— Perspectives</span>
             </Link>
             <p className="p-descriptor">
-              Independent perspectives on software engineering, technology architecture, web performance, and industry policy.
+              Software engineering analyses, Next.js architecture postmortems, and web performance insights by Lokesh Sain.
             </p>
           </div>
 

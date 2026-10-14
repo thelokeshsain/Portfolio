@@ -57,9 +57,9 @@ export async function generateMetadata({ searchParams }) {
   const category = sp?.category;
   const query = sp?.q;
 
-  let title = "Perspectives — Lokesh Sain | Independent Technical & Global Commentary";
+  let title = "Perspectives — Lokesh Sain | Software Engineering & System Architecture";
   let description =
-    "Independent perspectives, technology policy essays, software engineering analysis, and business commentary by Lokesh Sain.";
+    "Technical perspectives, software engineering postmortems, Next.js architecture analyses, and web performance case studies by Lokesh Sain.";
 
   if (category && category !== "all") {
     title = `${category} Perspectives | Lokesh Sain`;
@@ -96,7 +96,7 @@ export default async function BlogPage({ searchParams }) {
     "@type": "Blog",
     "@id": `${BASE_URL}/blog#blog`,
     name: "Lokesh Sain — Perspectives",
-    description: "Independent perspectives on software engineering, technology architecture, web performance, and industry policy.",
+    description: "Technical perspectives on software engineering, Next.js architecture, web performance, and systems design.",
     url: `${BASE_URL}/blog`,
     publisher: {
       "@type": "Person",
@@ -132,7 +132,7 @@ export default async function BlogPage({ searchParams }) {
                 : query
                 ? `Search: "${query}"`
                 : "Perspectives Index"
-              : "Perspectives — Independent Editorial Commentary"}
+              : "Perspectives — Software Engineering & Systems Analysis"}
           </h1>
           <p
             style={{
@@ -144,8 +144,8 @@ export default async function BlogPage({ searchParams }) {
             }}
           >
             {isFiltered
-              ? `Displaying verified perspectives and long-form commentary matching your selection (${articles.length} ${articles.length === 1 ? "article" : "articles"}).`
-              : "Rigorous essays, policy analysis, and software engineering commentary published by software engineer Lokesh Sain."}
+              ? `Displaying verified perspectives and engineering analyses matching your selection (${articles.length} ${articles.length === 1 ? "article" : "articles"}).`
+              : "Technical deep-dives, architectural postmortems, and web performance analyses published by software engineer Lokesh Sain."}
           </p>
         </header>
 

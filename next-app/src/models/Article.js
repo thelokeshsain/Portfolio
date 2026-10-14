@@ -76,7 +76,7 @@ const articleSchema = new mongoose.Schema(
       bio: {
         type: String,
         default:
-          "Software Engineer based in Jaipur. Writing independent analyses on technology, global affairs, industry policy, and modern engineering.",
+          "Software Engineer based in Jaipur, India. Writing technical deep-dives on software architecture, Next.js performance, cloud security, and web engineering.",
         maxlength: 500,
       },
       avatar: { type: String, maxlength: 2000000, default: "" },
