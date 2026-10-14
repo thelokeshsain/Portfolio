@@ -10,6 +10,17 @@ export default function robots() {
         allow: "/",
         disallow: standardDisallow,
       },
+      // Explicitly allow Google AdSense crawlers to verify site and index public content
+      {
+        userAgent: "Mediapartners-Google",
+        allow: "/",
+        disallow: standardDisallow,
+      },
+      {
+        userAgent: "Google-Display-Ads-Bot",
+        allow: "/",
+        disallow: standardDisallow,
+      },
       // Explicitly allow search & AI crawlers to index portfolio and public perspectives
       {
         userAgent: "Googlebot",

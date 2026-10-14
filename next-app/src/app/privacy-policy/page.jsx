@@ -14,6 +14,7 @@ import {
   Server
 } from "lucide-react";
 import ConsentRevokeButton from "@/components/ads/ConsentRevokeButton";
+import { ADS_CONFIG } from "@/config/ads";
 
 export const metadata = {
   title: {
@@ -299,7 +300,7 @@ export default function PrivacyPolicyPage() {
               <h2 style={{ fontSize: "18px", fontWeight: 700, margin: 0 }}>6. Google AdSense & Advertising Disclosures</h2>
             </div>
             <p style={{ color: "#94A3B8", fontSize: "14px", lineHeight: 1.7, marginBottom: "12px" }}>
-              This website may display advertisements served by Google AdSense (Publisher ID: <code style={{ fontFamily: "var(--font-mono, monospace)", color: "#38BDF8" }}>ca-pub-6421974191427219</code>) and Google&apos;s certified advertising partners. In compliance with official Google AdSense policies:
+              This website may display advertisements served by Google AdSense (Publisher ID: <code style={{ fontFamily: "var(--font-mono, monospace)", color: "#38BDF8" }}>{ADS_CONFIG.getClientId() || "ca-pub-4833006824493392"}</code>) and Google&apos;s certified advertising partners. In compliance with official Google AdSense policies:
             </p>
             <ul style={{ paddingLeft: "20px", color: "#94A3B8", fontSize: "14px", lineHeight: 1.7, display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
               <li><strong>Third-Party Vendors & Cookies:</strong> Third-party vendors, including Google, use cookies to serve ads based on prior visits to this website or other websites across the web.</li>
