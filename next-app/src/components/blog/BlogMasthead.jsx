@@ -2,18 +2,19 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import { ArrowLeft, Search } from "lucide-react";
 import BlogSearchBar from "./BlogSearchBar";
+import connectDB from "@/lib/db";
+import Article from "@/models/Article";
 
-const CATEGORIES = [
-  { id: "all", label: "All" },
-  { id: "Geopolitics", label: "Geopolitics" },
-  { id: "Technology", label: "Technology" },
-  { id: "Business", label: "Business" },
-  { id: "Sports", label: "Sports" },
-  { id: "Immigration & Careers", label: "Immigration & Careers" },
-  { id: "Opinion", label: "Opinion" },
-];
+export default async function BlogMasthead() {
+  let activeCategories = [];
+  try {
+    await connectDB();
+    // Only display categories that actually contain published content
+    activeCategories = await Article.distinct("category", { status: "published" });
+  } catch (err) {
+    console.error("Failed to load active blog categories:", err.message);
+  }
 
-export default function BlogMasthead() {
   return (
     <header className="p-masthead" role="banner">
       {/* Top Utility Bar */}
@@ -29,7 +30,7 @@ export default function BlogMasthead() {
             </Link>
             <span className="p-masthead-divider" aria-hidden="true">|</span>
             <span className="p-masthead-edition">
-              Editorial Edition &middot; Updated Daily
+              Editorial Edition &middot; Technical Commentary
             </span>
           </div>
 
@@ -52,7 +53,7 @@ export default function BlogMasthead() {
               Lokesh Sain <span>— Perspectives</span>
             </Link>
             <p className="p-descriptor">
-              Independent perspectives on technology, world affairs, business and sport.
+              Independent perspectives on software engineering, technology architecture, web performance, and industry policy.
             </p>
           </div>
 
@@ -75,17 +76,24 @@ export default function BlogMasthead() {
           </Suspense>
         </div>
 
-        {/* Crawlable Categories Navigation Bar */}
+        {/* Dynamic Categories Navigation Bar — Excludes Empty Dead-End Categories */}
         <nav className="p-nav-bar" aria-label="Blog categories">
           <div className="p-categories">
-            {CATEGORIES.map((cat) => (
+            <Link
+              href="/blog"
+              className="p-category-tab"
+              prefetch={false}
+            >
+              All Perspectives
+            </Link>
+            {activeCategories.map((cat) => (
               <Link
-                key={cat.id}
-                href={cat.id === "all" ? "/blog" : `/blog?category=${encodeURIComponent(cat.id)}`}
+                key={cat}
+                href={`/blog?category=${encodeURIComponent(cat)}`}
                 className="p-category-tab"
                 prefetch={false}
               >
-                {cat.label}
+                {cat}
               </Link>
             ))}
           </div>

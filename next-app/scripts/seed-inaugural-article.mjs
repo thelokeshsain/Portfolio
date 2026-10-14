@@ -36,8 +36,8 @@ const INAUGURAL_ARTICLE = {
     "HCLTech"
   ],
   isAnalysisOrOpinion: "Analysis",
-  status: "published",
-  featured: true,
+  status: "archived",
+  featured: false,
   readingTime: "8 min read",
   author: {
     name: "Lokesh Sain",
@@ -324,18 +324,19 @@ async function seed() {
   });
 
   if (existing) {
-    console.log(`Article already exists with id: ${existing._id}. Updating fields and setting status to published...`);
+    console.log(`Article already exists with id: ${existing._id}. Updating fields and preserving status as archived...`);
     await collection.updateOne(
       { _id: existing._id },
       {
         $set: {
           ...INAUGURAL_ARTICLE,
-          publishedAt: new Date("2026-10-09T10:00:00.000Z"),
+          status: "archived",
+          featured: false,
           updatedAt: new Date()
         }
       }
     );
-    console.log("Article successfully updated and marked as PUBLISHED.");
+    console.log("Article successfully updated and marked as ARCHIVED.");
   } else {
     const result = await collection.insertOne({
       ...INAUGURAL_ARTICLE,
